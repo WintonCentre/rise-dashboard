@@ -1,0 +1,53 @@
+
+/out/
+/resources/public/js/compiled/
+resources/public/kidney
+resources/public/lung
+/target/
+/*-init.clj
+/*.log
+resources/public/js-old
+resources/public/cljs-out-old
+# Leiningen
+/.lein-*
+/.nrepl-port
+
+# Node.js dependencies
+/node_modules/
+
+# shadow-cljs cache, port files
+/.shadow-cljs/
+
+/dist
+/dist/*
+.cache/
+resources/public/js
+resources/public/cljs-out
+.DS_Store
+*/.DS_Store
+
+# WIP - not ready for the public
+doc/UI inputs.md
+.calva/.cache
+.calva/output-window/*
+~*
+nashorn_code_cache/*
+.cljs_nashorn*/*
+
+# experimental
+src/cljs/eric.*
+resources/public/report.html
+resources/public/lung
+resources/public/kidney
+.cpcache/
+
+.rebel_readline_history
+.idea/
+transplants.iml
+dev.cljs.edn
+prod.cljs.edn
+
+report.html
+.lsp
+.Rproj.user
+.Rhistory

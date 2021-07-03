@@ -1,0 +1,27 @@
+;; Used to build transplants.configure
+{:deps {org.clojure/clojure {:mvn/version "1.10.3"}
+        org.clojure/core.memoize {:mvn/version "1.0.236"}
+        winton-utils/winton-utils          {:mvn/version "0.2.1"}
+        aero/aero {:mvn/version "1.1.6"}
+}
+ :paths ["src" "test" "resources" "target"]
+ :aliases {;; if we wish to configure bootstrap css with sass:sass 
+           :sass ["-M" "sass4clj.main" --source-paths]
+           :config {:jvm-opts ["-Xmx500m" "-Xms100m"
+                               "-Dvlaaad.reveal.prefs={:font-size,17}"]
+                    :extra-deps {vlaaad/reveal {:mvn/version "1.3.194"}}
+                    :main-opts  ["-m" "nrepl.cmdline"
+                                 "--middleware" "[vlaaad.reveal.nrepl/middleware,cider.nrepl/cider-middleware]"]}
+           ;; deps for kaocha (run with bin/kaocha)
+           :kaocha {;:jvm-opts ["-Xmx1g"]
+                    :extra-deps {lambdaisland/kaocha {:mvn/version "1.0.732"}}}
+           ;; use this for cognitect test runner in CI/CD container
+           :test {:extra-paths ["test"]
+                  :extra-deps {com.cognitect/test-runner {:git/url "https://github.com/cognitect-labs/test-runner.git"
+                                                          :sha "209b64504cb3bd3b99ecfec7937b358a879f55c1"}}
+                  :main-opts ["-m" "cognitect.test-runner"]}
+           ;; Use tcfg for calva repl-based tests
+           :tcfg {:extra-paths ["src" "test"]}}
+ #_#_:uberjar {:extra-deps {seancorfield/depstar {:mvn/version "1.0.94"}}
+               :main-opts ["-m" "hf.depstar.uberjar" "configure.jar"
+                           "-C" "-m" "transplants.configure"]}}
