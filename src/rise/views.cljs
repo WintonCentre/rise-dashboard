@@ -30,11 +30,14 @@
   []
   (let [location (get-in @(rf/subscribe [::subs/current-route])
                         [:path-params :id])]
-    [ui/page location
+    (locals)
+    [ui/page
      [ui/row
       [ui/col {:md 3}
-       [:> bs/Image {:src "/assets/Spoleto hex.png"
-                     :fluid true}]]
+       [:> bs/Image {:src (str "/assets/" location " hex.png")
+                     :fluid true}]
+       [:> bs/Image {:src "/assets/M4scale.png"
+                   :fluid true}]]
       [ui/col {:md 9}]]]))
 
 
