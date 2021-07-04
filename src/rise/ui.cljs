@@ -41,6 +41,7 @@ in the routes table."
   (href :rise.views/hex {:id 34})
   ;; => "#/hex/34"
 
+  (href :rise.views/regions {:id "lazio"})
   0)
 
 
@@ -71,14 +72,21 @@ in the routes table."
       [:> bs/Nav {:active-key (if page-name (name page-name) "home")}
        [:> bs/Nav.Link {:event-key :home
                         :href (href :rise.views/home)} "Home"]
-       [:> bs/Nav.Link {:event-key :info
+       #_[:> bs/Nav.Link {:event-key :info
                         :href (href :rise.views/info)} "Info"]
+       [navbar-dropdown-menu ::subs/countries]
+       [navbar-dropdown-menu ::subs/regions]
        [navbar-dropdown-menu ::subs/communities]
 
        #_[:> bs/NavDropdown {:title "Communities" :id "basic-nav-dropdown"}
         [:> bs/NavDropdown.Item {:href (href :rise.views/hex {:id "Spoleto"})
                                  :key "Spoleto"}
          "Spoleto"]]]]]))
+
+(comment
+  @(rf/subscribe [::subs/communities])
+  @(rf/subscribe [::subs/regions])
+  0)
 
 (defn page
   "A generic  component, rendering a title and the page's children"
@@ -114,9 +122,8 @@ in the routes table."
      [navbar {:router router
               :current-route current-route
               :home-url "/"
-              :logo "/assets/Spoleto hex.png"
+              :logo "/assets/rise-logo.png"
               :tool-name "rise"}]]))
-
 
 (def mobile-break
   "Screens of this size or smaller are rendered with mobile oriented views."

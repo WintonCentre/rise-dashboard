@@ -16,7 +16,8 @@
 
 (rf/reg-sub ::communities (fn [db] (:communities db)))
 
+(rf/reg-sub ::regions (fn [db] (:regions db)))
 
-
+(rf/reg-sub ::countries (fn [db] (:countries db)))
 
 

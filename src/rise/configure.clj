@@ -11,7 +11,7 @@
 
 (defn create-configuration
   []
-  "We currently have no confguration so this is an empty action.")
+  "We currently have no confguration so this is an empty action for now.")
 
 ;-------- MAIN -----------
 (defn main

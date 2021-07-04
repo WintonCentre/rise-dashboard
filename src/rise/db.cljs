@@ -1,7 +1,37 @@
 (ns rise.db)
 
 (def default-db
-  {:communities {:title "Communities"
+  {:countries {:title "Countries"
+               :items [{:href :rise.views/countries
+                        :title "Italy"
+                        :id "italy"
+                        :map "italy.png"}
+                       {:href :rise.views/countries
+                        :title "New Zealand"
+                        :id "nz"
+                        :map "nz.png"}
+                       {:href :rise.views/countries
+                        :title "Switzerland"
+                        :id "switzerland"
+                        :map "switzerland.png"}
+                       {:href :rise.views/countries
+                        :title "Iceland"
+                        :id "iceland"
+                        :map "iceland.png"}]}
+   :regions {:title "Regions"
+             :items [{:href :rise.views/regions
+                      :title "Umbria"
+                      :id "umbria"
+                      :map "umbria.png"}
+                     {:href :rise.views/regions
+                      :title "Lazio"
+                      :id "lazio"
+                      :map "lazio.png"}
+                     {:href :rise.views/regions
+                      :title "Abruzzo"
+                      :id "abruzzo"
+                      :map "abruzzo.png"}]}
+   :communities {:title "Communities"
                  :items [{:href :rise.views/hex
                           :title "Spoleto"
                           :id "spoleto"

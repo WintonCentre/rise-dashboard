@@ -24,20 +24,61 @@
 
 (defn info
   []
-  [:h1 "Info"])
+  [ui/page "Info"
+   [ui/row
+    [ui/col
+     "An info page placeholder"]]])
+
+(defn countries
+  []
+  (let [country-id (get-in @(rf/subscribe [::subs/current-route])
+                          [:path-params :id])
+        all-countries (group-by :id (:items @(rf/subscribe [::subs/countries])))
+        country (first (all-countries country-id))]
+    (locals)
+    [ui/page (country :title)
+     [ui/row
+      [ui/col {:md 3}
+       [:> bs/Image {:src (str "/assets/" country-id ".png")
+                     :width "100%"
+                     :fluid true}]
+       [:> bs/Image {:src "/assets/M4scale.png"
+                     :width "100%"
+                     :fluid true}]]]]))
+
+
+(defn regions
+  []
+  (let [region-id (get-in @(rf/subscribe [::subs/current-route])
+                          [:path-params :id])
+        all-regions (group-by :id (:items @(rf/subscribe [::subs/regions])))
+        region (first (all-regions region-id))]
+    (locals)
+    [ui/page (region :title)
+     [ui/row
+      [ui/col {:md 3}
+       [:> bs/Image {:src (str "/assets/" region-id ".png")
+                     :width "100%"
+                     :fluid true}]
+       [:> bs/Image {:src "/assets/M4scale.png"
+                     :width "100%"
+                     :fluid true}]]]]))
+
 
 (defn hex
   []
   (let [location (get-in @(rf/subscribe [::subs/current-route])
-                        [:path-params :id])]
+                         [:path-params :id])]
     (locals)
     [ui/page
      [ui/row
       [ui/col {:md 3}
        [:> bs/Image {:src (str "/assets/" location " hex.png")
+                     :width "100%"
                      :fluid true}]
        [:> bs/Image {:src "/assets/M4scale.png"
-                   :fluid true}]]
+                     :width "100%"
+                     :fluid true}]]
       [ui/col {:md 9}]]]))
 
 
