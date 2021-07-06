@@ -112,12 +112,12 @@
   "show earthquake status of an area"
   [area p mean]
   (let [mag+ @(rf/subscribe [::subs/mag+])]
-    [:div {:style {:font-size "14px"}}
+    [:section {:style {:font-size "14px"}}
      [:h2 "How likely is a magnitude " mag+ " or above earthquake"
       " in the " (area :title) " area within the 7 days from 6th July – 13th July?"]
     
      [ui/row
-      [ui/col {:md 9 :style {:font-size 21
+      [ui/col {:md 12 :style {:font-size 21
                              ;:border "1px solid #CCC"
                              :padding 15}}
 
@@ -125,7 +125,7 @@
         [large (.toFixed (js/Number (* p 100)) 1) "%, "]
         " which is "
         [large (js/Math.round (/ p mean))] " times the likelihood in an average week."]
-       ;[:br]
+
        [:p "The odds against are " (large (- (js/Math.round (/ 1 p)) 1) " - 1") "."]
        [:section {:style {:font-size 16}}
         [:br]
@@ -134,7 +134,14 @@
          [ui/col {:md 4} "00:00 6th July 2021"]]
         [ui/row
          [ui/col {:md 4}  "Next update due"]
-         [ui/col {:md 4} "00:00 7th July 2021"]]]]]]))
+         [ui/col {:md 4} "00:00 7th July 2021"]]]
+       
+       [:section
+        [:br][:br]
+        [ui/row
+         [ui/col {:md 6}
+          [:p "The locality is seeing higher chances than normal because of increased 
+             seismic activity around the Mount Vittore fault system."]]]]]]]))
 
 (def subs-key
   "subscription keys by administrative level key"
