@@ -20,4 +20,7 @@
 
 (rf/reg-sub ::countries (fn [db] (:countries db)))
 
+(rf/reg-sub ::mag+ (fn [db] (:mag+ db)))
+
+
 

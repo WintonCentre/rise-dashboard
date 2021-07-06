@@ -13,8 +13,6 @@
    [shadow.debug :refer [locals ?> ?-> ?->>]]
    #_["react-bootstrap" :as bs :refer [Navbar Navbar.Brand Navbar.Toggle Navbar.Collapse Navbar.Text
                                        Nav Nav.Link]]))
-(comment
-  (paths/centres-path :lung))
 
 (def routes
   "Reitit nested route syntax can be tricky. Only the leaves are valid.

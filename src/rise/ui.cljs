@@ -42,6 +42,8 @@ in the routes table."
   ;; => "#/hex/34"
 
   (href :rise.views/regions {:id "lazio"})
+
+  (href :rise.views/countries {:id "italy"})
   0)
 
 
@@ -51,9 +53,11 @@ in the routes table."
     (into [:> bs/NavDropdown {:title (submenu :title) :id "basic-nav-dropdown"}]
           (map (fn [item]
                  (locals)
-                 [:> bs/NavDropdown.Item {:href (href (item :href) {:id (item :id)})
-                                          :key (item :id)}
-                  (item :title)])
+                 (when (item :href) 
+                   [:> bs/NavDropdown.Item {:href (href (item :href) {:id (item :id)})
+                                                           :key (item :id)}
+                                   (item :title)]
+                   ))
                (submenu :items)))))
 
 (defn navbar
