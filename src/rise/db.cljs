@@ -86,9 +86,9 @@
                           :country "italy"
                           :p-7day 0.022
                           :mean-7day 0.00012
-                          :neighbours {:NE "spoleto-N"
-                                       :SE "spoleto"
-                                       :S "spoleto-SW"}
+                          :neighbours {:NW "spoleto-N"
+                                       :SW "spoleto"
+                                       :S "spoleto-SE"}
                           :osm-href "https://www.openstreetmap.org/relation/42105"}
                          {:href :rise.views/hex
                           :title "Spoleto-SE"
