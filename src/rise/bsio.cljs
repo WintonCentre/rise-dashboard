@@ -7,7 +7,11 @@ where we can work on defining a common interface. "
 (def missing-color "#ff0000")
 
 (comment
-
+  
+  ;; It's debatable whether this idea helps. It was an attempt to make components easier 
+  ;; to unit test by making it easier to wire them into both the 
+  ;; main app and the test code.
+  
   (defn example
     "This example defines an interface for reading and writing application state. 
 It borrows some language from re-frame.

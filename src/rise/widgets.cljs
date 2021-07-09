@@ -7,6 +7,9 @@
             [rise.events :as events]
             [shadow.debug :refer [locals ?> ?-> ?->>]]
             ))
+;;
+;; Transplants code some of which may come in handy in rise
+;;
 
 (defn key->id
   "Convert a namespaced factor key to an id"

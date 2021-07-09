@@ -13,8 +13,7 @@
 
 ;;; Views ;;;
 (defn home-page
-  "Display a generic home page. 
-   Minimally, navigation from here to an organ home page."
+  "Display a generic home page. Minimally, navigation from here to a country."
   []
   [ui/page "RISE Dashboard demo"
    [ui/row
