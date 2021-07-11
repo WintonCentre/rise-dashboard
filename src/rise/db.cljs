@@ -7,7 +7,7 @@
                         :title "Italy"
                         :id "italy"
                         :map "italy.png"}
-                       {:href :rise.views/countries
+                       #_{:href :rise.views/countries
                         :title "New Zealand"
                         :id "nz"
                         :map "nz.png"}

@@ -11,8 +11,9 @@
    [clojure.set :as rel]
    [shadow.debug :refer [locals ?> ?-> ?->>]]))
 
-;;; Events ;;;
+;; Need to clean out some transplants related events here...
 
+;;; Events ;;;
 (rf/reg-event-db
  ::initialize-db
  (fn ;-traced 

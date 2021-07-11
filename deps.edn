@@ -1,4 +1,4 @@
-;; Used to build transplants.configure
+
 {:deps {org.clojure/clojure {:mvn/version "1.10.3"}
         org.clojure/core.memoize {:mvn/version "1.0.236"}
         winton-utils/winton-utils          {:mvn/version "0.2.1"}

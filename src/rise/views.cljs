@@ -11,6 +11,61 @@
 (comment
   (rf/dispatch [::events/initialize-db]))
 
+;; Utils ;;
+
+(def subs-key
+  "subscription keys by administrative level key"
+  {:country [::subs/countries]
+   :region [::subs/regions]
+   :community [::subs/communities]})
+
+(defn find-location-by-id
+  "level will be an entity id for this level like :country, :region, :community.
+   Returns nil if not found."
+  [level id]
+  (first (-> (->> level
+                  (subs-key)
+                  (rf/subscribe)
+                  (deref)
+                  :items
+                  (group-by :id))
+             (get id))))
+
+(comment
+  (find-location-by-id :country "italy")
+  ;; => {:href :rise.views/countries, :title "Italy", :id "italy", :map "italy.png"}
+  (find-location-by-id :region "umbria")
+  ;; => {:href :rise.views/regions, :title "Umbria", :id "umbria", :map "umbria.png", :country "italy"}
+  (find-location-by-id :community "spoleto")
+  ;; => {:neighbours {:N "Spoleto-N", :NE "Spoleto-NE", :NW "Spoleto-NW", :S "Spoleto-S", :SE "Spoleto-SE", :SW "Spoleto-SW"}, :p-7day 0.022, :longitude 12.7376, :osm-href "https://www.openstreetmap.org/relation/42105", :title "Spoleto", :region "umbria", :mean-7day 1.5E-4, :id "spoleto", :latitude 42.739, :country "italy", :map "spoleto hex.png", :href :rise.views/hex}
+  (find-location-by-id :community "nowhere")
+  ;; => nil
+  0)
+
+(defn link-location-by-id
+  "Returns an anchor component to a location, wrapping the location title (2 arity) or the supplied hiccup component (3 arity)."
+  ([level id]
+   (let [location (find-location-by-id level id)]
+     [:a {:href (ui/href (location :href) {:id (location :id)})} (location :title)]))
+  ([level id component]
+   (let [location (find-location-by-id level id)]
+     (if location
+       [:a {:href (ui/href (location :href) {:id (location :id)})} component]
+       nil))))
+
+(comment
+  (link-location-by-id :country "italy")
+  ;; => [:a {:href "#/countries/italy"} "Italy"]
+
+  (link-location-by-id :country "italy" [:i "Italy"])
+  ;; => [:a {:href "#/countries/italy"} [:i "Italy"]]
+
+  (link-location-by-id :region "nowhere")
+  ;; => nil
+  0)
+
+
+
 ;;; Views ;;;
 (defn home-page
   "Display a generic home page. Minimally, navigation from here to a country."
@@ -27,22 +82,6 @@
     [ui/col
      "An info page placeholder"]]])
 
-(defn countries
-  []
-  (let [country-id (get-in @(rf/subscribe [::subs/current-route])
-                          [:path-params :id])
-        all-countries (group-by :id (:items @(rf/subscribe [::subs/countries])))
-        country (first (all-countries country-id))]
-    (locals)
-    [ui/page (country :title)
-     [ui/row
-      [ui/col {:md 3}
-       [:> bs/Image {:src (str "/assets/" country-id ".png")
-                     :width "100%"
-                     :fluid true}]
-       [:> bs/Image {:src "/assets/M4scale.png"
-                     :width "100%"
-                     :fluid true}]]]]))
 
 (defn links-to
   [items]
@@ -75,6 +114,27 @@
                :href :rise.views/countries}])
   (links-to items)
   0)
+
+(defn countries
+  []
+  (let [country-id (get-in @(rf/subscribe [::subs/current-route])
+                           [:path-params :id])
+        all-countries (group-by :id (:items @(rf/subscribe [::subs/countries])))
+        country (first (all-countries country-id))
+        all-regions (:items @(rf/subscribe [::subs/regions]))
+        country-regions (filter #(= (:country %) country-id) all-regions)]
+    (locals)
+    [ui/page (country :title)
+     [ui/row
+      [ui/col {:md 3}
+       [:> bs/Image {:src (str "/assets/" country-id ".png")
+                     :width "100%"
+                     :fluid true}]
+       [:> bs/Image {:src "/assets/M4scale.png"
+                     :width "100%"
+                     :fluid true}]]
+      [ui/col {:md 9}
+       (links-to country-regions)]]]))
 
 
 (defn regions
@@ -141,58 +201,6 @@
          [ui/col {:md 6}
           [:p "The locality is seeing higher chances than normal because of increased 
              seismic activity around the Mount Vittore fault system."]]]]]]]))
-
-(def subs-key
-  "subscription keys by administrative level key"
-  {:country [::subs/countries]
-   :region [::subs/regions]
-   :community [::subs/communities]})
-
-(defn find-location-by-id
-  "level will be an entity id for this level like :country, :region, :community.
-   Returns nil if not found."
-  [level id]
-  (first (-> (->> level
-                  (subs-key)
-                  (rf/subscribe)
-                  (deref)
-                  :items
-                  (group-by :id))
-             (get id))))
-
-(comment
-  (find-location-by-id :country "italy")
-  ;; => {:href :rise.views/countries, :title "Italy", :id "italy", :map "italy.png"}
-  (find-location-by-id :region "umbria")
-  ;; => {:href :rise.views/regions, :title "Umbria", :id "umbria", :map "umbria.png", :country "italy"}
-  (find-location-by-id :community "spoleto")
-  ;; => {:neighbours {:N "Spoleto-N", :NE "Spoleto-NE", :NW "Spoleto-NW", :S "Spoleto-S", :SE "Spoleto-SE", :SW "Spoleto-SW"}, :p-7day 0.022, :longitude 12.7376, :osm-href "https://www.openstreetmap.org/relation/42105", :title "Spoleto", :region "umbria", :mean-7day 1.5E-4, :id "spoleto", :latitude 42.739, :country "italy", :map "spoleto hex.png", :href :rise.views/hex}
-  (find-location-by-id :community "nowhere")
-  ;; => nil
-  0)
-
-(defn link-location-by-id
-  "Returns an anchor component to a location, wrapping the location title (2 arity) or the supplied hiccup component (3 arity)."
-  ([level id]
-   (let [location (find-location-by-id level id)]
-     [:a {:href (ui/href (location :href) {:id (location :id)})} (location :title)]))
-  ([level id component]
-   (let [location (find-location-by-id level id)]
-     (if location
-       [:a {:href (ui/href (location :href) {:id (location :id)})} component]
-       nil))))
-
-(comment
-  (link-location-by-id :country "italy")
-  ;; => [:a {:href "#/countries/italy"} "Italy"]
-
-  (link-location-by-id :country "italy" [:i "Italy"])
-  ;; => [:a {:href "#/countries/italy"} [:i "Italy"]]
-
-  (link-location-by-id :region "nowhere")
-  ;; => nil
-  0)
-
 
 (def map-arrow
   "Lookup the arrow shape based on hex direction."
