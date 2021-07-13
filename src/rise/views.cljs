@@ -216,31 +216,46 @@
   "show earthquake status of an area"
   [area p mean]
   (let [mag+ @(rf/subscribe [::subs/mag+])
-        left-style {:style {:width 250}}]
+        left-style {:style {}}]
     [ui/row {:style {:font-size "21px"}}
      [ui/col 
+      [:h1 {:style {:font-size "32px"}}"How likely is an earthquake in the next 7 days?"]
       [:div {:style {:border "1px solid #CCC"
                      :border-radius 20
-                     :padding "15px 0px"
+                     :padding "15px 30px"
                      :box-shadow "1px 1px 1px 1px #CCC"}}
-       [:div {:style {:display "flex"
-                      :justify-content "space-around"
-                      :align-items "center"}}
-        [:div left-style
-         [:p "The likelihood of a magnitude " mag+ " or above earthquake within the week from 6th July – 13th July is:"]]
-        [:div [large (.toFixed (js/Number (* p 100)) 1) "%"]]]
+       [ui/row
+        [ui/col {:md 9}
+         [:div "The chance of a magnitude " mag+ " or above" [:br] "between 6th July – 13th July"]]
+        [ui/col {:md 3}
+         [:div [large (.toFixed (js/Number (* p 100)) 1) "%"]]]]
+       [:hr]
+       #_[:div {:style {:display "flex"
+                        :justify-content "space-around"
+                        :align-items "center"}}
+          [:div left-style
+           [:p "The chance of a magnitude " mag+ " or above between" [:br] " 6th July – 13th July is:"]]
+          [:div [large (.toFixed (js/Number (* p 100)) 1) "%"]]]
 
-       [:div {:style {:display "flex"
-                      :justify-content "space-around"
-                      #_#_:align-items "center"}}
-        [:p "This is 147 times the average chance"]]
+       [ui/row {:style {:display "flex" :align-items "center" :padding-bottom 15}}
+        [ui/col {:md 9}
+         [:span "The chance in an average week"]]
+        [ui/col {:md 3}
+         [:div [large (.toFixed (js/Number (* mean 100)) 3) "%"]]]]
+       [:hr]
+       #_[:div {:style {:display "flex"
+                        :justify-content "space-around"
+                        #_#_:align-items "center"}}
+          [:p "This is 147 times the chance in an average week"]
+          [:div [large (.toPrecision (js/Number (* (/ p 147) 100)) 2) "%"]]]
+       [ui/row {:style {:display "flex" :align-items "center" :padding-bottom 15}}
+        [ui/col {:md 9}
+         [:span "The odds against are"]]
+        [ui/col {:md 3}
+         [:div (large (- (js/Math.round (/ 1 p)) 1) " - 1")]]]
 
-       [:div {:style {:display "flex"
-                      :justify-content "space-around"
-                      :align-items "center"}}
-        [:div left-style
-         [:p "The odds against are:"]]
-        [:div (large (- (js/Math.round (/ 1 p)) 1) " - 1")]]]
+       ]
+      
       [:div {:style {:font-size 16
                      :margin-left 45
                      :color "#888"}}
