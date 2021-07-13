@@ -127,7 +127,7 @@ in the routes table."
   "The root of the component tree which is mounted on the main app html element"
   [{:keys [router subscribe-current-route]}]
   (let [current-route @(subscribe-current-route)]
-    [:div {:style {:display :flex :flex-direction "column-reverse"}}
+    [:div {:style {:display :flex :flex-direction "column-reverse" :justify-content "space-between"}}
      (when current-route
        [:div {:style {:margin-top "0px" :padding-top 20}}
         [(-> current-route :data :view)]
