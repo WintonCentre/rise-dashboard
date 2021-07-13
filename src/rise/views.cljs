@@ -66,23 +66,6 @@
 
 
 
-;;; Views ;;;
-(defn home-page
-  "Display a generic home page. Minimally, navigation from here to a country."
-  []
-  [ui/page "RISE Dashboard demo"
-   [ui/row
-    [ui/col
-     "content here"]]])
-
-(defn info
-  []
-  [ui/page "Info"
-   [ui/row
-    [ui/col
-     "An info page placeholder"]]])
-
-
 (defn links-to
   [items]
   (into [:<>]
@@ -115,7 +98,71 @@
   (links-to items)
   0)
 
+(defn mag-button
+  ([mag color]
+   (mag-button mag color "" false))
+  ([mag color text]
+   (mag-button mag color text false))
+  ([mag color text bottom]
+   [:div {:style {:display "flex"
+                  :align-items "center"}}
+    [:div {:style {:color color
+                   :font-size (if (= color "#ACACAC") "1.2em" "1em")}} text]
+    [:div {:style {:background-color color
+                   :border "1px solid white"
+                   :color "white"
+                   :margin-left 10
+                   :min-width "80px"
+                   :height "5ex"
+                   :display "flex"
+                   :align-items "center"
+                   :justify-content "center"}} "Mag " mag]]))
+
+(defn mag-scale
+  []
+  [:<>
+   [ui/row
+    [ui/col {:style {:font-size "1.4em" }}
+     "Showing chances of earthquakes magnitude 4 or above like these:"]]
+   [ui/row {:class "d-flex flex-row justify-content-around"}
+    [ui/col {:class "d-flex flex-column align-items-end justify-content-end"}
+     (mag-button 9 "#6B5967")
+     (mag-button 8 "#80647C")
+     (mag-button 7 "#946E8C")
+     (mag-button 6 "#B58283" "Emilia 2012, M=6.9")
+     (mag-button 5 "#D2937A" "L'Aquila 2009, M=5.9")
+     (mag-button 4 "#E7A174" "Ischia 2017, M=4")
+     ;(mag-button 3 "#ACACAC" "")
+     (mag-button "1-3" "#ACACAC" "Not included
+                                  in dashboard")
+     #_(mag-button 1 "#ACACAC" "" true)
+     ]]])
+
+
+;;; Views ;;;
+
+(defn home-page
+  "Display a generic home page. Minimally, navigation from here to countries."
+  []
+  (let [all-countries (:items @(rf/subscribe [::subs/countries]))]
+  [ui/page "RISE Dashboard demo"
+   [ui/row
+    [ui/col {:md 5}
+     [mag-scale]]
+    [ui/col {:md {:span 5 :offset 1} :style {:font-size "1.4em"}}
+     "Navigate to your local area."
+     [links-to all-countries]]]]))
+
+(defn info
+  []
+  [ui/page "Info"
+   [ui/row
+    [ui/col
+     "An info page placeholder"]]])
+
+
 (defn countries
+  "A country overview with links to regions"
   []
   (let [country-id (get-in @(rf/subscribe [::subs/current-route])
                            [:path-params :id])
@@ -126,22 +173,20 @@
     (locals)
     [ui/page (country :title)
      [ui/row
-      [ui/col {:md 3}
+      [ui/col {:lg 3}
        [:> bs/Image {:src (str "/assets/" country-id ".png")
                      :width "100%"
                      :fluid true}]
-       [:> bs/Image {:src "/assets/M4scale.png"
-                     :width "100%"
-                     :fluid true}]]
-      [ui/col {:md 9}
+       [mag-scale]]
+      [ui/col {:lg 9}
        (links-to country-regions)]]]))
 
 
 (defn regions
+  "A regional page with map, links back to the country and down to communities"
   []
   (let [region-id (get-in @(rf/subscribe [::subs/current-route])
                           [:path-params :id])
-
         all-regions (group-by :id (:items @(rf/subscribe [::subs/regions])))
         region (first (all-regions region-id))
         all-countries (group-by :id (:items @(rf/subscribe [::subs/countries])))
@@ -151,71 +196,86 @@
     (locals)
     [ui/page [:span (region :title) " (" [:a {:href (ui/href (country :href) {:id (country :id)})} (country :title)] ")"]
      [ui/row
-      [ui/col {:md 3}
+      [ui/col {:lg 3}
        [:> bs/Image {:src (str "/assets/" region-id ".png")
                      :width "100%"
                      :fluid true}]
-       [:> bs/Image {:src "/assets/M4scale.png"
+       [mag-scale]
+       #_[:> bs/Image {:src "/assets/M4scale.png"
                      :width "100%"
                      :fluid true}]]
-      [ui/col {:md 9}
-
+      [ui/col {:lg 9}
        (links-to regional-communities)]]]))
 
 (defn large
   [& n]
-  (into [:span {:style {:font-size "1.8em"}}]
+  (into [:span {:style {:font-size "1.4em"}}]
         (map str n)))
 
 (defn area-status
   "show earthquake status of an area"
   [area p mean]
-  (let [mag+ @(rf/subscribe [::subs/mag+])]
-    [:section {:style {:font-size "14px"}}
-     [:h2 "How likely is a magnitude " mag+ " or above earthquake"
-      " in the " (area :title) " area within the 7 days from 6th July – 13th July?"]
-    
-     [ui/row
-      [ui/col {:md 12 :style {:font-size 21
-                             ;:border "1px solid #CCC"
-                             :padding 15}}
+  (let [mag+ @(rf/subscribe [::subs/mag+])
+        left-style {:style {:width 250}}]
+    [ui/row {:style {:font-size "21px"}}
+     [ui/col 
+      [:div {:style {:border "1px solid #CCC"
+                     :border-radius 20
+                     :padding "15px 0px"
+                     :box-shadow "1px 1px 1px 1px #CCC"}}
+       [:div {:style {:display "flex"
+                      :justify-content "space-around"
+                      :align-items "center"}}
+        [:div left-style
+         [:p "The likelihood of a magnitude " mag+ " or above earthquake within the week from 6th July – 13th July is:"]]
+        [:div [large (.toFixed (js/Number (* p 100)) 1) "%"]]]
 
-       [:p "The likelihood is "
-        [large (.toFixed (js/Number (* p 100)) 1) "%, "]
-        " which is "
-        [large (js/Math.round (/ p mean))] " times the likelihood in an average week."]
+       [:div {:style {:display "flex"
+                      :justify-content "space-around"
+                      #_#_:align-items "center"}}
+        [:p "This is 147 times the average chance"]]
 
-       [:p "The odds against are " (large (- (js/Math.round (/ 1 p)) 1) " - 1") "."]
-       [:section {:style {:font-size 16}}
-        [:br]
-        [ui/row
-         [ui/col {:md 4} "Last updated"]
-         [ui/col {:md 4} "00:00 6th July 2021"]]
-        [ui/row
-         [ui/col {:md 4}  "Next update due"]
-         [ui/col {:md 4} "00:00 7th July 2021"]]]
-       
-       [:section
-        [:br][:br]
-        [ui/row
-         [ui/col {:md 6}
-          [:p "The locality is seeing higher chances than normal because of increased 
-             seismic activity around the Mount Vittore fault system."]]]]]]]))
+       [:div {:style {:display "flex"
+                      :justify-content "space-around"
+                      :align-items "center"}}
+        [:div left-style
+         [:p "The odds against are:"]]
+        [:div (large (- (js/Math.round (/ 1 p)) 1) " - 1")]]]
+      [:div {:style {:font-size 16
+                     :margin-left 45
+                     :color "#888"}}
+       [ui/row
+        [ui/col {:xs 6} "Last updated"]
+        [ui/col {:xs 6} "00:00 6th July 2021"]]
+       [ui/row
+        [ui/col {:md 6}  "Next update due"]
+        [ui/col {:md 6} "00:00 7th July 2021"]]]
+
+      [ui/row 
+       [ui/col {:md 12 :style {:font-size 16
+                               :display "flex"
+                               :padding 45
+                               :justify-content "space-around"
+                               :align-items "center"}}
+        [:p [:i "The area is seeing higher chances than normal because of increased 
+             seismic activity around the Mount Vittore fault system."]]]]]]))
+
+(defn arrow-template
+  "a parameterised direction arrow"
+  [{:keys [top right bottom left deg]}]
+  [:div {:style {:width "22px" :height "22px" :border-bottom "22px solid #00ffff" :border-left "22px solid transparent"
+                 :border-right "20px solid transparent" :position "absolute"
+                 :top (when top top) :right (when right right) :bottom (when bottom bottom) :left (when left left)
+                 :transform (str "rotate(" deg "deg)")}}])
 
 (def map-arrow
-  "Lookup the arrow shape based on hex direction."
-  {:N [:div {:style {:width "22px" :height "22px" :border-bottom "22px solid #00ffff" :border-left "22px solid transparent"
-                     :border-right "20px solid transparent" :position "absolute" :top "3%" :left "46%"}}]
-   :NE [:div {:style {:width "22px" :height "22px" :border-bottom "22px solid #00ffff" :border-left "22px solid transparent"
-                      :border-right "20px solid transparent" :position "absolute" :top "25%" :right "6%" :transform "rotate(60deg)"}}]
-   :NW [:div {:style {:width "22px" :height "22px" :border-bottom "22px solid #00ffff" :border-left "22px solid transparent"
-                      :border-right "20px solid transparent" :position "absolute" :top "23.5%" :left "7%" :transform "rotate(-60deg)"}}]
-   :SE [:div {:style {:width "22px" :height "22px" :border-bottom "22px solid #00ffff" :border-left "22px solid transparent"
-                      :border-right "20px solid transparent" :position "absolute" :bottom "25%" :right "6%" :transform "rotate(120deg)"}}]
-   :SW [:div {:style {:width "22px" :height "22px" :border-bottom "22px solid #00ffff" :border-left "22px solid transparent"
-                      :border-right "20px solid transparent" :position "absolute" :bottom "25%" :left "6%" :transform "rotate(-120deg)"}}]
-   :S [:div {:style {:width "22px" :height "22px" :border-bottom "22px solid #00ffff" :border-left "22px solid transparent"
-                     :border-right "20px solid transparent" :position "absolute" :bottom "3%" :left "46%" :transform "rotate(180deg)"}}]})
+  "A map of arrows by hex direction."
+  {:N (arrow-template {:top "3%" :left "43%" :deg 0})
+   :NE (arrow-template {:top "25%" :right "6%" :deg 60})
+   :NW (arrow-template {:top "23.5%" :left "6%" :deg -60})
+   :SE (arrow-template {:bottom "25%" :right "6%" :deg 120})
+   :SW (arrow-template {:bottom "25%" :left "6%" :deg -120})
+   :S (arrow-template {:bottom "3%" :left "43%" :deg 180})})
 
 (defn link-neighbour
   "Link a location to "
@@ -239,6 +299,7 @@
   [:N :NE :NW :SE :SW :S])
 
 (defn hex
+  "A community-level page featuring a mapped hexagon."
   []
   (let [location (get-in @(rf/subscribe [::subs/current-route])
                          [:path-params :id])
@@ -250,7 +311,11 @@
     (locals)
     [ui/page [:span (community :title) " (" [:a {:href (ui/href (region :href) {:id (region :id)})} (region :title)] ")"]
      [ui/row
-      [ui/col {:md 3}
+      [ui/col {:lg 3}
+       [mag-scale]]
+      [ui/col {:lg 6}
+       (area-status community (community :p-7day) (community :mean-7day))]
+      [ui/col {:lg 3}
        [:div {:style {:position "relative" :display "flex"}}
         [:> bs/Image {:src (str "/assets/" location " hex.png")
                       :width "100%"
@@ -260,14 +325,7 @@
          (into [:<>]
                (map
                 #(link-neighbour :community (community :id) %)
-                hex-compass-points))
-         ]]
-       
-       [:> bs/Image {:src "/assets/M4scale.png"
-                     :width "100%"
-                     :fluid true}]]
-      [ui/col {:md 7}
-       (area-status community (community :p-7day) (community :mean-7day))]]]))
+                hex-compass-points))]]]]]))
 
 
 

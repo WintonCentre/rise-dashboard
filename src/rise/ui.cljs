@@ -69,7 +69,9 @@ in the routes table."
     [:h1 "Navbar"]
     [:> bs/Navbar {:bg "light" :expand "md"
                    :style {:border-bottom "1px solid black" :opacity "1"}}
-     [:> bs/Navbar.Brand  {:href home-url} [:img {:src logo :style {:height 40} :alt "RISE logo" :title "Dashboard Demo"}]]
+     [:> bs/Navbar.Brand  {:href home-url} 
+      [:img {:src logo :style {:height 40} :alt "RISE logo" :title "Dashboard Demo"}]
+      [:span {:style {:margin-left 10}} "Earthquake dashboard"]]
      [:> bs/Navbar.Toggle {:aria-controls "basic-navbar-nav"}]
      [:> bs/Navbar.Collapse {:id "basic-navbar-nav" :style {:margin-left 70}}
 
@@ -107,12 +109,19 @@ in the routes table."
       content]]]))
 
 (defn footer
-  "Site footer. 
-   todo: Needs to be made configurable."
+  "Site footer."
   []
-  [:div {:style {:width "100%" :height "60px" :background-color "black" :color "white"
-                 :display "flex" :align-items "center" :justify-content "center"}}
-   [:div {:style {:margin "20px"}} "Footer"]])
+  [:div {:style {:width "100%" :height "100px" :background-color "black" :color "white"
+                 :display "flex" :align-items "center" :justify-content "center"
+                 :font-size 12}}
+   [:div
+    [:span "Data source: INGV, n. 3456783567"]
+    [:br]
+    [:span "Responsibilty: Civil Protection n.327 347684"]]
+   [:div {:style {:margin-left 40}}
+    [:span [:b "Ambulance:"] " Call 118"]
+    [:br]
+    [:span [:b "Emergency number:"] " Call 112"]]])
 
 (defn root-component
   "The root of the component tree which is mounted on the main app html element"
