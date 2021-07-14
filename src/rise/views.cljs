@@ -224,7 +224,8 @@
 (defn area-status
   "show earthquake status of an area"
   [area p mean]
-  (let [mag+ @(rf/subscribe [::subs/mag+])]
+  (let [mag+ @(rf/subscribe [::subs/mag+])
+        animate? @(rf/subscribe [::subs/animate?])]
     [ui/row {:style {:font-size "21px"}}
      [ui/col 
       [:h1 {:style {:font-size "32px"}}"How likely is an earthquake in the next 7 days?"]
@@ -320,14 +321,14 @@
   "Points around a hexagon standing on its base"
   [:N :NE :NW :SE :SW :S])
 
+
+
 (defn timer-component []
   (let [seconds-elapsed (r/atom 0)]
     (fn []
       (js/setTimeout #(swap! seconds-elapsed inc) 1000)
       [:div
        "Seconds Elapsed: " @seconds-elapsed])))
-
-
 
 (defn hex
   "A community-level page featuring a mapped hexagon."
@@ -340,10 +341,9 @@
         region-id (community :region)
         region (first (all-regions region-id))
         animate? @(rf/subscribe [::subs/animate?])
-        quake? @(rf/subscribe [::subs/quake?])]
-    ;(locals)
-    ;; todo: move the row-col structure to a wrapping component and 
-    ;; reuse it in country and region pages too.
+        quake? true
+        ]
+    (locals)
     [ui/page [:span (community :title) " (" [:a {:href (ui/href (region :href) {:id (region :id)})} (region :title)] ")"]
      [ui/three-columns
       {:col1 [mag-scale]
@@ -354,7 +354,7 @@
                [:> bs/Image {:src (str "/assets/" location " hex.png")
                              :width "100%"
                              :fluid false}]
-        ; decorate map with map arrow links
+               ; decorate map with map arrow links
                [:div {:style {:position "absolute" :top 0 :left 0 :bottom 0 :right 0}}
                 (into [:<>]
                       (map
@@ -365,7 +365,6 @@
                  [:div {:style {:width 20
                                 :height 20
                                 :display "inline-block"
-                       ;:background-color "#ACACAC"
                                 :border "3px solid #ACACAC"
                                 :border-radius 10}}]
                  [:div {:style {:padding-left 15 :display "inline-block"}}
@@ -401,49 +400,7 @@
              "Every beat is a possible future 7 days"]])]]]]])
 
 )
-#_(defn hex
-  "A community-level page featuring a mapped hexagon."
-  []
-  (let [location (get-in @(rf/subscribe [::subs/current-route])
-                         [:path-params :id])
-        all-communities (group-by :id (:items @(rf/subscribe [::subs/communities])))
-        community (first (all-communities location))
-        all-regions (group-by :id (:items @(rf/subscribe [::subs/regions])))
-        region-id (community :region)
-        region (first (all-regions region-id))
-        animate? @(rf/subscribe [::subs/animate?])
-        quake? @(rf/subscribe [::subs/quake?])]
-    ;(locals)
-    ;; todo: move the row-col structure to a wrapping component and 
-    ;; reuse it in country and region pages too.
-    [ui/page [:span (community :title) " (" [:a {:href (ui/href (region :href) {:id (region :id)})} (region :title)] ")"]
-     [ui/row
-      [ui/col {:lg 3 :style {:max-width 500 :margin-bottom 30}}
-       [mag-scale]]
-      [ui/col {:lg 6 :style {:max-width 600}}
-       (area-status community (community :p-7day) (community :mean-7day))]
-      [ui/col {:lg 3 :style {:max-width 500}}
-       [:div {:style {:position "relative" :display "flex"}
-              :class-name (when quake? "shake")}
-        [:> bs/Image {:src (str "/assets/" location " hex.png")
-                      :width "100%"
-                      :fluid false}]
-        ; decorate map with map arrow links
-        [:div {:style {:position "absolute" :top 0 :left 0 :bottom 0 :right 0}}
-         (into [:<>]
-               (map
-                #(link-neighbour :community (community :id) %)
-                hex-compass-points))]]
-       (when animate?
-         [:div {:style {:display "flex" :align-items "start" :margin-top 15}}
-          [:div {:style {:width 20
-                         :height 20
-                         :display "inline-block"
-                       ;:background-color "#ACACAC"
-                         :border "3px solid #ACACAC"
-                         :border-radius 10}}]
-          [:div {:style {:padding-left 15 :display "inline-block"}}
-           "Every beat is a possible future 7 days"]])]]]))
+
 
 
 

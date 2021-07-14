@@ -3,7 +3,7 @@
 (def default-db
   {:mag+ 4 ; threshold displayed
    :animate? false ; whether to run the animation
-   :quake? true ; initial animation status
+   :quake? 0 ; time to next quake. None if next-quake < clock
    :countries {:title "Countries"
                :items [{:href :rise.views/countries
                         :title "Italy"

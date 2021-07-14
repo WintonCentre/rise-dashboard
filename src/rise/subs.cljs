@@ -24,7 +24,6 @@
 
 (rf/reg-sub ::animate? (fn [db] (:animate? db)))
 
-(rf/reg-sub ::quake? (fn [db] (:quake? db)))
 
 
 

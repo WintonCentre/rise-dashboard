@@ -34,18 +34,44 @@
    [db [_ new-match]]
    (assoc db :current-route new-match)))
 
-;; set animate? or not
+;;;
+;; earthquake timer
+;;;
+
+(defn time-of-next-quake
+  [p]
+  (- (/ (js/Math.log (rand)) p)))
+
+(defn average
+  "keep calling f to find its average value"
+  [f]
+  (/ (apply + (map f (range 100))) 100))
+
+
+  (comment
+    (time-of-next-quake 0.5)
+    (average #(time-of-next-quake 0.5))
+    0)
+
+
+;; set animate? or not. If animate? is false, then quake should be true
 (rf/reg-event-db
  ::animate?
  (fn
    [db [_ animate?]]
-   (assoc db :animate? animate?)))
+   (assoc db 
+          :animate? animate?
+          :quake? (when animate? (db :quake?)))))
 
-;; set quake? this time interval or not
-(rf/reg-event-db
+(rf/reg-sub ::animate? (fn [db] (:animate? db)))
+
+;; set quake? probability
+#_(rf/reg-event-db
  ::quake?
  (fn
    [db [_ quake?]]
    (assoc db :quake? quake?)))
+
+
 
 
