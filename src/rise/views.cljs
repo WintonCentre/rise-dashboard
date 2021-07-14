@@ -222,7 +222,7 @@
 
 (defn bar
   [p]
-  [:div {:style {:border "0.5px solid #CCC"
+  [:div {:style {:border "1px inset #CCC"
                  :height 16
                  :position "relative"
                  :width "100%"}}
@@ -355,7 +355,7 @@
      [ui/row
       [ui/col {:lg 3 :style {:max-width 500}}
        [mag-scale]]
-      [ui/col {:lg 6 :style {:max-width 500}}
+      [ui/col {:lg 6 :style {:max-width 600}}
        (area-status community (community :p-7day) (community :mean-7day))]
       [ui/col {:lg 3 :style {:max-width 500}}
        [:div {:style {:position "relative" :display "flex"}
