@@ -3,6 +3,7 @@
    [clojure.string :as string]
    [re-frame.core :as rf]
    ["react-bootstrap" :as bs]
+   [reagent.core :as r]
    [rise.subs :as subs]
    [rise.events :as events]
    [rise.ui :as ui]
@@ -174,12 +175,17 @@
     [ui/page (country :title)
      [ui/row
       [ui/col {:lg 3}
+       [mag-scale]
+       ]
+      [ui/col {:lg 6}
+       [:h2 "Italian Regions"]
+       (links-to country-regions)]
+      [ui/col {:lg 3}
        [:> bs/Image {:src (str "/assets/" country-id ".png")
                      :width "100%"
                      :fluid true}]
-       [mag-scale]]
-      [ui/col {:lg 9}
-       (links-to country-regions)]]]))
+       ]
+      ]]))
 
 
 (defn regions
@@ -197,26 +203,41 @@
     [ui/page [:span (region :title) " (" [:a {:href (ui/href (country :href) {:id (country :id)})} (country :title)] ")"]
      [ui/row
       [ui/col {:lg 3}
+       [mag-scale]]
+      [ui/col {:lg 6}
+       [:h2 "Regional Communities"]
+       (links-to regional-communities)]
+      [ui/col {:lg 3}
        [:> bs/Image {:src (str "/assets/" region-id ".png")
                      :width "100%"
-                     :fluid true}]
-       [mag-scale]
-       #_[:> bs/Image {:src "/assets/M4scale.png"
-                     :width "100%"
                      :fluid true}]]
-      [ui/col {:lg 9}
-       (links-to regional-communities)]]]))
+      ]]))
 
 (defn large
   [& n]
   (into [:span {:style {:font-size "1.4em"}}]
         (map str n)))
 
+(def p 0.22)
+
+(defn bar
+  [p]
+  [:div {:style {:border "0.5px solid #CCC"
+                 :height 16
+                 :position "relative"
+                 :width "100%"}}
+   [:div {:style {
+                  :background-color "#E7A174"
+                  :position "absolute"
+                  :padding "0px 0px"
+                  :height 8
+                  :left 0 :top 3
+                  :width (str (* p 100) "%")}}]])
+
 (defn area-status
   "show earthquake status of an area"
   [area p mean]
-  (let [mag+ @(rf/subscribe [::subs/mag+])
-        left-style {:style {}}]
+  (let [mag+ @(rf/subscribe [::subs/mag+])]
     [ui/row {:style {:font-size "21px"}}
      [ui/col 
       [:h1 {:style {:font-size "32px"}}"How likely is an earthquake in the next 7 days?"]
@@ -229,42 +250,39 @@
          [:div "The chance of a magnitude " mag+ " or above" [:br] "between 6th July – 13th July"]]
         [ui/col {:md 3}
          [:div [large (.toFixed (js/Number (* p 100)) 1) "%"]]]]
+       [ui/row {:style {:margin-top 15}}
+        [ui/col
+         [bar p]]]
        [:hr]
-       #_[:div {:style {:display "flex"
-                        :justify-content "space-around"
-                        :align-items "center"}}
-          [:div left-style
-           [:p "The chance of a magnitude " mag+ " or above between" [:br] " 6th July – 13th July is:"]]
-          [:div [large (.toFixed (js/Number (* p 100)) 1) "%"]]]
 
        [ui/row {:style {:display "flex" :align-items "center" :padding-bottom 15}}
         [ui/col {:md 9}
          [:span "The chance in an average week"]]
         [ui/col {:md 3}
          [:div [large (.toFixed (js/Number (* mean 100)) 3) "%"]]]]
+       [ui/row {:style {:margin-top 15}}
+        [ui/col
+         [bar mean]]]
        [:hr]
-       #_[:div {:style {:display "flex"
-                        :justify-content "space-around"
-                        #_#_:align-items "center"}}
-          [:p "This is 147 times the chance in an average week"]
-          [:div [large (.toPrecision (js/Number (* (/ p 147) 100)) 2) "%"]]]
+
        [ui/row {:style {:display "flex" :align-items "center" :padding-bottom 15}}
         [ui/col {:md 9}
          [:span "The odds against are"]]
         [ui/col {:md 3}
-         [:div (large (- (js/Math.round (/ 1 p)) 1) " - 1")]]]
-
-       ]
+         [:div (large (- (js/Math.round (/ 1 p)) 1) " - 1")]]]]
       
       [:div {:style {:font-size 16
-                     :margin-left 45
+                     :margin-left 30
                      :color "#888"}}
-       [ui/row
-        [ui/col {:xs 6} "Last updated"]
-        [ui/col {:xs 6} "00:00 6th July 2021"]]
-       [ui/row
-        [ui/col {:md 6}  "Next update due"]
-        [ui/col {:md 6} "00:00 7th July 2021"]]]
+       [ui/row {:style {:width 370}}
+        ;[:span  "Last updated"]
+        ;[:span "00:00 6th July 2021"]
+        [ui/col {:xs 5} "Last updated"]
+        [ui/col {:xs 6} "00:00 6th July 2021"]
+        ]
+       [ui/row {:style {:width 370}}
+        [ui/col {:xs 5} "Next update due"]
+        [ui/col {:xs 6} "00:00 7th July 2021"]]]
 
       [ui/row 
        [ui/col {:md 12 :style {:font-size 16
@@ -313,6 +331,13 @@
   "Points around a hexagon standing on its base"
   [:N :NE :NW :SE :SW :S])
 
+(defn timer-component []
+  (let [seconds-elapsed (r/atom 0)]
+    (fn []
+      (js/setTimeout #(swap! seconds-elapsed inc) 1000)
+      [:div
+       "Seconds Elapsed: " @seconds-elapsed])))
+
 (defn hex
   "A community-level page featuring a mapped hexagon."
   []
@@ -322,25 +347,38 @@
         community (first (all-communities location))
         all-regions (group-by :id (:items @(rf/subscribe [::subs/regions])))
         region-id (community :region)
-        region (first (all-regions region-id))]
-    (locals)
+        region (first (all-regions region-id))
+        animate? @(rf/subscribe [::subs/animate?])
+        quake? @(rf/subscribe [::subs/quake?])]
+   ;(locals)
     [ui/page [:span (community :title) " (" [:a {:href (ui/href (region :href) {:id (region :id)})} (region :title)] ")"]
      [ui/row
-      [ui/col {:lg 3}
+      [ui/col {:lg 3 :style {:max-width 500}}
        [mag-scale]]
-      [ui/col {:lg 6}
+      [ui/col {:lg 6 :style {:max-width 500}}
        (area-status community (community :p-7day) (community :mean-7day))]
-      [ui/col {:lg 3}
-       [:div {:style {:position "relative" :display "flex"}}
+      [ui/col {:lg 3 :style {:max-width 500}}
+       [:div {:style {:position "relative" :display "flex"}
+              :class-name (when quake? "shake")}
         [:> bs/Image {:src (str "/assets/" location " hex.png")
                       :width "100%"
-                      :fluid true}]
+                      :fluid false}]
         ; decorate map with map arrow links
         [:div {:style {:position "absolute" :top 0 :left 0 :bottom 0 :right 0}}
          (into [:<>]
                (map
                 #(link-neighbour :community (community :id) %)
-                hex-compass-points))]]]]]))
+                hex-compass-points))]]
+       (when animate?
+         [:div {:style {:display "flex" :align-items "start" :margin-top 15}}
+          [:div {:style {:width 20
+                         :height 20
+                         :display "inline-block"
+                       ;:background-color "#ACACAC"
+                         :border "3px solid #ACACAC"
+                         :border-radius 10}}]
+          [:div {:style {:padding-left 15 :display "inline-block"}}
+           "Every beat is a possible future 7 days"]])]]]))
 
 
 

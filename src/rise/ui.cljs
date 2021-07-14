@@ -99,7 +99,7 @@ in the routes table."
   ([title content]
    [container {:key 1
                :fluid "xl"
-               :style {:min-height "calc(100vh - 165px"
+               :style {:min-height "calc(100vh - 200px)"
                        :background-color "#ffffffbb"
                        :max-width 2000
                        :margin-bottom 20}}

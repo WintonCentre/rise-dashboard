@@ -1,7 +1,9 @@
 (ns rise.db)
 
 (def default-db
-  {:mag+ 4
+  {:mag+ 4 ; threshold displayed
+   :animate? false ; whether to run the animation
+   :quake? true ; initial animation status
    :countries {:title "Countries"
                :items [{:href :rise.views/countries
                         :title "Italy"
