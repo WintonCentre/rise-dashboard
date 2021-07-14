@@ -108,6 +108,16 @@ in the routes table."
       [:h1 {:style {:margin-top 0}} title]
       content]]]))
 
+(defn three-columns
+  [{:keys [col1 col2 col3]}]
+  [row
+   [col {:lg 3 :style {:max-width 500 :margin-bottom 30}}
+    col1]
+   [col {:lg 6 :style {:max-width 600}}
+    col2]
+   [col {:lg 3 :style {:max-width 500}}
+    col3]])
+
 (defn footer
   "Site footer."
   []

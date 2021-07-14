@@ -101,13 +101,12 @@
 
 (defn mag-button
   ([mag color]
-   (mag-button mag color "" false))
+   (mag-button mag color ""))
   ([mag color text]
-   (mag-button mag color text false))
-  ([mag color text bottom]
+   ;(mag-button mag color text)
    [:div {:style {:display "flex"
                   :align-items "center"}}
-    [:div {:style {:color color
+    [:div {:style {:color (if (= color "#ACACAC") color "black")
                    :font-size (if (= color "#ACACAC") "1.2em" "1em")}} text]
     [:div {:style {:background-color color
                    :border "1px solid white"
@@ -133,10 +132,8 @@
      (mag-button 6 "#B58283" "Emilia 2012, M=6.9")
      (mag-button 5 "#D2937A" "L'Aquila 2009, M=5.9")
      (mag-button 4 "#E7A174" "Ischia 2017, M=4")
-     ;(mag-button 3 "#ACACAC" "")
      (mag-button "1-3" "#ACACAC" "Not included
                                   in dashboard")
-     #_(mag-button 1 "#ACACAC" "" true)
      ]]])
 
 
@@ -173,19 +170,13 @@
         country-regions (filter #(= (:country %) country-id) all-regions)]
     (locals)
     [ui/page (country :title)
-     [ui/row
-      [ui/col {:lg 3}
-       [mag-scale]
-       ]
-      [ui/col {:lg 6}
-       [:h2 "Italian Regions"]
-       (links-to country-regions)]
-      [ui/col {:lg 3}
-       [:> bs/Image {:src (str "/assets/" country-id ".png")
-                     :width "100%"
-                     :fluid true}]
-       ]
-      ]]))
+     [ui/three-columns
+      {:col1 [mag-scale]
+       :col2 [:<> [:h2 "Italian Regions"]
+              (links-to country-regions)]
+       :col3 [:> bs/Image {:src (str "/assets/" country-id ".png")
+                           :width "100%"
+                           :fluid true}]}]]))
 
 
 (defn regions
@@ -201,17 +192,13 @@
         regional-communities (filter #(= (:region %) region-id) all-communities)]
     (locals)
     [ui/page [:span (region :title) " (" [:a {:href (ui/href (country :href) {:id (country :id)})} (country :title)] ")"]
-     [ui/row
-      [ui/col {:lg 3}
-       [mag-scale]]
-      [ui/col {:lg 6}
-       [:h2 "Regional Communities"]
-       (links-to regional-communities)]
-      [ui/col {:lg 3}
-       [:> bs/Image {:src (str "/assets/" region-id ".png")
-                     :width "100%"
-                     :fluid true}]]
-      ]]))
+     [ui/three-columns
+      {:col1 [mag-scale]
+       :col2 [:<> [:h2 "Regional Communities"]
+              (links-to regional-communities)]
+       :col3 [:> bs/Image {:src (str "/assets/" region-id ".png")
+                           :width "100%"
+                           :fluid true}]}]]))
 
 (defn large
   [& n]
@@ -250,20 +237,22 @@
          [:div "The chance of a magnitude " mag+ " or above" [:br] "between 6th July – 13th July"]]
         [ui/col {:md 3}
          [:div [large (.toFixed (js/Number (* p 100)) 1) "%"]]]]
-       [ui/row {:style {:margin-top 15}}
+       [ui/row {:style {:margin-top 5}}
         [ui/col
          [bar p]]]
-       [:hr]
+       [:br]
+       ;[:hr]
 
        [ui/row {:style {:display "flex" :align-items "center" :padding-bottom 15}}
         [ui/col {:md 9}
          [:span "The chance in an average week"]]
         [ui/col {:md 3}
          [:div [large (.toFixed (js/Number (* mean 100)) 3) "%"]]]]
-       [ui/row {:style {:margin-top 15}}
+       [ui/row {:style {:margin-top 5}}
         [ui/col
          [bar mean]]]
-       [:hr]
+       [:br]
+       ;[:hr]
 
        [ui/row {:style {:display "flex" :align-items "center" :padding-bottom 15}}
         [ui/col {:md 9}
@@ -338,6 +327,8 @@
       [:div
        "Seconds Elapsed: " @seconds-elapsed])))
 
+
+
 (defn hex
   "A community-level page featuring a mapped hexagon."
   []
@@ -350,10 +341,84 @@
         region (first (all-regions region-id))
         animate? @(rf/subscribe [::subs/animate?])
         quake? @(rf/subscribe [::subs/quake?])]
-   ;(locals)
+    ;(locals)
+    ;; todo: move the row-col structure to a wrapping component and 
+    ;; reuse it in country and region pages too.
+    [ui/page [:span (community :title) " (" [:a {:href (ui/href (region :href) {:id (region :id)})} (region :title)] ")"]
+     [ui/three-columns
+      {:col1 [mag-scale]
+       :col2 (area-status community (community :p-7day) (community :mean-7day))
+       :col3 [:<>
+              [:div {:style {:position "relative" :display "flex"}
+                     :class-name (when quake? "shake")}
+               [:> bs/Image {:src (str "/assets/" location " hex.png")
+                             :width "100%"
+                             :fluid false}]
+        ; decorate map with map arrow links
+               [:div {:style {:position "absolute" :top 0 :left 0 :bottom 0 :right 0}}
+                (into [:<>]
+                      (map
+                       #(link-neighbour :community (community :id) %)
+                       hex-compass-points))]]
+              (when animate?
+                [:div {:style {:display "flex" :align-items "start" :margin-top 15}}
+                 [:div {:style {:width 20
+                                :height 20
+                                :display "inline-block"
+                       ;:background-color "#ACACAC"
+                                :border "3px solid #ACACAC"
+                                :border-radius 10}}]
+                 [:div {:style {:padding-left 15 :display "inline-block"}}
+                  "Every beat is a possible future 7 days"]])]}
+
+      [ui/row
+       [ui/col {:lg 3 :style {:max-width 500 :margin-bottom 30}}
+        [mag-scale]]
+       [ui/col {:lg 6 :style {:max-width 600}}
+        (area-status community (community :p-7day) (community :mean-7day))]
+       [ui/col {:lg 3 :style {:max-width 500}}
+        [:<>
+         [:div {:style {:position "relative" :display "flex"}
+                :class-name (when quake? "shake")}
+          [:> bs/Image {:src (str "/assets/" location " hex.png")
+                        :width "100%"
+                        :fluid false}]
+        ; decorate map with map arrow links
+          [:div {:style {:position "absolute" :top 0 :left 0 :bottom 0 :right 0}}
+           (into [:<>]
+                 (map
+                  #(link-neighbour :community (community :id) %)
+                  hex-compass-points))]]
+         (when animate?
+           [:div {:style {:display "flex" :align-items "start" :margin-top 15}}
+            [:div {:style {:width 20
+                           :height 20
+                           :display "inline-block"
+                       ;:background-color "#ACACAC"
+                           :border "3px solid #ACACAC"
+                           :border-radius 10}}]
+            [:div {:style {:padding-left 15 :display "inline-block"}}
+             "Every beat is a possible future 7 days"]])]]]]])
+
+)
+#_(defn hex
+  "A community-level page featuring a mapped hexagon."
+  []
+  (let [location (get-in @(rf/subscribe [::subs/current-route])
+                         [:path-params :id])
+        all-communities (group-by :id (:items @(rf/subscribe [::subs/communities])))
+        community (first (all-communities location))
+        all-regions (group-by :id (:items @(rf/subscribe [::subs/regions])))
+        region-id (community :region)
+        region (first (all-regions region-id))
+        animate? @(rf/subscribe [::subs/animate?])
+        quake? @(rf/subscribe [::subs/quake?])]
+    ;(locals)
+    ;; todo: move the row-col structure to a wrapping component and 
+    ;; reuse it in country and region pages too.
     [ui/page [:span (community :title) " (" [:a {:href (ui/href (region :href) {:id (region :id)})} (region :title)] ")"]
      [ui/row
-      [ui/col {:lg 3 :style {:max-width 500}}
+      [ui/col {:lg 3 :style {:max-width 500 :margin-bottom 30}}
        [mag-scale]]
       [ui/col {:lg 6 :style {:max-width 600}}
        (area-status community (community :p-7day) (community :mean-7day))]
