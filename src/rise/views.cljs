@@ -107,6 +107,7 @@
    [:div {:style {:display "flex"
                   :align-items "center"}}
     [:div {:style {:color (if (= color "#ACACAC") color "black")
+                   :padding-left 15
                    :font-size (if (= color "#ACACAC") "1.2em" "1em")}} text]
     [:div {:style {:background-color color
                    :border "1px solid white"
@@ -119,7 +120,35 @@
                    :align-items "center"
                    :justify-content "center"}} "Mag " mag]]))
 
+(defn mag-y
+  "Linear map so mag-y 10 -> 0 and mag-y 4 -> 302 (the height of the mag scale)"
+  [mag] (/ (* (- 10 mag) 302) 6))
+(comment 
+  (mag-y 4)
+  ;; => 302
+
+  (mag-y 5)
+  ;; => 251.66666666666666
+
+  (mag-y 10)
+  ;; => 0
+  )
+
+(defn example-quake
+  "example quake text and arrow"
+  [text slot mag color]
+  [:g
+   [:line {:x1 "calc(100% - 25px)" :x2 "100%" :y1 (mag-y slot) :y2 (mag-y mag) :stroke color :stroke-width 2}]
+   [:circle {:cx "100%" :cy (mag-y mag) :r 4 :fill color}]
+   [:rect {:x 5 :width "calc(100% -  30px)" :y (- (mag-y slot) 12) :height 22 :rx 10 :fill "#fff" :stroke-width 1 :stroke color}]
+   [:text {:x 10 :y (+ 4 (mag-y slot)) :fill color} text]
+   ;[:circle {:cx 220 :cy (mag-y slot) :r 4 :fill color}]
+   ;[:line {:x1 220 :x2 230 :y1 (mag-y slot) :y2 (mag-y slot) :stroke color :stroke-width 2}]
+  ;[:line {:x1 "calc(100% -  25px)" :x2 "calc(100% - 15px)" :y1 (mag-y slot) :y2 (mag-y mag) :stroke color :stroke-width 2}]
+])
+
 (defn mag-scale
+  "Dra magnitude scale with example quakes on it"
   []
   [:<>
    #_[ui/row
@@ -128,15 +157,23 @@
    [ui/row {:class "d-flex flex-row justify-content-end"}
     [:div {:style {:position "absolute"
                    ;:border "1px solid green"
-                   :width 100
-                   }}
-     [:svg {:viewbox "0 0 100 200" 
-            :style {:position "relative" 
+                   :width "100%"}}
+     [:svg {;:viewbox "0 0 100 200"
+            :style {:position "relative"
                     :right 0
-                    :width "10" :height "20"}}
-      [:rect {:x 0 :y 10 :height 400 :width 100 :fill "red" :line-width 10 }]]]
-    
-    [:div {:class "d-flex flex-column align-items-end justify-content-end"}
+                    :margin-top 15
+                    :width "calc(100% - 80px)" :height "302"
+                    #_#_:border "1px solid red"}}
+
+      (example-quake "Norcia 2016 M=6.5" 6.7 6.5 "#888")
+      (example-quake "L'Aquila 2009 M=6.1" 6.1 6.1 "#888")
+      (example-quake "Emilia 2012 M=5.8" 5.5 5.8 "#888")
+      (example-quake "Amatrice 2017 M=4.3" 4.5 4.3 "#888")      
+      ]]
+
+
+    [:div {;:style {:margin-right 15}
+           :class "d-flex flex-column align-items-end justify-content-end"}
      [:div {:style {:width  0
                     :height 0
                     :border-style "solid" ;
@@ -148,9 +185,11 @@
      (mag-button 7 "#946E8C")
      (mag-button 6 "#B58283" #_"L'Aquila 2009, M=6.1")
      (mag-button 5 "#D2937A" #_"Emilia 2012, M=5.8")
-     (mag-button 4 "#E7A174" #_"Amatrice (RI) 2017 M=4.3")
-     [:div {:style {:margin-top 20}}]
-     #_(mag-button "1-3" "#ACACAC" "Not included
+     (mag-button 4 "#E7A174" #_"Amatrice (RI) 2017 M=4.3")]]
+    [ui/row {:class "d-flex flex-row justify-content-end"}
+     [:div {:class "d-flex flex-column align-items-end justify-content-end"
+            :style {:margin-top 20}}
+      (mag-button "1-3" "#ACACAC" "Not included
                                   in dashboard")]]])
 
 
@@ -186,10 +225,11 @@
         all-regions (:items @(rf/subscribe [::subs/regions]))
         country-regions (filter #(= (:country %) country-id) all-regions)]
     (locals)
-    [ui/page (country :title)
+    [ui/page [:h1 (country :title)]
      [ui/three-columns
       {:col1 [mag-scale]
-       :col2 [:<> [:h2 "Italian Regions"]
+       :col2 [:div {:style {:margin-left 30}} 
+              [:h2 "Italian Regions"]
               (links-to country-regions)]
        :col3 [:> bs/Image {:src (str "/assets/" country-id ".png")
                            :width "100%"
@@ -208,10 +248,11 @@
         all-communities (:items @(rf/subscribe [::subs/communities]))
         regional-communities (filter #(= (:region %) region-id) all-communities)]
     (locals)
-    [ui/page [:span (region :title) " (" [:a {:href (ui/href (country :href) {:id (country :id)})} (country :title)] ")"]
+    [ui/page [:div {:style {:margin-left 30}} 
+              [:h1 [:span (region :title) " (" [:a {:href (ui/href (country :href) {:id (country :id)})} (country :title)] ")"]]]
      [ui/three-columns
       {:col1 [mag-scale]
-       :col2 [:div {:style {:margin-left 15}} [:h2 "Regional Communities"]
+       :col2 [:div {:style {:margin-left 30}} [:h2 "Regional Communities"]
               (links-to regional-communities)]
        :col3 [:> bs/Image {:src (str "/assets/" region-id ".png")
                            :width "100%"
@@ -288,12 +329,13 @@
       [:div {:style {:font-size 16
                      :margin-left 30
                      :color "#888"}}
+       
        [ui/row {:style {:width 370}}
         ;[:span  "Last updated"]
         ;[:span "00:00 6th July 2021"]
         [ui/col {:xs 5} "Last updated"]
-        [ui/col {:xs 6} "00:00 6th July 2021"]
-        ]
+        [ui/col {:xs 6} "00:00 6th July 2021"]]
+       
        [ui/row {:style {:width 370}}
         [ui/col {:xs 5} "Next update due"]
         [ui/col {:xs 6} "00:00 7th July 2021"]]]
