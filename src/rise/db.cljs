@@ -3,7 +3,7 @@
 (def default-db
   {:mag+ 4 ; threshold displayed
    :animate? false ; whether to run the animation
-   :quake? 0 ; time to next quake. None if next-quake < clock
+   :next-quake-t 0 ; time to next quake. None if next-quake < clock
    :countries {:title "Countries"
                :items [{:href :rise.views/countries
                         :title "Italy"
@@ -65,7 +65,7 @@
                                        :SW "spoleto-SW"}
                           :osm-href "https://www.openstreetmap.org/relation/42105"}
                          {:href :rise.views/hex
-                          :title "Spoleto-N"
+                          :title "Spoleto–N"
                           :id "spoleto-N"
                           :map "spoleto-N hex.png"
                           :latitude 42.739

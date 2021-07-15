@@ -121,7 +121,7 @@
 (defn mag-scale
   []
   [:<>
-   [ui/row
+   #_[ui/row
     [ui/col {:style {:font-size "1.4em" }}
      "Showing chances of earthquakes magnitude 4 or above like these:"]]
    [ui/row {:class "d-flex flex-row justify-content-around"}
@@ -209,17 +209,20 @@
 
 (defn bar
   [p]
-  [:div {:style {:border "1px inset #CCC"
-                 :height 16
-                 :position "relative"
-                 :width "100%"}}
-   [:div {:style {
-                  :background-color "#E7A174"
-                  :position "absolute"
-                  :padding "0px 0px"
-                  :height 8
-                  :left 0 :top 3
-                  :width (str (* p 100) "%")}}]])
+  [:div
+   [:div {:style {:border "1px inset #CCC"
+                  :background-color "white"
+                  :height 16
+                  :position "relative"
+                  :width "100%"}}
+    [:div {:style {:background-color #_"#2177FF" "#444466"
+                   :position "absolute"
+                   :padding "0px 0px"
+                   :height 8
+                   :left 0 :top 3
+                   :width (str (* p 100) "%")}}]]
+   [:div {:style {:display "flex" :justify-content "space-between" :width "100%" :font-size "0.8em" :color "#BCBCCC"}}
+    [:span "0%"] [:span "100%"]]])
 
 (defn area-status
   "show earthquake status of an area"
@@ -228,36 +231,40 @@
         animate? @(rf/subscribe [::subs/animate?])]
     [ui/row {:style {:font-size "21px"}}
      [ui/col 
-      [:h1 {:style {:font-size "32px"}}"How likely is an earthquake in the next 7 days?"]
       [:div {:style {:border "1px solid #CCC"
                      :border-radius 20
                      :padding "15px 30px"
-                     :box-shadow "1px 1px 1px 1px #CCC"}}
+                     :box-shadow "1px 1px 1px 1px #CCC"
+                     :background-color "#444466" #_"#80647D"
+                     :color "white"}}
        [ui/row
         [ui/col {:md 9}
-         [:div "The chance of a magnitude " mag+ " or above" [:br] "between 6th July – 13th July"]]
+         [:div  "The chance of an earthquake" [:br] [:nobr "within 6th July <———> 13th July"]]]
         [ui/col {:md 3}
          [:div [large (.toFixed (js/Number (* p 100)) 1) "%"]]]]
        [ui/row {:style {:margin-top 5}}
         [ui/col
          [bar p]]]
-       [:br]
-       ;[:hr]
-
-       [ui/row {:style {:display "flex" :align-items "center" :padding-bottom 15}}
-        [ui/col {:md 9}
-         [:span "The chance in an average week"]]
-        [ui/col {:md 3}
-         [:div [large (.toFixed (js/Number (* mean 100)) 3) "%"]]]]
        [ui/row {:style {:margin-top 5}}
         [ui/col
+                  [:div {:style {:margin-bottom 6}} "compared to"]
          [bar mean]]]
+       ;[:br]
+       ;[:hr]
+
+       [ui/row {:style {:display "flex" :align-items "center" :padding-bottom 15}}
+        [ui/col {:md 9}
+         [:span "the chance in an average week"]]
+        [:br]
+        [ui/col {:md 3 }
+         [:div [large (.toFixed (js/Number (* mean 100)) 3) "%"]]]]
+       
        [:br]
        ;[:hr]
 
        [ui/row {:style {:display "flex" :align-items "center" :padding-bottom 15}}
         [ui/col {:md 9}
-         [:span "The odds against are"]]
+         [:span "The odds against an earthquake"]]
         [ui/col {:md 3}
          [:div (large (- (js/Math.round (/ 1 p)) 1) " - 1")]]]]
       
@@ -277,16 +284,19 @@
       [ui/row 
        [ui/col {:md 12 :style {:font-size 16
                                :display "flex"
+                               :flex-direction "column"
                                :padding 45
+                               :align-items "flex-start"
                                :justify-content "space-around"
-                               :align-items "center"}}
+                               }}
+        [:h4 "What's happening?"]
         [:p [:i "The area is seeing higher chances than normal because of increased 
              seismic activity around the Mount Vittore fault system."]]]]]]))
 
 (defn arrow-template
   "a parameterised direction arrow"
   [{:keys [top right bottom left deg]}]
-  [:div {:style {:width "22px" :height "22px" :border-bottom "22px solid #00ffff" :border-left "22px solid transparent"
+  [:div {:style {:width "22px" :height "22px" :border-bottom "22px solid #444466" #_"#AA647D" :border-left "22px solid transparent"
                  :border-right "20px solid transparent" :position "absolute"
                  :top (when top top) :right (when right right) :bottom (when bottom bottom) :left (when left left)
                  :transform (str "rotate(" deg "deg)")}}])
@@ -344,22 +354,27 @@
         quake? true
         ]
     (locals)
-    [ui/page [:span (community :title) " (" [:a {:href (ui/href (region :href) {:id (region :id)})} (region :title)] ")"]
+    [ui/page
+     [:<>
+      [ui/row {:style {:margin-bottom 20 :display "flex" :align-items "flex-end"}}
+       [ui/col {:md 3 :style {:display "inline-block" :font-size "2.2em" :font-weight  "500"}}
+        [:nobr (community :title)] " (" [:a {:href (ui/href (region :href) {:id (region :id)})} (region :title)] ")"]
+       [ui/col {:md 8 :style {:display "inline-block" :font-size "2em" :font-weight  "500"}}
+        "How likely is a " [:i "magnitude 4 or above"] " earthquake" [:br] " within the next 7 days?"]]]
      [ui/three-columns
-      {:col1 [mag-scale]
+      {:col1 [:div {:style {:margin-top 30}} [mag-scale]]
        :col2 (area-status community (community :p-7day) (community :mean-7day))
-       :col3 [:<>
-              [:div {:style {:position "relative" :display "flex"}
-                     :class-name (when quake? "shake")}
-               [:> bs/Image {:src (str "/assets/" location " hex.png")
-                             :width "100%"
-                             :fluid false}]
+       :col3 [:<> [:div {:style {:position "relative" :display "flex"}
+                         :class-name (when quake? "shake")}
+                   [:> bs/Image {:src (str "/assets/" location " hex.png")
+                                 :width "100%"
+                                 :fluid false}]
                ; decorate map with map arrow links
-               [:div {:style {:position "absolute" :top 0 :left 0 :bottom 0 :right 0}}
-                (into [:<>]
-                      (map
-                       #(link-neighbour :community (community :id) %)
-                       hex-compass-points))]]
+                   [:div {:style {:position "absolute" :top 0 :left 0 :bottom 0 :right 0}}
+                    (into [:<>]
+                          (map
+                           #(link-neighbour :community (community :id) %)
+                           hex-compass-points))]]
               (when animate?
                 [:div {:style {:display "flex" :align-items "start" :margin-top 15}}
                  [:div {:style {:width 20
@@ -370,7 +385,7 @@
                  [:div {:style {:padding-left 15 :display "inline-block"}}
                   "Every beat is a possible future 7 days"]])]}
 
-      [ui/row
+      #_[ui/row
        [ui/col {:lg 3 :style {:max-width 500 :margin-bottom 30}}
         [mag-scale]]
        [ui/col {:lg 6 :style {:max-width 600}}

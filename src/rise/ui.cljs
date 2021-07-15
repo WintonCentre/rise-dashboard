@@ -105,15 +105,15 @@ in the routes table."
                        :margin-bottom 20}}
     [row
      [col
-      [:h1 {:style {:margin-top 0}} title]
+      title
       content]]]))
 
 (defn three-columns
   [{:keys [col1 col2 col3]}]
   [row
-   [col {:lg 3 :style {:max-width 500 :margin-bottom 30}}
+   [col {:lg 3 :style {:max-width 500 :margin-bottom 30 :margin-right 0 :padding-right 0}}
     col1]
-   [col {:lg 6 :style {:max-width 600}}
+   [col {:lg 5 :style {:max-width 600 :margin-left -2 :padding-left 0}}
     col2]
    [col {:lg 3 :style {:max-width 500}}
     col3]])
