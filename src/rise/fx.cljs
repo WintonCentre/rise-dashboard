@@ -2,8 +2,6 @@
   (:require [re-frame.core :as rf]
             [reitit.frontend.easy :as rfe]))
 
-
-
 ;;; Effects ;;;
 
 ;; Triggering navigation from events.

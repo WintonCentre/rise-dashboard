@@ -110,10 +110,11 @@
                    :font-size (if (= color "#ACACAC") "1.2em" "1em")}} text]
     [:div {:style {:background-color color
                    :border "1px solid white"
+                   :border-top "none"
                    :color "white"
-                   :margin-left 10
-                   :min-width "80px"
-                   :height "5ex"
+                   :margin-left 0
+                   :width "80px"
+                   :height "6ex"
                    :display "flex"
                    :align-items "center"
                    :justify-content "center"}} "Mag " mag]]))
@@ -122,20 +123,35 @@
   []
   [:<>
    #_[ui/row
-    [ui/col {:style {:font-size "1.4em" }}
-     "Showing chances of earthquakes magnitude 4 or above like these:"]]
-   [ui/row {:class "d-flex flex-row justify-content-around"}
-    [ui/col {:class "d-flex flex-column align-items-end justify-content-end"}
+      [ui/col {:style {:font-size "1.4em"}}
+       "Showing chances of earthquakes magnitude 4 or above like these:"]]
+   [ui/row {:class "d-flex flex-row justify-content-end"}
+    [:div {:style {:position "absolute"
+                   ;:border "1px solid green"
+                   :width 100
+                   }}
+     [:svg {:viewbox "0 0 100 200" 
+            :style {:position "relative" 
+                    :right 0
+                    :width "10" :height "20"}}
+      [:rect {:x 0 :y 10 :height 400 :width 100 :fill "red" :line-width 10 }]]]
+    
+    [:div {:class "d-flex flex-column align-items-end justify-content-end"}
+     [:div {:style {:width  0
+                    :height 0
+                    :border-style "solid" ;
+                    :border-width "0 40px 15px 40px" ;
+                    :border-color " transparent transparent #6b5967 transparent"}};
+      ]
      (mag-button 9 "#6B5967")
      (mag-button 8 "#80647C")
      (mag-button 7 "#946E8C")
-     (mag-button 6 "#B58283" "Emilia 2012, M=6.9")
-     (mag-button 5 "#D2937A" "L'Aquila 2009, M=5.9")
-     (mag-button 4 "#E7A174" "Ischia 2017, M=4")
-     [:div {:style {:margin-top 90}}]
-     (mag-button "1-3" "#ACACAC" "Not included
-                                  in dashboard")
-     ]]])
+     (mag-button 6 "#B58283" #_"L'Aquila 2009, M=6.1")
+     (mag-button 5 "#D2937A" #_"Emilia 2012, M=5.8")
+     (mag-button 4 "#E7A174" #_"Amatrice (RI) 2017 M=4.3")
+     [:div {:style {:margin-top 20}}]
+     #_(mag-button "1-3" "#ACACAC" "Not included
+                                  in dashboard")]]])
 
 
 ;;; Views ;;;
@@ -195,7 +211,7 @@
     [ui/page [:span (region :title) " (" [:a {:href (ui/href (country :href) {:id (country :id)})} (country :title)] ")"]
      [ui/three-columns
       {:col1 [mag-scale]
-       :col2 [:<> [:h2 "Regional Communities"]
+       :col2 [:div {:style {:margin-left 15}} [:h2 "Regional Communities"]
               (links-to regional-communities)]
        :col3 [:> bs/Image {:src (str "/assets/" region-id ".png")
                            :width "100%"
@@ -203,7 +219,7 @@
 
 (defn large
   [& n]
-  (into [:span {:style {:font-size "1.4em"}}]
+  (into [:span {:style {:font-size "1.3em"}}]
         (map str n)))
 
 (def p 0.22)
@@ -329,8 +345,10 @@
   (link-neighbour :community "spoleto-NE" :S))
 
 (def hex-compass-points
-  "Points around a hexagon standing on its base"
-  [:N :NE :NW :SE :SW :S])
+  "Points around a hexagon standing on its base. 
+   Order will be retained up to 32 points only"
+  (keys map-arrow)
+  )
 
 
 
@@ -363,8 +381,8 @@
        [ui/col {:md 8 :style {:display "inline-block" :font-size "2em" :font-weight  "500"}}
         "How likely is a " [:i "magnitude 4 or above"] " earthquake" [:br] " within the next 7 days?"]]]
      [ui/three-columns
-      {:col1 [:div {:style {:margin-top 30}} [mag-scale]]
-       :col2 (area-status community (community :p-7day) (community :mean-7day))
+      {:col1 [:div {:style {:margin-top 20}} [mag-scale]]
+       :col2 [:div {:style {:margin-left 15}} (area-status community (community :p-7day) (community :mean-7day))]
        :col3 [:<> [:div {:style {:position "relative" :display "flex"}
                          :class-name (when quake? "shake")}
                    [:> bs/Image {:src (str "/assets/" location " hex.png")
