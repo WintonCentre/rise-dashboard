@@ -132,6 +132,7 @@
      (mag-button 6 "#B58283" "Emilia 2012, M=6.9")
      (mag-button 5 "#D2937A" "L'Aquila 2009, M=5.9")
      (mag-button 4 "#E7A174" "Ischia 2017, M=4")
+     [:div {:style {:margin-top 90}}]
      (mag-button "1-3" "#ACACAC" "Not included
                                   in dashboard")
      ]]])
@@ -266,7 +267,7 @@
         [ui/col {:md 9}
          [:span "The odds against an earthquake"]]
         [ui/col {:md 3}
-         [:div (large (- (js/Math.round (/ 1 p)) 1) " - 1")]]]]
+         [:nobr [:div (large (- (js/Math.round (/ 1 p)) 1) " - 1")]]]]]
       
       [:div {:style {:font-size 16
                      :margin-left 30
