@@ -41,7 +41,7 @@
                            :stop  (fn [& params] (js/console.log (str "Leaving Info" params)))}]}
     [""] ; required to make ["åinfo"] a leaf route
     ]
-   ["hex/:id" {:name      ::views/hex
+   ["hex/{id}" {:name      ::views/hex
                :view      views/hex
                :link-text "Location"
                :controllers [{:start (fn [& params] (js/console.log "Entering hex: " params))

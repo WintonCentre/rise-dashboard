@@ -13,11 +13,11 @@
                         :title "New Zealand"
                         :id "nz"
                         :map "nz.png"}
-                       {:href :rise.views/countries
+                       #_{:href :rise.views/countries
                         :title "Switzerland"
                         :id "switzerland"
                         :map "switzerland.png"}
-                       {:href :rise.views/countries
+                       #_{:href :rise.views/countries
                         :title "Iceland"
                         :id "iceland"
                         :map "iceland.png"}]}

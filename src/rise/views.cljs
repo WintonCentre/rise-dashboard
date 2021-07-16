@@ -137,39 +137,39 @@
 (defn example-quake
   "example quake text and arrow"
   [text slot mag color]
+
   [:g
    [:line {:x1 "calc(100% - 25px)" :x2 "100%" :y1 (mag-y slot) :y2 (mag-y mag) :stroke color :stroke-width 2}]
    [:circle {:cx "100%" :cy (mag-y mag) :r 4 :fill color}]
    [:rect {:x 5 :width "calc(100% -  30px)" :y (- (mag-y slot) 12) :height 22 :rx 10 :fill "#fff" :stroke-width 1 :stroke color}]
-   [:text {:x 10 :y (+ 4 (mag-y slot)) :fill color} text]
-   ;[:circle {:cx 220 :cy (mag-y slot) :r 4 :fill color}]
-   ;[:line {:x1 220 :x2 230 :y1 (mag-y slot) :y2 (mag-y slot) :stroke color :stroke-width 2}]
-  ;[:line {:x1 "calc(100% -  25px)" :x2 "calc(100% - 15px)" :y1 (mag-y slot) :y2 (mag-y mag) :stroke color :stroke-width 2}]
-])
+   [:text {:x 10 :y (+ 4 (mag-y slot)) :fill color} text]])
 
 (defn mag-scale
-  "Dra magnitude scale with example quakes on it"
+  "Draw magnitude scale with example quakes on it"
   []
+  #_(let [w @(rf/subscribe [::subs/window-width])])
   [:<>
    #_[ui/row
       [ui/col {:style {:font-size "1.4em"}}
        "Showing chances of earthquakes magnitude 4 or above like these:"]]
+
    [ui/row {:class "d-flex flex-row justify-content-end"}
     [:div {:style {:position "absolute"
                    ;:border "1px solid green"
-                   :width "100%"}}
+                   :width #_(/ w 4) "100%"}}
      [:svg {;:viewbox "0 0 100 200"
+            :width "calc(100% - 80px)"
             :style {:position "relative"
                     :right 0
                     :margin-top 15
-                    :width "calc(100% - 80px)" :height "302"
+
+                    :height "302"
                     #_#_:border "1px solid red"}}
 
-      (example-quake "Norcia 2016 M=6.5" 6.7 6.5 "#888")
-      (example-quake "L'Aquila 2009 M=6.1" 6.1 6.1 "#888")
-      (example-quake "Emilia 2012 M=5.8" 5.5 5.8 "#888")
-      (example-quake "Amatrice 2017 M=4.3" 4.5 4.3 "#888")      
-      ]]
+      (example-quake "Norcia 2016 M=6.5" 6.7 6.5 "#666")
+      (example-quake "L'Aquila 2009 M=6.1" 6.1 6.1 "#666")
+      (example-quake "Emilia 2012 M=5.8" 5.5 5.8 "#666")
+      (example-quake "Amatrice 2017 M=4.3" 4.5 4.3 "#666")]]
 
 
     [:div {;:style {:margin-right 15}
@@ -186,10 +186,10 @@
      (mag-button 6 "#B58283" #_"L'Aquila 2009, M=6.1")
      (mag-button 5 "#D2937A" #_"Emilia 2012, M=5.8")
      (mag-button 4 "#E7A174" #_"Amatrice (RI) 2017 M=4.3")]]
-    [ui/row {:class "d-flex flex-row justify-content-end"}
-     [:div {:class "d-flex flex-column align-items-end justify-content-end"
-            :style {:margin-top 20}}
-      (mag-button "1-3" "#ACACAC" "Not included
+   [ui/row {:class "d-flex flex-row justify-content-end"}
+    [:div {:class "d-flex flex-column align-items-end justify-content-end"
+           :style {:margin-top 20}}
+     (mag-button "1-3" "#ACACAC" "Not included
                                   in dashboard")]]])
 
 
