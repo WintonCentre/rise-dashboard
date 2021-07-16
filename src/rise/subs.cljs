@@ -24,6 +24,10 @@
 
 (rf/reg-sub ::animate? (fn [db] (:animate? db)))
 
+(rf/reg-sub ::with-context? (fn [db] (:with-context? db)))
+
+(rf/reg-sub ::with-vis? (fn [db] (:with-vis? db)))
+
 
 
 

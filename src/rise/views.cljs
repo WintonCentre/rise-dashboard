@@ -108,13 +108,14 @@
                   :align-items "center"}}
     [:div {:style {:color (if (= color "#ACACAC") color "black")
                    :padding-left 15
+                   :padding-right 25
                    :font-size (if (= color "#ACACAC") "1.2em" "1em")}} text]
     [:div {:style {:background-color color
                    :border "1px solid white"
                    :border-top "none"
                    :color "white"
                    :margin-left 0
-                   :width "80px"
+                   :min-width "80px"
                    :height "6ex"
                    :display "flex"
                    :align-items "center"
@@ -267,43 +268,48 @@
 
 (defn bar
   [p]
-  [:div
-   [:div {:style {:border "1px inset #CCC"
-                  :background-color "white"
-                  :height 16
-                  :position "relative"
-                  :width "100%"}}
-    [:div {:style {:background-color #_"#2177FF" "#444466"
-                   :position "absolute"
-                   :padding "0px 0px"
-                   :height 8
-                   :left 0 :top 3
-                   :width (str (* p 100) "%")}}]]
-   [:div {:style {:display "flex" :justify-content "space-between" :width "100%" :font-size "0.8em" :color "#BCBCCC"}}
-    [:span "0%"] [:span "100%"]]])
+  (when @(rf/subscribe [::subs/with-vis?])
+    [:<>
+     [:div {:style {:border "1px inset #CCC"
+                    :background-color "white"
+                    :height 16
+                    :position "relative"
+                    :width "100%"}}
+      [:div {:style {:background-color #_"#2177FF" "#444466"
+                     :position "absolute"
+                     :padding "0px 0px"
+                     :height 8
+                     :left 0 :top 3
+                     :width (str (* p 100) "%")}}]]
+     [:div {:style {:display "flex" :justify-content "space-between" :width "100%" :font-size "0.8em" :color "#BCBCCC"}}
+      [:span "0%"] [:span "100%"]]]))
 
 (defn content-base
   "wrapper for the central box component occupying cols 2 and 3"
   [community]
-  (let [base-style (fn [md] {:md md :style {:font-size 16
-                                           :display "flex"
-                                           :flex-direction "column"
-                                           :padding 45
-                                           :align-items "flex-start"
-                                           :justify-content "space-between"}})]
+  (let [with-context? @(rf/subscribe [::subs/with-context?])
+        base-style (fn [md] {:md md :style {:font-size 16
+                                            :display "flex"
+                                            :flex-direction "column"
+                                            :padding 45
+                                            :align-items "flex-start"
+                                            :justify-content "space-between"}})]
     [ui/row
      [ui/col (base-style 3)
-      [:h4 [:a {:href (str "/#/history/" (community :id))} "Local earthquake history"]]
-      [:p "When have earthquakes of magnitude 4 ot more hit " (community :title) " in the past?"]]
+      (when with-context?
+        [:<>
+         [:h4 [:a {:href (str "/#/history/" (community :id))} "Local earthquake history"]]
+         [:p "When have earthquakes of magnitude 4 ot more hit " (community :title) " in the past?"]])]
      [ui/col (base-style 5)
       [:h4 [:a {:href (str "/#/hex/" (community :id))} "What's happening here and now?"]]
       [:p (community :title) " is seeing higher chances than normal because of increased 
              seismic activity around the Mount Vittore fault system."]]
-     [ui/col (base-style {:span 4 })
-      [:h4 [:a {:href (str "/#/world/" (community :id))} "How does " (community :title) " compare to the world?"]]
-      [:p "How does the current chance of a magnitude 4 quake in " (community :title)
-       " compare to an average week in other places worldwide?"]]
-     ]))
+     [ui/col (base-style {:span 4})
+      (when with-context?
+        [:<>
+         [:h4 [:a {:href (str "/#/world/" (community :id))} "How does " (community :title) " compare to the world?"]]
+         [:p "How does the current chance of a magnitude 4 quake in " (community :title)
+          " compare to an average week in other places worldwide?"]])]]))
 
 (defn update-status
   []
@@ -328,12 +334,13 @@
   (let [p (community :p-7day) 
         mean (community :mean-7day)
         mag+ @(rf/subscribe [::subs/mag+])
-        animate? @(rf/subscribe [::subs/animate?])]
+        animate? @(rf/subscribe [::subs/animate?])
+        with-vis? @(rf/subscribe [::subs/with-vis?])]
     [ui/row {:style {:font-size "21px"}}
      [ui/col 
       [:div {:style {:border "1px solid #CCC"
                      :border-radius 20
-                     :padding "15px 30px"
+                     :padding (str (if with-vis? 15 60) "px 30px")
                      :box-shadow "1px 1px 1px 1px #CCC"
                      :background-color "#444466" #_"#80647D"
                      :color "white"}}
@@ -345,16 +352,18 @@
        [ui/row {:style {:margin-top 5}}
         [ui/col
          [bar p]]]
-       [ui/row {:style {:margin-top 5}}
-        [ui/col
-                  [:div {:style {:margin-bottom 6}} "compared to"]
-         [bar mean]]]
+       (if with-vis?
+         [ui/row {:style {:margin-top 5}}
+          [ui/col
+           [:div {:style {:margin-bottom 6}} "compared to"]
+           [bar mean]]]
+         [:br])
        ;[:br]
        ;[:hr]
 
        [ui/row {:style {:display "flex" :align-items "center" :padding-bottom 15}}
         [ui/col {:md 9}
-         [:span "the chance in an average week"]]
+         [:span (if with-vis? "t" "T") "he chance in an average week"]]
         [:br]
         [ui/col {:md 3 }
          [:div [large (.toFixed (js/Number (* mean 100)) 3) "%"]]]]
