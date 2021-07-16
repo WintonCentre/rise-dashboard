@@ -263,7 +263,7 @@
   (into [:span {:style {:font-size "1.3em"}}]
         (map str n)))
 
-(def p 0.22)
+;(def p 0.22)
 
 (defn bar
   [p]
@@ -282,10 +282,52 @@
    [:div {:style {:display "flex" :justify-content "space-between" :width "100%" :font-size "0.8em" :color "#BCBCCC"}}
     [:span "0%"] [:span "100%"]]])
 
+(defn content-base
+  "wrapper for the central box component occupying cols 2 and 3"
+  [community]
+  (let [base-style (fn [md] {:md md :style {:font-size 16
+                                           :display "flex"
+                                           :flex-direction "column"
+                                           :padding 45
+                                           :align-items "flex-start"
+                                           :justify-content "space-between"}})]
+    [ui/row
+     [ui/col (base-style 3)
+      [:h4 [:a {:href (str "/#/history/" (community :id))} "Local earthquake history"]]
+      [:p "When have earthquakes of magnitude 4 ot more hit " (community :title) " in the past?"]]
+     [ui/col (base-style 5)
+      [:h4 [:a {:href (str "/#/hex/" (community :id))} "What's happening here and now?"]]
+      [:p (community :title) " is seeing higher chances than normal because of increased 
+             seismic activity around the Mount Vittore fault system."]]
+     [ui/col (base-style {:span 4 })
+      [:h4 [:a {:href (str "/#/world/" (community :id))} "How does " (community :title) " compare to the world?"]]
+      [:p "How does the current chance of a magnitude 4 quake in " (community :title)
+       " compare to an average week in other places worldwide?"]]
+     ]))
+
+(defn update-status
+  []
+  [:div {:style {:font-size 16
+                 :margin-left 30
+                 :color "#888"}}
+
+   [ui/row {:style {:width 370}}
+        ;[:span  "Last updated"]
+        ;[:span "00:00 6th July 2021"]
+    [ui/col {:xs 5} "Last updated"]
+    [ui/col {:xs 6} "00:00 6th July 2021"]]
+
+   [ui/row {:style {:width 370}}
+    [ui/col {:xs 5} "Next update due"]
+    [ui/col {:xs 6} "00:00 7th July 2021"]]]
+  )
+
 (defn area-status
   "show earthquake status of an area"
-  [area p mean]
-  (let [mag+ @(rf/subscribe [::subs/mag+])
+  [community]
+  (let [p (community :p-7day) 
+        mean (community :mean-7day)
+        mag+ @(rf/subscribe [::subs/mag+])
         animate? @(rf/subscribe [::subs/animate?])]
     [ui/row {:style {:font-size "21px"}}
      [ui/col 
@@ -326,31 +368,9 @@
         [ui/col {:md 3}
          [:nobr [:div (large (- (js/Math.round (/ 1 p)) 1) " - 1")]]]]]
       
-      [:div {:style {:font-size 16
-                     :margin-left 30
-                     :color "#888"}}
-       
-       [ui/row {:style {:width 370}}
-        ;[:span  "Last updated"]
-        ;[:span "00:00 6th July 2021"]
-        [ui/col {:xs 5} "Last updated"]
-        [ui/col {:xs 6} "00:00 6th July 2021"]]
-       
-       [ui/row {:style {:width 370}}
-        [ui/col {:xs 5} "Next update due"]
-        [ui/col {:xs 6} "00:00 7th July 2021"]]]
+      [update-status]
 
-      [ui/row 
-       [ui/col {:md 12 :style {:font-size 16
-                               :display "flex"
-                               :flex-direction "column"
-                               :padding 45
-                               :align-items "flex-start"
-                               :justify-content "space-around"
-                               }}
-        [:h4 "What's happening?"]
-        [:p [:i "The area is seeing higher chances than normal because of increased 
-             seismic activity around the Mount Vittore fault system."]]]]]]))
+      ]]))
 
 (defn arrow-template
   "a parameterised direction arrow"
@@ -392,8 +412,6 @@
   (keys map-arrow)
   )
 
-
-
 (defn timer-component []
   (let [seconds-elapsed (r/atom 0)]
     (fn []
@@ -401,9 +419,13 @@
       [:div
        "Seconds Elapsed: " @seconds-elapsed])))
 
-(defn hex
-  "A community-level page featuring a mapped hexagon."
-  []
+
+
+(defn main-content-template
+  "Three standard columns with injected title and main central panel
+   page-title is a page-title function which takes the community as a parameter
+   content is a content component taking the community as parameter"
+  [page-title animate? content]
   (let [location (get-in @(rf/subscribe [::subs/current-route])
                          [:path-params :id])
         all-communities (group-by :id (:items @(rf/subscribe [::subs/communities])))
@@ -411,9 +433,7 @@
         all-regions (group-by :id (:items @(rf/subscribe [::subs/regions])))
         region-id (community :region)
         region (first (all-regions region-id))
-        animate? @(rf/subscribe [::subs/animate?])
-        quake? true
-        ]
+        quake? false]
     (locals)
     [ui/page
      [:<>
@@ -421,61 +441,88 @@
        [ui/col {:md 3 :style {:display "inline-block" :font-size "2.2em" :font-weight  "500"}}
         [:nobr (community :title)] " (" [:a {:href (ui/href (region :href) {:id (region :id)})} (region :title)] ")"]
        [ui/col {:md 8 :style {:display "inline-block" :font-size "2em" :font-weight  "500"}}
-        "How likely is a " [:i "magnitude 4 or above"] " earthquake" [:br] " within the next 7 days?"]]]
-     [ui/three-columns
-      {:col1 [:div {:style {:margin-top 20}} [mag-scale]]
-       :col2 [:div {:style {:margin-left 15}} (area-status community (community :p-7day) (community :mean-7day))]
-       :col3 [:<> [:div {:style {:position "relative" :display "flex"}
-                         :class-name (when quake? "shake")}
-                   [:> bs/Image {:src (str "/assets/" location " hex.png")
-                                 :width "100%"
-                                 :fluid false}]
+        [page-title community]]]
+      [ui/three-columns
+       {:col1 [:div {:style {:margin-top 20}} [mag-scale]]
+        :col2 [:div {:style {:margin-left 15}} (content community)]
+        :col3 [:<> [:div {:style {:position "relative" :display "flex"}
+                          :class-name (when quake? "shake")}
+                    [:> bs/Image {:src (str "/assets/" location " hex.png")
+                                  :width "100%"
+                                  :fluid false}]
                ; decorate map with map arrow links
-                   [:div {:style {:position "absolute" :top 0 :left 0 :bottom 0 :right 0}}
-                    (into [:<>]
-                          (map
-                           #(link-neighbour :community (community :id) %)
-                           hex-compass-points))]]
-              (when animate?
-                [:div {:style {:display "flex" :align-items "start" :margin-top 15}}
-                 [:div {:style {:width 20
-                                :height 20
-                                :display "inline-block"
-                                :border "3px solid #ACACAC"
-                                :border-radius 10}}]
-                 [:div {:style {:padding-left 15 :display "inline-block"}}
-                  "Every beat is a possible future 7 days"]])]}
+                    [:div {:style {:position "absolute" :top 0 :left 0 :bottom 0 :right 0}}
+                     (into [:<>]
+                           (map
+                            #(link-neighbour :community (community :id) %)
+                            hex-compass-points))]]
+               (when animate?
+                 [:div {:style {:display "flex" :align-items "start" :margin-top 15}}])]}]
+      [content-base community]]]))
 
-      #_[ui/row
-       [ui/col {:lg 3 :style {:max-width 500 :margin-bottom 30}}
-        [mag-scale]]
-       [ui/col {:lg 6 :style {:max-width 600}}
-        (area-status community (community :p-7day) (community :mean-7day))]
-       [ui/col {:lg 3 :style {:max-width 500}}
-        [:<>
-         [:div {:style {:position "relative" :display "flex"}
-                :class-name (when quake? "shake")}
-          [:> bs/Image {:src (str "/assets/" location " hex.png")
-                        :width "100%"
-                        :fluid false}]
-        ; decorate map with map arrow links
-          [:div {:style {:position "absolute" :top 0 :left 0 :bottom 0 :right 0}}
-           (into [:<>]
-                 (map
-                  #(link-neighbour :community (community :id) %)
-                  hex-compass-points))]]
-         (when animate?
-           [:div {:style {:display "flex" :align-items "start" :margin-top 15}}
-            [:div {:style {:width 20
-                           :height 20
-                           :display "inline-block"
-                       ;:background-color "#ACACAC"
-                           :border "3px solid #ACACAC"
-                           :border-radius 10}}]
-            [:div {:style {:padding-left 15 :display "inline-block"}}
-             "Every beat is a possible future 7 days"]])]]]]])
+(defn hex
+  "A community-level page featuring a mapped hexagon."
+  []
+  (main-content-template 
+   (fn [community] [:<> "How likely is a " [:i "magnitude 4 or above"] " earthquake" [:br] " within the next 7 days?"])
+   true
+   area-status
+   )
+  )
 
-)
+;;;
+;;
+;;;
+(defn histogram
+  [community]
+  [ui/row {:style {:font-size "21px"}}
+   [ui/col
+    [:div {:style {:border "1px solid #CCC"
+                   :border-radius 20
+                   :padding "0px 40px"
+                   :box-shadow "1px 1px 1px 1px #CCC"
+                   :background-color "#444466" #_"#80647D"
+                   :color "white"
+                   :height 355}}
+     [:> bs/Image {:src "/assets/history.png"
+                   :fluid "true"}]]]])
+
+(defn history
+  "Showing the earthquake history for an area"
+  []
+  (main-content-template
+   (fn [community] [:span  "Mag 4+ earthquakes in " (community :title) " over time"])
+   true
+   histogram))
+
+
+;;;
+;;
+;;;
+(defn world-averages
+  [community]
+  [ui/row {:style {:font-size "21px"}}
+   [ui/col
+    [:div {:style {:border "1px solid #CCC"
+                   :border-radius 20
+                   :padding "15px 70px"
+                   :box-shadow "1px 1px 1px 1px #CCC"
+                   :background-color "#444466" #_"#80647D"
+                   :color "white"
+                   :height 355}}
+     [:> bs/Image {:src "/assets/thermometer.png"
+                   :fluid "true"}]]]])
+
+(defn world
+  "Showing community relative to world averages"
+  []
+  (main-content-template
+   (fn [community] [:span "How does " (community :title) " compare to the world?"])
+   true
+   world-averages))
+
+
+
 
 
 

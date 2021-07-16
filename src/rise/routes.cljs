@@ -33,19 +33,25 @@
                     :start (fn [& params] (println ::routes "Entering Home " params))
        ;; Teardown can be done here.
                     :stop   (fn [& params] (println ::routes "Leaving Home " params))}]}]
-
-   ["info" {:name      ::views/info
-            :view      views/info
-            :link-text "Info"
-            :controllers [{:start (fn [& params] (js/console.log "Entering info: " params))
-                           :stop  (fn [& params] (js/console.log (str "Leaving Info" params)))}]}
-    [""] ; required to make ["åinfo"] a leaf route
+   ["history/{id}" {:name      ::views/history
+            :view      views/history
+            :link-text "History"
+            :controllers [{:start (fn [& params] (js/console.log "Entering history: " params))
+                           :stop  (fn [& params] (js/console.log (str "Leaving history" params)))}]}
+    [""] ; required to make ["history"] a leaf route
+    ]
+   ["world/{id}" {:name      ::views/world
+                    :view      views/world
+                    :link-text "World"
+                    :controllers [{:start (fn [& params] (js/console.log "Entering world: " params))
+                                   :stop  (fn [& params] (js/console.log (str "Leaving world" params)))}]}
+    [""] ; required to make ["world"] a leaf route
     ]
    ["hex/{id}" {:name      ::views/hex
-               :view      views/hex
-               :link-text "Location"
-               :controllers [{:start (fn [& params] (js/console.log "Entering hex: " params))
-                              :stop  (fn [& params] (js/console.log (str "Leaving hex" params)))}]}
+                :view      views/hex
+                :link-text "Location"
+                :controllers [{:start (fn [& params] (js/console.log "Entering hex: " params))
+                               :stop  (fn [& params] (js/console.log (str "Leaving hex" params)))}]}
     [""] ; required to make ["hex"] a leaf route
     ]
    ["regions/:id" {:name      ::views/regions
@@ -56,10 +62,10 @@
     [""] ; required to make ["regions"] a leaf route
     ]
    ["countries/:id" {:name      ::views/countries
-                   :view      views/countries
-                   :link-text "Country"
-                   :controllers [{:start (fn [& params] (js/console.log "Entering countries: " params))
-                                  :stop  (fn [& params] (js/console.log (str "Leaving countries" params)))}]}
+                     :view      views/countries
+                     :link-text "Country"
+                     :controllers [{:start (fn [& params] (js/console.log "Entering countries: " params))
+                                    :stop  (fn [& params] (js/console.log (str "Leaving countries" params)))}]}
     [""] ; required to make ["regions"] a leaf route
     ]])
 
