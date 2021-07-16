@@ -38,9 +38,43 @@
 ;; earthquake timer
 ;;;
 
+(def time-factors {:1 "1 week"
+                   :2 "2 weeks"
+                   :3 "3 weeks"
+                   :4 "1 month"
+                   :8 "2 months"
+                   :12 "3 months"
+                   :16 "4 months"
+                   :26 "6 months"
+                   :52 "1 year"
+                   :104 "2 years"
+                   :156 "3 years"
+                   :208 "4 years"
+                   :260 "5 years"
+                   :312 "6 years"
+                   :364 "7 years"
+                   :416 "8 years"
+                   :520 "10 years"})
+
+(defn closest 
+  "returns the closest value to x in coll"
+  [x coll]
+  (first (sort-by #(js/Math.abs (- x %)) coll)))
+
+(defn pretty-factor
+  "returns the closest factor to x from time factors"
+  [x]
+  (let [coll (mapv #(js/parseInt (name %)) (keys time-factors))]
+    (closest x coll)))
+
 (defn time-of-next-quake
   [p]
   (- (/ (js/Math.log (rand)) p)))
+
+(defn time-acceleration-factor
+  "Scaling factor to get an average time of m between earthquakes of probability p"
+  [p m]
+  (pretty-factor (/ 1000 (* m p))))
 
 (defn average
   "keep calling f to find its average value"
@@ -64,6 +98,16 @@
           :quake? (when animate? (db :quake?)))))
 
 (rf/reg-sub ::animate? (fn [db] (:animate? db)))
+
+;; set boolean for :quake? and time for :next-quake-t in db
+(rf/reg-event-db
+ ::quake?
+ (fn
+   [db [_ quake? time]]
+   (cond
+     time (assoc db :quake? quake?
+                 :next-quake-t time)
+     :else (assoc db :quake? quake?))))
 
 ;; set quake? probability
 #_(rf/reg-event-db

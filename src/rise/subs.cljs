@@ -24,6 +24,8 @@
 
 (rf/reg-sub ::animate? (fn [db] (:animate? db)))
 
+(rf/reg-sub ::quake? (fn [db] (:quake? db)))
 
+(rf/reg-sub ::next-quake-t (fn [db] (:next-quake-t db)))
 
-
+(rf/reg-sub ::average-time-to-quake (fn [db] (:average-time-to-quake db)))

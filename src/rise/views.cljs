@@ -314,7 +314,7 @@
   "Link a location to "
   [level id direction]
   (when-let [location (find-location-by-id level id)]
-    (js/console.log location ::location)
+    #_(js/console.log location ::location)
     (when-let [neighbour (get-in location [:neighbours direction])]
       (println neighbour ::neighbour)
       (link-location-by-id level neighbour (map-arrow direction)))))
@@ -351,8 +351,15 @@
         region-id (community :region)
         region (first (all-regions region-id))
         animate? @(rf/subscribe [::subs/animate?])
-        quake? true
-        ]
+        quake? @(rf/subscribe [::subs/quake?])
+        lambda (:p-7day community)
+        time->next-q @(rf/subscribe [::subs/next-quake-t])
+        time-acc-f (events/time-acceleration-factor lambda @(rf/subscribe [::subs/average-time-to-quake]))
+        time-acc-f-in-words ((keyword (str time-acc-f)) events/time-factors)]
+    (if quake? (do
+                 (js/console.log (str "Next quake in: " time->next-q " ms."))
+                 (js/setTimeout #(rf/dispatch [::events/quake? true]) time->next-q)
+                 (js/setTimeout #(rf/dispatch [::events/quake? false (max 1000 (/ (* 1000 (events/time-of-next-quake lambda)) time-acc-f))]) 800)))
     (locals)
     [ui/page
      [:<>
@@ -369,12 +376,17 @@
                    [:> bs/Image {:src (str "/assets/" location " hex.png")
                                  :width "100%"
                                  :fluid false}]
-               ; decorate map with map arrow links
+                   
+                                        ; decorate map with map arrow links
                    [:div {:style {:position "absolute" :top 0 :left 0 :bottom 0 :right 0}}
                     (into [:<>]
                           (map
                            #(link-neighbour :community (community :id) %)
                            hex-compass-points))]]
+              [:div {:style {:font-size 16
+                             :margin-left 30
+                             :color "#888"}}
+               [ui/row {:style {:width 370}} (str "Simulating " time-acc-f-in-words " of seismic activity per second.")]]
               (when animate?
                 [:div {:style {:display "flex" :align-items "start" :margin-top 15}}
                  [:div {:style {:width 20
@@ -386,33 +398,33 @@
                   "Every beat is a possible future 7 days"]])]}
 
       #_[ui/row
-       [ui/col {:lg 3 :style {:max-width 500 :margin-bottom 30}}
-        [mag-scale]]
-       [ui/col {:lg 6 :style {:max-width 600}}
-        (area-status community (community :p-7day) (community :mean-7day))]
-       [ui/col {:lg 3 :style {:max-width 500}}
-        [:<>
-         [:div {:style {:position "relative" :display "flex"}
-                :class-name (when quake? "shake")}
-          [:> bs/Image {:src (str "/assets/" location " hex.png")
-                        :width "100%"
-                        :fluid false}]
-        ; decorate map with map arrow links
-          [:div {:style {:position "absolute" :top 0 :left 0 :bottom 0 :right 0}}
-           (into [:<>]
-                 (map
-                  #(link-neighbour :community (community :id) %)
-                  hex-compass-points))]]
-         (when animate?
-           [:div {:style {:display "flex" :align-items "start" :margin-top 15}}
-            [:div {:style {:width 20
-                           :height 20
-                           :display "inline-block"
-                       ;:background-color "#ACACAC"
-                           :border "3px solid #ACACAC"
-                           :border-radius 10}}]
-            [:div {:style {:padding-left 15 :display "inline-block"}}
-             "Every beat is a possible future 7 days"]])]]]]])
+         [ui/col {:lg 3 :style {:max-width 500 :margin-bottom 30}}
+          [mag-scale]]
+         [ui/col {:lg 6 :style {:max-width 600}}
+          (area-status community (community :p-7day) (community :mean-7day))]
+         [ui/col {:lg 3 :style {:max-width 500}}
+          [:<>
+           [:div {:style {:position "relative" :display "flex"}
+                  :class-name (when quake? "shake")}
+            [:> bs/Image {:src (str "/assets/" location " hex.png")
+                          :width "100%"
+                          :fluid false}]
+                                        ; decorate map with map arrow links
+            [:div {:style {:position "absolute" :top 0 :left 0 :bottom 0 :right 0}}
+             (into [:<>]
+                   (map
+                    #(link-neighbour :community (community :id) %)
+                    hex-compass-points))]]
+           (when animate?
+             [:div {:style {:display "flex" :align-items "start" :margin-top 15}}
+              [:div {:style {:width 20
+                             :height 20
+                             :display "inline-block"
+                                        ;:background-color "#ACACAC"
+                             :border "3px solid #ACACAC"
+                             :border-radius 10}}]
+              [:div {:style {:padding-left 15 :display "inline-block"}}
+               "Every beat is a possible future 7 days"]])]]]]])
 
 )
 
