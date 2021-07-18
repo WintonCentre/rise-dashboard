@@ -268,22 +268,23 @@
 ;(def p 0.22)
 
 (defn bar
-  [p]
-  (when @(rf/subscribe [::subs/with-vis?])
-    [:<>
-     [:div {:style {:border "1px inset #CCC"
-                    :background-color "white"
+  [{:keys [p r w text]}]
+  
+  [:div {:style {:width 100 :height 100 :display "flex" :flex-direction "column" :justify-content "space-between" :align-items "center"}}
+   (when text  [:div {:style {:margin "auto auto" :font-size "1.4em"}} text])
+   (when @(rf/subscribe [::subs/with-vis?])
+     [:div {:style {:background-color "#fff8"
                     :height 16
                     :position "relative"
-                    :width "100%"}}
-      [:div {:style {:background-color #_"#2177FF" "#444466"
+                    :width "100px"}}
+      [:div {:style {:background-color "#fff"
                      :position "absolute"
                      :padding "0px 0px"
-                     :height 8
-                     :left 0 :top 3
+                     :height "100%"
+                     :left 0 :top 0
                      :width (str (* p 100) "%")}}]]
      [:div {:style {:display "flex" :justify-content "space-between" :width "100%" :font-size "0.8em" :color "#BCBCCC"}}
-      [:span "0%"] [:span "100%"]]]))
+      [:span "0%"] [:span "100%"]])])
 
 (defn arc
   "Return an arc. p is a fraction of a turn, r is the radius at the centre of the arc, w is the width of the arc
@@ -292,11 +293,12 @@
   [{:keys [p r w text]}]
   (let [cr (- r (/ w 2))
         d (* 2 r)]
-    (when @(rf/subscribe [::subs/with-vis?])
-      (let [dash (* js/Math.PI cr p)
-            gap (- (* 2 js/Math.PI cr) (* 2 dash))]
-        [:div {:style {:width d :height d}}
-         [:div {:style {:display "flex" :direction "row" :justify-content "center" :align-items "center"}}
+    
+    (let [dash (* js/Math.PI cr p)
+          gap (- (* 2 js/Math.PI cr) (* 2 dash))]
+      [:div {:style {:width d :height d}}
+       [:div {:style {:display "flex" :direction "row" :justify-content "center" :align-items "center"}}
+        (when @(rf/subscribe [::subs/with-vis?])
           [:div {:style {:width 0}}
            [:svg {:width d :height d}
             [:g
@@ -304,8 +306,8 @@
              [:circle {:cx r :cy r :r cr :fill "none" :stroke "#ffffff" #_"#327bff" :stroke-width w
                        :stroke-dasharray (str dash " " gap " " dash)
                        :style {:transform "rotate(-90deg)"
-                               :transform-origin "50% 50%"}}]]]]
-          (when text  [:div {:style {:margin "auto auto"}} text])]]))))
+                               :transform-origin "50% 50%"}}]]]])
+        (when text  [:div {:style {:margin "auto auto"}} text])]])))
 
 (defn trim-s
   "Given s as a string representation of an integer or simple decimal (not E notation!), 
@@ -334,14 +336,19 @@
 
 (trim-s "0.01500")
 
-(defn arc%
+(defn vis%
   "An arc with p rendered as a percentage at the centre"
   [p]
-  [arc {:p p
-        :r 55
-        :w 12
-        :b 3
-        :text (str (trim-s (.toPrecision (js/Number. (* p 100)) 2)) "%")}])
+  (let [with-vis? @(rf/subscribe [::subs/with-vis?])
+         annular? @(rf/subscribe [::subs/annular?])
+        params {:p p
+                :r 55
+                :w 12
+                :b 3
+                :text (str (trim-s (.toPrecision (js/Number. (* p 100)) 2)) "%")}]
+    (if (and with-vis? annular?)
+      [arc params]
+      [bar params])))
 
 (defn content-base
   "The bottom of the page, occupying cols 1, 2 and 3"
@@ -394,20 +401,22 @@
         mean (community :mean-7day)
         mag+ @(rf/subscribe [::subs/mag+])
         animate? @(rf/subscribe [::subs/animate?])
-        with-vis? @(rf/subscribe [::subs/with-vis?])]
+        with-vis? @(rf/subscribe [::subs/with-vis?])
+        odds? @(rf/subscribe [::subs/odds?])]
     [ui/row {:style {:font-size "21px"}}
      [ui/col
       [:div {:style {:border "1px solid #CCC"
                      :border-radius 20
-                     :padding (str (if with-vis? 15 60) "px 30px")
+                     :padding (str (if with-vis? 15 30) "px 30px")
                      :box-shadow "1px 1px 1px 1px #CCC"
                      :background-color "#444466" #_"#80647D"
                      :color "white"}}
-       [ui/row {:style {:display "flex" :align-items "center" :justify-content "space-between" :padding-bottom 25}}
+       [ui/row {:style {:display "flex" :align-items "center" :justify-content "space-between" 
+                        :padding-bottom (when with-vis? 25)}}
         [:<> ;ui/col {:md 9}
          [:div  "The chance of an earthquake" [:br] [:nobr "within 6th July ⟷ 13th July is"]]]
         [:<> ;ui/col {:md 3}
-         [arc% p]
+         [vis% p]
          #_[:div [large (.toFixed (js/Number (* p 100)) 1) "%"]]]]
        #_[ui/row {:style {:margin-top 5}}
           [ui/col
@@ -424,20 +433,32 @@
 
        [ui/row {:style {:display "flex" :align-items "center" :justify-content "space-between" :padding-bottom 35}}
         [:<> ;ui/col {:md 9}
-         [:span (if with-vis? "w" "W") "hereas the chance in an average week is"]]
+         [:span "whereas the chance in an average week is"]]
         ;[:br]
         [:<> ;ui/col {:md 3}
-         [arc% mean]
+         [vis% mean]
          #_[:div [large (.toFixed (js/Number (* mean 100)) 3) "%"]]]]
 
        ;[:br]
        ;[:hr]
 
        [ui/row {:style {:display "flex" :align-items "center" :justify-content "space-between" :padding-bottom 25}}
-        [:<> ;ui/col ;{:md 9}
-         [:span "The odds against an earthquake are"]]
-        [:<> ;ui/col {:md 3}
-         [:nobr [:div {:style {:width 85}} (large (- (js/Math.round (/ 1 p)) 1) " - 1")]]]]]
+        (if odds?
+          [:<>
+           [:span "The odds against an earthquake are"]
+           [:nobr [:div {:style {:width 85}} (large (- (js/Math.round (/ 1 p)) 1) " - 1")]]]
+          [:<>
+           [:span "The current chance is " (large (let [rr (/ p mean)]
+                                            (str (if (> rr 1)
+                                                   (js/Math.round rr) ;(* 10 (js/Math.round (/ rr 10)))
+                                                   (trim-s (.toPrecision (js/Number. (* rr 100)) 2)))))) " times " 
+            (condp = (compare p mean)
+              -1 "smaller than"
+              0 "equal to"
+              1 "bigger than")
+            " average."]
+           ]
+          )]]
 
       [update-status]]]))
 

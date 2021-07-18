@@ -4,8 +4,10 @@
   {:mag+ 4 ; display this magnitude and greater
    :animate? false ; whether to run the animation
    :next-quake-t 0 ; time to next quake. None if next-quake < clock
-   :with-context? true
-   :with-vis? true
+   :with-context? true ; include contextual pages (local history and compare with the world)
+   :with-vis? false ; use visuals for the percentage
+   :annular? true ; use an annular visual / use a bar chart
+   :odds? false ; show odds or relative risk
    :countries {:title "Countries"
                :items [{:href :rise.views/countries
                         :title "Italy"
@@ -88,7 +90,7 @@
                           :longitude 12.7376
                           :region "umbria"
                           :country "italy"
-                          :p-7day 0.022
+                          :p-7day 0.16
                           :mean-7day 0.00012
                           :neighbours {:NW "spoleto-N"
                                        :SW "spoleto"
@@ -130,8 +132,8 @@
                           :longitude 12.7376
                           :region "umbria"
                           :country "italy"
-                          :p-7day 0.0012
-                          :mean-7day 0.00009
+                          :p-7day 0.00012
+                          :mean-7day 0.00044
                           :neighbours {:NE "spoleto"
                                        :SE "spoleto-S"
                                        :N "spoleto-NW"}

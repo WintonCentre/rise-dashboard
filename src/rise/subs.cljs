@@ -28,6 +28,10 @@
 
 (rf/reg-sub ::with-vis? (fn [db] (:with-vis? db)))
 
+(rf/reg-sub ::annular? (fn [db] (:annular? db)))
+
+(rf/reg-sub ::odds? (fn [db] (:odds? db)))
+
 
 
 
