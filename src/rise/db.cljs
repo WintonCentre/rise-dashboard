@@ -1,7 +1,7 @@
 (ns rise.db)
 
 (def default-db
-  {:mag+ 4 ; threshold displayed
+  {:mag+ 4 ; display this magnitude and greater
    :animate? false ; whether to run the animation
    :next-quake-t 0 ; time to next quake. None if next-quake < clock
    :with-context? true

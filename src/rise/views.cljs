@@ -1,6 +1,7 @@
 (ns rise.views
   (:require
    [clojure.string :as string]
+   [clojure.edn :as edn]
    [re-frame.core :as rf]
    ["react-bootstrap" :as bs]
    [reagent.core :as r]
@@ -124,7 +125,7 @@
 (defn mag-y
   "Linear map so mag-y 10 -> 0 and mag-y 4 -> 302 (the height of the mag scale)"
   [mag] (/ (* (- 10 mag) 302) 6))
-(comment 
+(comment
   (mag-y 4)
   ;; => 302
 
@@ -200,13 +201,13 @@
   "Display a generic home page. Minimally, navigation from here to countries."
   []
   (let [all-countries (:items @(rf/subscribe [::subs/countries]))]
-  [ui/page "RISE Dashboard demo"
-   [ui/row
-    [ui/col {:md 5}
-     [mag-scale]]
-    [ui/col {:md {:span 5 :offset 1} :style {:font-size "1.4em"}}
-     "Navigate to your local area."
-     [links-to all-countries]]]]))
+    [ui/page "RISE Dashboard demo"
+     [ui/row
+      [ui/col {:md 5}
+       [mag-scale]]
+      [ui/col {:md {:span 5 :offset 1} :style {:font-size "1.4em"}}
+       "Navigate to your local area."
+       [links-to all-countries]]]]))
 
 (defn info
   []
@@ -229,7 +230,7 @@
     [ui/page [:h1 (country :title)]
      [ui/three-columns
       {:col1 [mag-scale]
-       :col2 [:div {:style {:margin-left 30}} 
+       :col2 [:div {:style {:margin-left 30}}
               [:h2 "Italian Regions"]
               (links-to country-regions)]
        :col3 [:> bs/Image {:src (str "/assets/" country-id ".png")
@@ -249,7 +250,7 @@
         all-communities (:items @(rf/subscribe [::subs/communities]))
         regional-communities (filter #(= (:region %) region-id) all-communities)]
     (locals)
-    [ui/page [:div {:style {:margin-left 30}} 
+    [ui/page [:div {:style {:margin-left 30}}
               [:h1 [:span (region :title) " (" [:a {:href (ui/href (country :href) {:id (country :id)})} (country :title)] ")"]]]
      [ui/three-columns
       {:col1 [mag-scale]
@@ -284,10 +285,69 @@
      [:div {:style {:display "flex" :justify-content "space-between" :width "100%" :font-size "0.8em" :color "#BCBCCC"}}
       [:span "0%"] [:span "100%"]]]))
 
+(defn arc
+  "Return an arc. p is a fraction of a turn, r is the radius at the centre of the arc, w is the width of the arc
+   To get a pie chart the whole circle and not just the annulus, we need (= w r).
+   "
+  [{:keys [p r w text]}]
+  (let [cr (- r (/ w 2))
+        d (* 2 r)]
+    (when @(rf/subscribe [::subs/with-vis?])
+      (let [dash (* js/Math.PI cr p)
+            gap (- (* 2 js/Math.PI cr) (* 2 dash))]
+        [:div {:style {:width d :height d}}
+         [:div {:style {:display "flex" :direction "row" :justify-content "center" :align-items "center"}}
+          [:div {:style {:width 0}}
+           [:svg {:width d :height d}
+            [:g
+             [:circle {:cx r :cy r :r cr :fill "none" :stroke "#ffffff88" :stroke-width w}]
+             [:circle {:cx r :cy r :r cr :fill "none" :stroke "#ffffff" #_"#327bff" :stroke-width w
+                       :stroke-dasharray (str dash " " gap " " dash)
+                       :style {:transform "rotate(-90deg)"
+                               :transform-origin "50% 50%"}}]]]]
+          (when text  [:div {:style {:margin "auto auto"}} text])]]))))
+
+(defn trim-s
+  "Given s as a string representation of an integer or simple decimal (not E notation!), 
+   trim whitespace and remove trailing zeroes. If a simple integer trim and drop leading zeroes."
+  [s]
+  (let [small-decimal (< (edn/read-string s) 1)
+        zero-s? #(= "0" %)
+        drop-zeroes #(drop-while zero-s? %)]
+    (if small-decimal
+      (->> s
+           string/trim
+           reverse
+           drop-zeroes
+           reverse
+           string/join)
+      (->> s string/trim drop-zeroes string/join))))
+
+(comment
+  (trim-s "0.01500")
+  ;; => "0.015"
+  (trim-s "01500")
+  ;; => "1500"
+  (trim-s "01500.30")
+  ;; => "1500.30"
+  0)
+
+(trim-s "0.01500")
+
+(defn arc%
+  "An arc with p rendered as a percentage at the centre"
+  [p]
+  [arc {:p p
+        :r 55
+        :w 12
+        :b 3
+        :text (str (trim-s (.toPrecision (js/Number. (* p 100)) 2)) "%")}])
+
 (defn content-base
-  "wrapper for the central box component occupying cols 2 and 3"
+  "The bottom of the page, occupying cols 1, 2 and 3"
   [community]
   (let [with-context? @(rf/subscribe [::subs/with-context?])
+        region (find-location-by-id :region (community :region))
         base-style (fn [md] {:md md :style {:font-size 16
                                             :display "flex"
                                             :flex-direction "column"
@@ -299,7 +359,7 @@
       (when with-context?
         [:<>
          [:h4 [:a {:href (str "/#/history/" (community :id))} "Local earthquake history"]]
-         [:p "When have earthquakes of magnitude 4 ot more hit " (community :title) " in the past?"]])]
+         [:p "How many earthquakes of magnitude 4 or more have hit " (community :title) " in the past?"]])]
      [ui/col (base-style 5)
       [:h4 [:a {:href (str "/#/hex/" (community :id))} "What's happening here and now?"]]
       [:p (community :title) " is seeing higher chances than normal because of increased 
@@ -308,7 +368,7 @@
       (when with-context?
         [:<>
          [:h4 [:a {:href (str "/#/world/" (community :id))} "How does " (community :title) " compare to the world?"]]
-         [:p "How does the current chance of a magnitude 4 quake in " (community :title)
+         [:p "How does the current chance of a magnitude 4+ quake in " (community :title)
           " compare to an average week in other places worldwide?"]])]]))
 
 (defn update-status
@@ -325,61 +385,61 @@
 
    [ui/row {:style {:width 370}}
     [ui/col {:xs 5} "Next update due"]
-    [ui/col {:xs 6} "00:00 7th July 2021"]]]
-  )
+    [ui/col {:xs 6} "00:00 7th July 2021"]]])
 
 (defn area-status
   "show earthquake status of an area"
   [community]
-  (let [p (community :p-7day) 
+  (let [p (community :p-7day)
         mean (community :mean-7day)
         mag+ @(rf/subscribe [::subs/mag+])
         animate? @(rf/subscribe [::subs/animate?])
         with-vis? @(rf/subscribe [::subs/with-vis?])]
     [ui/row {:style {:font-size "21px"}}
-     [ui/col 
+     [ui/col
       [:div {:style {:border "1px solid #CCC"
                      :border-radius 20
                      :padding (str (if with-vis? 15 60) "px 30px")
                      :box-shadow "1px 1px 1px 1px #CCC"
                      :background-color "#444466" #_"#80647D"
                      :color "white"}}
-       [ui/row
-        [ui/col {:md 9}
-         [:div  "The chance of an earthquake" [:br] [:nobr "within 6th July <———> 13th July"]]]
-        [ui/col {:md 3}
-         [:div [large (.toFixed (js/Number (* p 100)) 1) "%"]]]]
-       [ui/row {:style {:margin-top 5}}
-        [ui/col
-         [bar p]]]
-       (if with-vis?
-         [ui/row {:style {:margin-top 5}}
+       [ui/row {:style {:display "flex" :align-items "center" :justify-content "space-between" :padding-bottom 25}}
+        [:<> ;ui/col {:md 9}
+         [:div  "The chance of an earthquake" [:br] [:nobr "within 6th July ⟷ 13th July is"]]]
+        [:<> ;ui/col {:md 3}
+         [arc% p]
+         #_[:div [large (.toFixed (js/Number (* p 100)) 1) "%"]]]]
+       #_[ui/row {:style {:margin-top 5}}
           [ui/col
-           [:div {:style {:margin-bottom 6}} "compared to"]
-           [bar mean]]]
-         [:br])
+
+           #_[bar p]]]
+       #_(if with-vis?
+           [ui/row {:style {:margin-top 5}}
+            [ui/col
+             #_[:div {:style {:margin-bottom 6}} "compared to"]
+             #_[bar mean]]]
+           [:br])
        ;[:br]
        ;[:hr]
 
-       [ui/row {:style {:display "flex" :align-items "center" :padding-bottom 15}}
-        [ui/col {:md 9}
-         [:span (if with-vis? "t" "T") "he chance in an average week"]]
-        [:br]
-        [ui/col {:md 3 }
-         [:div [large (.toFixed (js/Number (* mean 100)) 3) "%"]]]]
-       
-       [:br]
+       [ui/row {:style {:display "flex" :align-items "center" :justify-content "space-between" :padding-bottom 35}}
+        [:<> ;ui/col {:md 9}
+         [:span (if with-vis? "w" "W") "hereas the chance in an average week is"]]
+        ;[:br]
+        [:<> ;ui/col {:md 3}
+         [arc% mean]
+         #_[:div [large (.toFixed (js/Number (* mean 100)) 3) "%"]]]]
+
+       ;[:br]
        ;[:hr]
 
-       [ui/row {:style {:display "flex" :align-items "center" :padding-bottom 15}}
-        [ui/col {:md 9}
-         [:span "The odds against an earthquake"]]
-        [ui/col {:md 3}
-         [:nobr [:div (large (- (js/Math.round (/ 1 p)) 1) " - 1")]]]]]
-      
-      [update-status]
+       [ui/row {:style {:display "flex" :align-items "center" :justify-content "space-between" :padding-bottom 25}}
+        [:<> ;ui/col ;{:md 9}
+         [:span "The odds against an earthquake are"]]
+        [:<> ;ui/col {:md 3}
+         [:nobr [:div {:style {:width 85}} (large (- (js/Math.round (/ 1 p)) 1) " - 1")]]]]]
 
-      ]]))
+      [update-status]]]))
 
 (defn arrow-template
   "a parameterised direction arrow"
@@ -418,8 +478,7 @@
 (def hex-compass-points
   "Points around a hexagon standing on its base. 
    Order will be retained up to 32 points only"
-  (keys map-arrow)
-  )
+  (keys map-arrow))
 
 (defn timer-component []
   (let [seconds-elapsed (r/atom 0)]
@@ -472,12 +531,10 @@
 (defn hex
   "A community-level page featuring a mapped hexagon."
   []
-  (main-content-template 
+  (main-content-template
    (fn [community] [:<> "How likely is a " [:i "magnitude 4 or above"] " earthquake" [:br] " within the next 7 days?"])
    true
-   area-status
-   )
-  )
+   area-status))
 
 ;;;
 ;;
@@ -488,19 +545,29 @@
    [ui/col
     [:div {:style {:border "1px solid #CCC"
                    :border-radius 20
-                   :padding "0px 40px"
+                   :display "flex"
+                   :flex-direction "column" 
+                   :padding 20
+                   :justify-content "space-between"
+                   :align-items "center"
                    :box-shadow "1px 1px 1px 1px #CCC"
                    :background-color "#444466" #_"#80647D"
                    :color "white"
                    :height 355}}
-     [:> bs/Image {:src "/assets/history.png"
-                   :fluid "true"}]]]])
+     [:div {:style {:text-align "center"}}
+      "How many earthquakes of magnitude 4 or morehit " (community :title) " in each 50 year period?"]
+     [:div {:style {:max-width 450}}
+      [:> bs/Image {:src "/assets/history.png"
+                    :alt "History of quakes in the area"
+                    :fluid "false"}]]]]])
 
 (defn history
   "Showing the earthquake history for an area"
   []
   (main-content-template
-   (fn [community] [:span  "Mag 4+ earthquakes in " (community :title) " over time"])
+   (fn [community]
+     (let [region (find-location-by-id :region (community :region))]
+       [:span  "Mag 4+ earthquakes in " (community :title) " over time"]))
    true
    histogram))
 
@@ -520,7 +587,8 @@
                    :color "white"
                    :height 355}}
      [:> bs/Image {:src "/assets/thermometer.png"
-                   :fluid "true"}]]]])
+                   :alt "Map showing forecast area"
+                   :fluid "false"}]]]])
 
 (defn world
   "Showing community relative to world averages"

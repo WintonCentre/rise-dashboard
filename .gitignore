@@ -30,6 +30,7 @@ resources/public/cljs-out
 doc/UI inputs.md
 .calva/.cache
 .calva/output-window/*
+.cljs_node_repl/
 ~*
 nashorn_code_cache/*
 .cljs_nashorn*/*
