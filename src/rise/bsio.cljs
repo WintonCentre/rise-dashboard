@@ -73,7 +73,7 @@ I've also missed out things like stopPropagation, preventDefault, and touch even
              :name id
              :value value
              :on-change on-change
-             :style  {:border (str "3px solid "
+             :style  {#_#_:border (str "3px solid "
                                    (if (or (nil? value)
                                            (= :unknown value)) 
                                      (if optional "teal" missing-color) "#CCCCCC"))

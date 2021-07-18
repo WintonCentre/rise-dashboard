@@ -108,9 +108,35 @@
           :animate? animate?
           :quake? (when animate? (db :quake?)))))
 
-(rf/reg-sub ::animate? (fn [db] (:animate? db)))
+;; set animate? or not. If animate? is false.
+(rf/reg-event-db
+ ::odds?
+ (fn
+   [db [_ odds?]]
+   (assoc db
+          :odds? odds?
+          )))
 
+(rf/reg-event-db
+ ::with-vis?
+ (fn
+   [db [_ with-vis?]]
+   (assoc db
+          :with-vis? with-vis?)))
 
+(rf/reg-event-db
+ ::with-context?
+ (fn
+   [db [_ with-context?]]
+   (assoc db
+          :with-context? with-context?)))
+
+(rf/reg-event-db
+ ::annular?
+ (fn
+   [db [_ annular?]]
+   (assoc db
+          :annular? annular?)))
 
 
 

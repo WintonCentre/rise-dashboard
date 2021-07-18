@@ -8,6 +8,7 @@
    [rise.subs :as subs]
    [rise.events :as events]
    [rise.ui :as ui]
+   [rise.bsio :as bsio]
    [shadow.debug :refer [locals ?> ?-> ?->>]]))
 
 (comment
@@ -209,13 +210,31 @@
        "Navigate to your local area."
        [links-to all-countries]]]]))
 
-(defn info
-  []
-  [ui/page "Info"
-   [ui/row
-    [ui/col
-     "An info page placeholder"]]])
+(defn option-radio-group
+  [id key-name on-text off-text]
+  [ui/row
+   [ui/col {:md 6}
+    [bsio/radio-button-group {:id id
+                              :value-k (keyword key-name)
+                              :value-f #(if @(rf/subscribe [(keyword :rise.subs key-name)]) "on" "off")
+                              :on-change #(rf/dispatch [(keyword :rise.events key-name) (= % "on")])
+                              :buttons-f (fn [] [{:key (keyword key-name) :level "on" :level-name on-text}
+                                                 {:key (str "not" (keyword key-name)) :level "off" :level-name off-text}])}]]])
 
+(defn settings
+  "Page to set options"
+  []
+  [ui/page [:h1 "Set Options"]
+   [:div {:style {:height 500 :width 200 :display "flex" :flex-direction "column" :justify-content "space-between"}}
+    [option-radio-group "odds?" "odds?" "Show Odds" "Show relative risk" ]
+    [option-radio-group "setcontext" "with-context?" "With contextual pages" "Without contextual pages"]
+    [option-radio-group "setvis" "with-vis?" "With visualisation" "Without visualisation"]
+    [option-radio-group "annular" "annular?" "Show speedo?" "Show bar?"]
+
+    [ui/row
+     [ui/col {:md 3}
+      [:> bs/Button {:href (ui/href :rise.views/hex {:id "spoleto"})}
+       "Start"]]]]])
 
 (defn countries
   "A country overview with links to regions"
@@ -269,33 +288,36 @@
 
 (defn bar
   [{:keys [p r w text]}]
-  
+
   [:div {:style {:width 100 :height 100 :display "flex" :flex-direction "column" :justify-content "space-between" :align-items "center"}}
    (when text  [:div {:style {:margin "auto auto" :font-size "1.4em"}} text])
    (when @(rf/subscribe [::subs/with-vis?])
-     [:div {:style {:background-color "#fff8"
-                    :height 16
-                    :position "relative"
-                    :width "100px"}}
-      [:div {:style {:background-color "#fff"
-                     :position "absolute"
-                     :padding "0px 0px"
-                     :height "100%"
-                     :left 0 :top 0
-                     :width (str (* p 100) "%")}}]]
-     [:div {:style {:display "flex" :justify-content "space-between" :width "100%" :font-size "0.8em" :color "#BCBCCC"}}
-      [:span "0%"] [:span "100%"]])])
+     (when-not @(rf/subscribe [::subs/annular?])
+       [:<>
+        [:div {:id "bar-vis"
+               :style {:background-color "#ffffff88"
+                       :height 16
+                       :position "relative"
+                       :width "100px"}}
+         [:div {:style {:background-color "#fff"
+                        :position "absolute"
+                        :padding "0px 0px"
+                        :height "100%"
+                        :left 0 :top 0
+                        :width 20 #_(str (* p 100) "%")}}]]
+        [:div {:style {:display "flex" :justify-content "space-between" :width "100%" :font-size "0.8em" :color "#BCBCCC"}}
+         [:span "0%"] [:span "100%"]]]))])
 
-(defn arc
-  "Return an arc. p is a fraction of a turn, r is the radius at the centre of the arc, w is the width of the arc
+  (defn arc
+    "Return an arc. p is a fraction of a turn, r is the radius at the centre of the arc, w is the width of the arc
    To get a pie chart the whole circle and not just the annulus, we need (= w r).
    "
-  [{:keys [p r w text]}]
-  (let [cr (- r (/ w 2))
-        d (* 2 r)]
-    
-    (let [dash (* js/Math.PI cr p)
+    [{:keys [p r w text]}]
+    (let [cr (- r (/ w 2))
+          d (* 2 r)
+          dash (* js/Math.PI cr p)
           gap (- (* 2 js/Math.PI cr) (* 2 dash))]
+
       [:div {:style {:width d :height d}}
        [:div {:style {:display "flex" :direction "row" :justify-content "center" :align-items "center"}}
         (when @(rf/subscribe [::subs/with-vis?])
@@ -307,7 +329,7 @@
                        :stroke-dasharray (str dash " " gap " " dash)
                        :style {:transform "rotate(-90deg)"
                                :transform-origin "50% 50%"}}]]]])
-        (when text  [:div {:style {:margin "auto auto"}} text])]])))
+        (when text  [:div {:style {:margin "auto auto"}} text])]]))
 
 (defn trim-s
   "Given s as a string representation of an integer or simple decimal (not E notation!), 
@@ -339,14 +361,14 @@
 (defn vis%
   "An arc with p rendered as a percentage at the centre"
   [p]
-  (let [with-vis? @(rf/subscribe [::subs/with-vis?])
-         annular? @(rf/subscribe [::subs/annular?])
+  (let [annular? @(rf/subscribe [::subs/annular?])
+        with-vis? @(rf/subscribe [::subs/with-vis?])
         params {:p p
                 :r 55
                 :w 12
                 :b 3
                 :text (str (trim-s (.toPrecision (js/Number. (* p 100)) 2)) "%")}]
-    (if (and with-vis? annular?)
+    (if (and annular? with-vis?)
       [arc params]
       [bar params])))
 
@@ -618,7 +640,6 @@
    (fn [community] [:span "How does " (community :title) " compare to the world?"])
    true
    world-averages))
-
 
 
 

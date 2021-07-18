@@ -75,7 +75,8 @@ in the routes table."
      [:> bs/Navbar.Toggle {:aria-controls "basic-navbar-nav"}]
      [:> bs/Navbar.Collapse {:id "basic-navbar-nav" :style {:margin-left 70}}
 
-      [:> bs/Nav {:active-key (if page-name (name page-name) "home")}
+      [:> bs/Nav {:style {:display "flex" :justify-content "space-between" :width "100%"}
+                  :active-key (if page-name (name page-name) "home")}
        [:> bs/Nav.Link {:event-key :home
                         :href (href :rise.views/home)} "Home"]
        #_[:> bs/Nav.Link {:event-key :info
@@ -83,6 +84,9 @@ in the routes table."
        [navbar-dropdown-menu ::subs/countries]
        [navbar-dropdown-menu ::subs/regions]
        [navbar-dropdown-menu ::subs/communities]
+       [:div {:style {:flex-grow 6}} " "]
+       [:> bs/Nav.Link {:event-key :settings
+                        :href (href :rise.views/settings)} "Settings"]
 
        #_[:> bs/NavDropdown {:title "Communities" :id "basic-nav-dropdown"}
         [:> bs/NavDropdown.Item {:href (href :rise.views/hex {:id "Spoleto"})
