@@ -10,7 +10,7 @@
    [shadow.debug :refer [locals ?> ?-> ?->>]]
    ))
 
-(enable-console-print!)
+;(enable-console-print!)
 
 ;;; Setup ;;;
 (def debug? ^boolean goog.DEBUG)

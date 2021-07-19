@@ -23,33 +23,35 @@
 
 (def default-db
   {:mag+ 4 ; display this magnitude and greater
-   
    :animate? false ; whether to run the animation
+<<<<<<< HEAD
    :quake? true
    :next-quake-t 15000 ; time to next quake. None if next-quake < clock
    :average-time-to-quake 15000 ; in ms
-
+=======
+   :next-quake-t 0 ; time to next quake. None if next-quake < clock
    :with-context? true ; include contextual pages (local history and compare with the world)
    :with-vis? false ; use visuals for the percentage
    :annular? true ; use an annular visual / use a bar chart
    :odds? false ; show odds or relative risk
+>>>>>>> main
    :countries {:title "Countries"
                :items [{:href :rise.views/countries
                         :title "Italy"
                         :id "italy"
                         :map "italy.png"}
                        #_{:href :rise.views/countries
-                          :title "New Zealand"
-                          :id "nz"
-                          :map "nz.png"}
+                        :title "New Zealand"
+                        :id "nz"
+                        :map "nz.png"}
                        #_{:href :rise.views/countries
-                          :title "Switzerland"
-                          :id "switzerland"
-                          :map "switzerland.png"}
+                        :title "Switzerland"
+                        :id "switzerland"
+                        :map "switzerland.png"}
                        #_{:href :rise.views/countries
-                          :title "Iceland"
-                          :id "iceland"
-                          :map "iceland.png"}]}
+                        :title "Iceland"
+                        :id "iceland"
+                        :map "iceland.png"}]}
    :regions {:title "Regions"
              :items [{:href :rise.views/regions
                       :title "Umbria"

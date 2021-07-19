@@ -24,6 +24,9 @@
 
 (rf/reg-sub ::animate? (fn [db] (:animate? db)))
 
+<<<<<<< HEAD
+(rf/reg-sub ::quake? (fn [db] (:quake? db)))
+=======
 (rf/reg-sub ::with-context? (fn [db] (:with-context? db)))
 
 (rf/reg-sub ::with-vis? (fn [db] (:with-vis? db)))
@@ -33,10 +36,7 @@
 (rf/reg-sub ::odds? (fn [db] (:odds? db)))
 
 
-
-
-
-(rf/reg-sub ::quake? (fn [db] (:quake? db)))
+>>>>>>> main
 
 (rf/reg-sub ::next-quake-t (fn [db] (:next-quake-t db)))
 

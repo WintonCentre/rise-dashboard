@@ -7,10 +7,11 @@ the low level ui."
             ["react-bootstrap" :as bs]
             [re-frame.core :as rf]
             [rise.events :as events]
+            [rise.db :as db]
             [rise.subs :as subs]
             [shadow.debug :refer [?-> ?->> locals]]))
 
-(enable-console-print!)
+;(enable-console-print!)
 
 
 (def container "a react/bootstrap component adapter" (rc/adapt-react-class bs/Container))
@@ -19,6 +20,16 @@ the low level ui."
 (def button "a react/bootstrap component adapter" (rc/adapt-react-class bs/Button))
 (def tabs "a react/bootstrap component adapter" (rc/adapt-react-class bs/Tabs))
 (def tab "a react/bootstrap component adapter" (rc/adapt-react-class bs/Tab))
+
+(defn ttt
+  "Look up the keyword in the dictionary.
+   If found then return in an undecorated span.
+   If not found return english in a pink span."
+  [field-key english] 
+  (let [translation (get db/italian field-key)]
+    (if translation 
+      [:span translation]
+      [:span.pink translation])))
 
 (defn href
   "Return relative url for given route. Url can be used in HTML links. Note that k is a route name defined 
@@ -71,11 +82,12 @@ in the routes table."
                    :style {:border-bottom "1px solid black" :opacity "1"}}
      [:> bs/Navbar.Brand  {:href home-url} 
       [:img {:src logo :style {:height 40} :alt "RISE logo" :title "Dashboard Demo"}]
-      [:span {:style {:margin-left 10}} "Earthquake dashboard"]]
+      [:span {:style {:margin-left 10}} (ttt :db/dashboard "Earthquake dashboard")]]
      [:> bs/Navbar.Toggle {:aria-controls "basic-navbar-nav"}]
      [:> bs/Navbar.Collapse {:id "basic-navbar-nav" :style {:margin-left 70}}
 
-      [:> bs/Nav {:active-key (if page-name (name page-name) "home")}
+      [:> bs/Nav {:style {:display "flex" :justify-content "space-between" :width "100%"}
+                  :active-key (if page-name (name page-name) "home")}
        [:> bs/Nav.Link {:event-key :home
                         :href (href :rise.views/home)} "Home"]
        #_[:> bs/Nav.Link {:event-key :info
@@ -83,6 +95,9 @@ in the routes table."
        [navbar-dropdown-menu ::subs/countries]
        [navbar-dropdown-menu ::subs/regions]
        [navbar-dropdown-menu ::subs/communities]
+       [:div {:style {:flex-grow 6}} " "]
+       [:> bs/Nav.Link {:event-key :settings
+                        :href (href :rise.views/settings)} "Settings"]
 
        #_[:> bs/NavDropdown {:title "Communities" :id "basic-nav-dropdown"}
         [:> bs/NavDropdown.Item {:href (href :rise.views/hex {:id "Spoleto"})

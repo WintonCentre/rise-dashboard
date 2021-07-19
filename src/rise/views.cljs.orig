@@ -513,7 +513,7 @@
       (link-location-by-id level neighbour (map-arrow direction)))))
 
 (comment
-  ;(enable-console-print!)
+  (enable-console-print!)
   (link-neighbour :community "spoleto" :N)
   0
   ;; => [:a {:href "#/hex/spoleto-N"} [:div {:style {:width "22px", :height "22px", :border-bottom "22px solid #ffffff88", :border-left "22px solid transparent", :border-right "20px solid transparent", :position "absolute", :top "3%", :left "46%"}}]]
@@ -546,6 +546,7 @@
         all-regions (group-by :id (:items @(rf/subscribe [::subs/regions])))
         region-id (community :region)
         region (first (all-regions region-id))
+<<<<<<< HEAD
         animate? @(rf/subscribe [::subs/animate?])
         quake? @(rf/subscribe [::subs/quake?])
         lambda (:p-7day community)
@@ -556,6 +557,9 @@
                  (js/console.log (str "Next quake in: " time->next-q " ms."))
                  (js/setTimeout #(rf/dispatch [::events/quake? true]) time->next-q)
                  (js/setTimeout #(rf/dispatch [::events/quake? false (max 1000 (/ (* 1000 (events/time-of-next-quake lambda)) time-acc-f))]) 800)))
+=======
+        quake? false]
+>>>>>>> main
     (locals)
     [ui/page
      [:<>
@@ -563,6 +567,68 @@
        [ui/col {:md 3 :style {:display "inline-block" :font-size "2.2em" :font-weight  "500"}}
         [:nobr (community :title)] " (" [:a {:href (ui/href (region :href) {:id (region :id)})} (region :title)] ")"]
        [ui/col {:md 8 :style {:display "inline-block" :font-size "2em" :font-weight  "500"}}
+<<<<<<< HEAD
+        "How likely is a " [:i "magnitude 4 or above"] " earthquake" [:br] " within the next 7 days?"]]]
+     [ui/three-columns
+      {:col1 [:div {:style {:margin-top 30}} [mag-scale]]
+       :col2 (area-status community (community :p-7day) (community :mean-7day))
+       :col3 [:<> [:div {:style {:position "relative" :display "flex"}
+                         :class-name (when quake? "shake")}
+                   [:> bs/Image {:src (str "/assets/" location " hex.png")
+                                 :width "100%"
+                                 :fluid false}]
+                   
+                                        ; decorate map with map arrow links
+                   [:div {:style {:position "absolute" :top 0 :left 0 :bottom 0 :right 0}}
+                    (into [:<>]
+                          (map
+                           #(link-neighbour :community (community :id) %)
+                           hex-compass-points))]]
+              [:div {:style {:font-size 16
+                             :margin-left 30
+                             :color "#888"}}
+               [ui/row {:style {:width 370}} (str "Simulating " time-acc-f-in-words " of seismic activity per second.")]]
+              (when animate?
+                [:div {:style {:display "flex" :align-items "start" :margin-top 15}}
+                 [:div {:style {:width 20
+                                :height 20
+                                :display "inline-block"
+                                :border "3px solid #ACACAC"
+                                :border-radius 10}}]
+                 [:div {:style {:padding-left 15 :display "inline-block"}}
+                  "Every beat is a possible future 7 days"]])]}
+
+      #_[ui/row
+         [ui/col {:lg 3 :style {:max-width 500 :margin-bottom 30}}
+          [mag-scale]]
+         [ui/col {:lg 6 :style {:max-width 600}}
+          (area-status community (community :p-7day) (community :mean-7day))]
+         [ui/col {:lg 3 :style {:max-width 500}}
+          [:<>
+           [:div {:style {:position "relative" :display "flex"}
+                  :class-name (when quake? "shake")}
+            [:> bs/Image {:src (str "/assets/" location " hex.png")
+                          :width "100%"
+                          :fluid false}]
+                                        ; decorate map with map arrow links
+            [:div {:style {:position "absolute" :top 0 :left 0 :bottom 0 :right 0}}
+             (into [:<>]
+                   (map
+                    #(link-neighbour :community (community :id) %)
+                    hex-compass-points))]]
+           (when animate?
+             [:div {:style {:display "flex" :align-items "start" :margin-top 15}}
+              [:div {:style {:width 20
+                             :height 20
+                             :display "inline-block"
+                                        ;:background-color "#ACACAC"
+                             :border "3px solid #ACACAC"
+                             :border-radius 10}}]
+              [:div {:style {:padding-left 15 :display "inline-block"}}
+               "Every beat is a possible future 7 days"]])]]]]])
+
+)
+=======
         [page-title community]]]
       [ui/three-columns
        {:col1 [:div {:style {:margin-top 20}} [mag-scale]]
@@ -578,10 +644,8 @@
                            (map
                             #(link-neighbour :community (community :id) %)
                             hex-compass-points))]]
-               (when true ;animate?
-                 [:div {:style {:display "flex" :align-items "start" :margin-top 15}}
-                  (str "
-                   Every second of simulation represents " time-acc-f-in-words " of real time where the chance is " (nice% (community :p-7day)) " per week.")])]}]
+               (when animate?
+                 [:div {:style {:display "flex" :align-items "start" :margin-top 15}}])]}]
       [content-base community]]]))
 
 (defn hex
@@ -682,6 +746,7 @@
    world-averages))
 
 
+>>>>>>> main
 
 
 
