@@ -1,5 +1,26 @@
 (ns rise.db)
 
+(def italian
+  "Translate the english to italian"
+  {:db/Dashboard "Earthquake dashboard"
+   :db/Countries "Countries"
+   :db/country "country"
+   :db/Communities "Communities"
+   :db/Regions "Regions"
+   :db/Italy "Italy"
+   :db/Home "Home"
+   :db/Settings "Settings"
+   :db/History "History"
+   :db/Data-source "Data source: INGV, n. 3456783567"
+   :db/Responsibility "Responsibilty: Civil Protection n.327 347684"
+   :db/Ambulance [:span [:b "Ambulance:"] " Call 118"]
+   :db/Emergency [:span [:b "Emergency number:"] " Call 112"]
+   :db/nowhere "nowhere"
+   :db/Country-regions "Italian Regions"
+   :db/Regional-communities "Regional Communities"
+   :db/Local-history ""}
+  )
+
 (def default-db
   {:mag+ 4 ; display this magnitude and greater
    :animate? false ; whether to run the animation

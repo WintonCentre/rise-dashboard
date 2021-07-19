@@ -141,20 +141,18 @@
   "example quake text and arrow"
   [text slot mag color]
 
-  [:g
-   [:line {:x1 "calc(100% - 25px)" :x2 "100%" :y1 (mag-y slot) :y2 (mag-y mag) :stroke color :stroke-width 2}]
+  [:g {:style {:width "100%"}}
+   [:line {:x1 "85%" :x2 "100%" :y1 (mag-y slot) :y2 (mag-y mag) :stroke color :stroke-width 2}]
    [:circle {:cx "100%" :cy (mag-y mag) :r 4 :fill color}]
    [:rect {:x 5 :width "calc(100% -  30px)" :y (- (mag-y slot) 12) :height 22 :rx 10 :fill "#fff" :stroke-width 1 :stroke color}]
-   [:text {:x 10 :y (+ 4 (mag-y slot)) :fill color} text]])
+   [:text {:x 10 :y (+ 4 (mag-y slot)) :fill color} text]]
+  )
 
 (defn mag-scale
   "Draw magnitude scale with example quakes on it"
   []
   #_(let [w @(rf/subscribe [::subs/window-width])])
   [:<>
-   #_[ui/row
-      [ui/col {:style {:font-size "1.4em"}}
-       "Showing chances of earthquakes magnitude 4 or above like these:"]]
 
    [ui/row {:class "d-flex flex-row justify-content-end"}
     [:div {:style {:position "absolute"
@@ -253,7 +251,6 @@
               [:h2 "Italian Regions"]
               (links-to country-regions)]
        :col3 [:> bs/Image {:src (str "/assets/" country-id ".png")
-                           :width "100%"
                            :fluid true}]}]]))
 
 
@@ -276,7 +273,6 @@
        :col2 [:div {:style {:margin-left 30}} [:h2 "Regional Communities"]
               (links-to regional-communities)]
        :col3 [:> bs/Image {:src (str "/assets/" region-id ".png")
-                           :width "100%"
                            :fluid true}]}]]))
 
 (defn large
@@ -304,7 +300,7 @@
                         :padding "0px 0px"
                         :height "100%"
                         :left 0 :top 0
-                        :width 20 #_(str (* p 100) "%")}}]]
+                        :width (str (* p 100) "%")}}]]
         [:div {:style {:display "flex" :justify-content "space-between" :width "100%" :font-size "0.8em" :color "#BCBCCC"}}
          [:span "0%"] [:span "100%"]]]))])
 
@@ -358,6 +354,12 @@
 
 (trim-s "0.01500")
 
+(defn nice% 
+  "format a percentage nicely"
+  [p]
+  (str (trim-s (.toPrecision (js/Number. (* p 100)) 2)) "%")
+  )
+
 (defn vis%
   "An arc with p rendered as a percentage at the centre"
   [p]
@@ -367,7 +369,7 @@
                 :r 55
                 :w 12
                 :b 3
-                :text (str (trim-s (.toPrecision (js/Number. (* p 100)) 2)) "%")}]
+                :text (nice% p)}]
     (if (and annular? with-vis?)
       [arc params]
       [bar params])))
@@ -477,7 +479,7 @@
             (condp = (compare p mean)
               -1 "smaller than"
               0 "equal to"
-              1 "bigger than")
+              1 "higher than")
             " average."]
            ]
           )]]
@@ -556,7 +558,7 @@
       [ui/three-columns
        {:col1 [:div {:style {:margin-top 20}} [mag-scale]]
         :col2 [:div {:style {:margin-left 15}} (content community)]
-        :col3 [:<> [:div {:style {:position "relative" :display "flex"}
+        :col3 [:<> [:div {:style {:position "relative" #_#_:display "flex"}
                           :class-name (when quake? "shake")}
                     [:> bs/Image {:src (str "/assets/" location " hex.png")
                                   :width "100%"
@@ -602,7 +604,7 @@
      [:div {:style {:max-width 450}}
       [:> bs/Image {:src "/assets/history.png"
                     :alt "History of quakes in the area"
-                    :fluid "false"}]]]]])
+                    :fluid true}]]]]])
 
 (defn history
   "Showing the earthquake history for an area"
@@ -620,18 +622,45 @@
 ;;;
 (defn world-averages
   [community]
-  [ui/row {:style {:font-size "21px"}}
-   [ui/col
-    [:div {:style {:border "1px solid #CCC"
-                   :border-radius 20
-                   :padding "15px 70px"
-                   :box-shadow "1px 1px 1px 1px #CCC"
-                   :background-color "#444466" #_"#80647D"
-                   :color "white"
-                   :height 355}}
-     [:> bs/Image {:src "/assets/thermometer.png"
-                   :alt "Map showing forecast area"
-                   :fluid "false"}]]]])
+  (let [X #(+ 10 (* % 2))
+        dx -4
+        p (community :p-7day)
+        pc (fn [x] (str x "%"))
+        community-x (X (* 100 p))]
+    [ui/row {:style {:font-size "21px"}}
+     [ui/col
+      [:div {:style {:display "relative"
+                     :border "1px solid #CCC"
+                     :border-radius 20
+                     :padding "0px 0px"
+                     :box-shadow "1px 1px 1px 1px #CCC"
+                     :background-color "#444466" #_"#80647D"
+                     :color "white"
+                     :height 360}}
+       [:svg {:width "100%" :height "100%"}
+        [:g
+         [:text {:x "8%" :y "12%" :fill "#fff"} "Chance of a magnitude 4 or "]
+         [:text {:x "8%" :y "19%" :fill "#fff"} "more within the next 7 days"]
+         [:text {:style {:font-size "1.5em"} :x (pc (+ community-x dx)) :y "33%" :fill "#fff"} (nice% p) " in " (community :title)]
+         [:line {:x1 (pc community-x) :x2 (pc community-x) :y1 "36%" :y2 "50%" :stroke "#fff" :stroke-width 2}]
+         [:circle {:cx (pc community-x) :cy "50%" :r 5 :fill "#fff"}]
+         (into [:g
+                [:line {:x1 "10%" :x2 "90%" :y1 "50%" :y2 "50%" :stroke "#fff" :stroke-width 3}]]
+               (map (fn [tick]
+                      (let [x* (X tick)
+                            x (str x* "%")
+                            dx (str (- x* 2) "%")]
+                        [:g
+                         [:line {:x1 x :x2 x
+                                 :y1 "47%" :y2 "53%"
+                                 :stroke "#fff" :stroke-width 3}]
+                         [:text {:x dx :y "46%" :fill "#fff8"} (str tick "%")]]))
+                    (range 0 50 10)))
+         [:text {:x "8%" :y "95%" :fill "#fff8"} "Tokyo"]]]
+
+       #_[:> bs/Image {:src "/assets/thermometer.png"
+                     :alt "Map showing forecast area"
+                     :fluid true}]]]]))
 
 (defn world
   "Showing community relative to world averages"

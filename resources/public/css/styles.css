@@ -39,6 +39,10 @@
     }
 }
 
+.pink {
+    background-color: rgb(250, 39, 254);
+}
+
 [data-title]:hover:after {
     opacity: 1;
     transition: all 0.1s ease 0.5s;
