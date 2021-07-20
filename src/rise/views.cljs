@@ -9,6 +9,7 @@
    [rise.events :as events]
    [rise.ui :as ui]
    [rise.bsio :as bsio]
+   [rise.db :as db]
    [shadow.debug :refer [locals ?> ?-> ?->>]]))
 
 (comment
@@ -121,7 +122,7 @@
                    :height "6ex"
                    :display "flex"
                    :align-items "center"
-                   :justify-content "center"}} "Mag " mag]]))
+                   :justify-content "center"}} [:span (db/ttt :db/Mag "Mag") " " mag]]]))
 
 (defn mag-y
   "Linear map so mag-y 10 -> 0 and mag-y 4 -> 302 (the height of the mag scale)"
@@ -190,8 +191,7 @@
    [ui/row {:class "d-flex flex-row justify-content-end"}
     [:div {:class "d-flex flex-column align-items-end justify-content-end"
            :style {:margin-top 20}}
-     (mag-button "1-3" "#ACACAC" "Not included
-                                  in dashboard")]]])
+     (mag-button "1-3" "#ACACAC" (db/ttt :db/Not-included "Not included in dashboard"))]]])
 
 
 ;;; Views ;;;
@@ -227,7 +227,8 @@
     [option-radio-group "odds?" "odds?" "Show Odds" "Show relative risk" ]
     [option-radio-group "setcontext" "with-context?" "With contextual pages" "Without contextual pages"]
     [option-radio-group "setvis" "with-vis?" "With visualisation" "Without visualisation"]
-    [option-radio-group "annular" "annular?" "Show speedo?" "Show bar?"]
+    [option-radio-group "annular" "annular?" "Show speedo" "Show bar"]
+    [option-radio-group "animate" "animate?" "Show animation" "No animation"]
 
     [ui/row
      [ui/col {:md 3}
@@ -389,18 +390,21 @@
      [ui/col (base-style 3)
       (when with-context?
         [:<>
-         [:h4 [:a {:href (str "/#/history/" (community :id))} "Local earthquake history"]]
-         [:p "How many earthquakes of magnitude 4 or more have hit " (community :title) " in the past?"]])]
+         [:h4 [:a {:href (str "/#/history/" (community :id))} (db/ttt :db/Local-history "Local earthquake history")]]
+         [:p (db/ttt :db/Local-history-p1 "How many earthquakes of magnitude 4 or more have hit") " " 
+          (community :title) " "
+          (db/ttt :db/Local-history-p2 "in the past?")]])]
      [ui/col (base-style 5)
-      [:h4 [:a {:href (str "/#/hex/" (community :id))} "What's happening here and now?"]]
-      [:p (community :title) " is seeing higher chances than normal because of increased 
-             seismic activity around the Mount Vittore fault system."]]
+      [:h4 [:a {:href (str "/#/hex/" (community :id))} (db/ttt :db/Whats-happening "What's happening here and now?")]]
+      [:p (community :title) " " (db/ttt :db/local-message "is seeing higher chances than normal because of increased 
+             seismic activity around the Mount Vittore fault system.")]]
      [ui/col (base-style {:span 4})
       (when with-context?
         [:<>
-         [:h4 [:a {:href (str "/#/world/" (community :id))} "How does " (community :title) " compare to the world?"]]
-         [:p "How does the current chance of a magnitude 4+ quake in " (community :title)
-          " compare to an average week in other places worldwide?"]])]]))
+         [:h4 [:a {:href (str "/#/world/" (community :id))} (db/ttt :db/How-does "How does") " " 
+               (community :title) " " (db/ttt :db/compare-to-world "compare to the world?")]]
+         [:p (db/ttt :db/How-chance-compares "How does the current chance of a magnitude 4+ quake in") " " (community :title)
+          " " (db/ttt :db/compare-average "compare to an average week in other places worldwide?")]])]]))
 
 (defn update-status
   []
@@ -411,12 +415,12 @@
    [ui/row {:style {:width 370}}
         ;[:span  "Last updated"]
         ;[:span "00:00 6th July 2021"]
-    [ui/col {:xs 5} "Last updated"]
-    [ui/col {:xs 6} "00:00 6th July 2021"]]
+    [ui/col {:xs 5} (db/ttt :db/Last-updated "Last updated")]
+    [ui/col {:xs 6} [db/ttt :db/from-date "00:00 6th July 2021"]]]
 
    [ui/row {:style {:width 370}}
-    [ui/col {:xs 5} "Next update due"]
-    [ui/col {:xs 6} "00:00 7th July 2021"]]])
+    [ui/col {:xs 5} (db/ttt :db/Next-update-due "Next update due")]
+    [ui/col {:xs 6} (db/ttt :db/to-date "00:00 7th July 2021")]]])
 
 (defn area-status
   "show earthquake status of an area"
@@ -424,7 +428,6 @@
   (let [p (community :p-7day)
         mean (community :mean-7day)
         mag+ @(rf/subscribe [::subs/mag+])
-        animate? @(rf/subscribe [::subs/animate?])
         with-vis? @(rf/subscribe [::subs/with-vis?])
         odds? @(rf/subscribe [::subs/odds?])]
     [ui/row {:style {:font-size "21px"}}
@@ -435,61 +438,43 @@
                      :box-shadow "1px 1px 1px 1px #CCC"
                      :background-color "#444466" #_"#80647D"
                      :color "white"}}
-       [ui/row {:style {:display "flex" :align-items "center" :justify-content "space-between" 
+       [ui/row {:style {:display "flex" :align-items "center" :justify-content "space-between"
                         :padding-bottom (when with-vis? 25)}}
-        [:<> ;ui/col {:md 9}
-         [:div  "The chance of an earthquake" [:br] [:nobr "within 6th July ⟷ 13th July is"]]]
-        [:<> ;ui/col {:md 3}
-         [vis% p]
-         #_[:div [large (.toFixed (js/Number (* p 100)) 1) "%"]]]]
-       #_[ui/row {:style {:margin-top 5}}
-          [ui/col
-
-           #_[bar p]]]
-       #_(if with-vis?
-           [ui/row {:style {:margin-top 5}}
-            [ui/col
-             #_[:div {:style {:margin-bottom 6}} "compared to"]
-             #_[bar mean]]]
-           [:br])
-       ;[:br]
-       ;[:hr]
+        [:div (db/ttt :db/the-chance-within [:<> "The chance of an earthquake" [:br] [:nobr "within 6th July ⟷ 13th July is"]])]
+        [:<>
+         [vis% p]]]
 
        [ui/row {:style {:display "flex" :align-items "center" :justify-content "space-between" :padding-bottom 35}}
         [:<> ;ui/col {:md 9}
-         [:span "whereas the chance in an average week is"]]
-        ;[:br]
+         [:span (db/ttt :db/whereas "whereas the chance in an average week is")]]
         [:<> ;ui/col {:md 3}
-         [vis% mean]
-         #_[:div [large (.toFixed (js/Number (* mean 100)) 3) "%"]]]]
-
-       ;[:br]
-       ;[:hr]
+         [vis% mean]]]
 
        [ui/row {:style {:display "flex" :align-items "center" :justify-content "space-between" :padding-bottom 25}}
         (if odds?
           [:<>
-           [:span "The odds against an earthquake are"]
+           [:span (db/ttt :db/odds-against "The odds against an earthquake are")]
            [:nobr [:div {:style {:width 85}} (large (- (js/Math.round (/ 1 p)) 1) " - 1")]]]
           [:<>
-           [:span "The current chance is " (large (let [rr (/ p mean)]
-                                            (str (if (> rr 1)
-                                                   (js/Math.round rr) ;(* 10 (js/Math.round (/ rr 10)))
-                                                   (trim-s (.toPrecision (js/Number. (* rr 100)) 2)))))) " times " 
-            (condp = (compare p mean)
-              -1 "smaller than"
-              0 "equal to"
-              1 "higher than")
-            " average."]
-           ]
-          )]]
+           [:span (db/ttt :db/current-chance-is "The current chance is") " "
+            (large (let [rr (/ p mean)]
+                     (str (if (> rr 1)
+                            (js/Math.round rr) ;(* 10 (js/Math.round (/ rr 10)))
+                            (trim-s (.toPrecision (js/Number. (* rr 100)) 2))))))
+            " "
+            (db/ttt :db/times-average "times %1 average."
+                    (condp = (compare p mean)
+                      -1 "smaller than"
+                      0 "equal to"
+                      1 "higher than"))]
+           ])]]
 
       [update-status]]]))
 
 (defn arrow-template
   "a parameterised direction arrow"
   [{:keys [top right bottom left deg]}]
-  [:div {:style {:width "22px" :height "22px" :border-bottom "22px solid #444466" #_"#AA647D" :border-left "22px solid transparent"
+  [:div {:style {:width "22px" :height "22px" :border-bottom "22px solid #444466" :border-left "22px solid transparent"
                  :border-right "20px solid transparent" :position "absolute"
                  :top (when top top) :right (when right right) :bottom (when bottom bottom) :left (when left left)
                  :transform (str "rotate(" deg "deg)")}}])
@@ -507,18 +492,14 @@
   "Link a location to "
   [level id direction]
   (when-let [location (find-location-by-id level id)]
-    #_(js/console.log location ::location)
     (when-let [neighbour (get-in location [:neighbours direction])]
-      (println neighbour ::neighbour)
       (link-location-by-id level neighbour (map-arrow direction)))))
 
 (comment
-  ;(enable-console-print!)
-  (link-neighbour :community "spoleto" :N)
-  0
-  ;; => [:a {:href "#/hex/spoleto-N"} [:div {:style {:width "22px", :height "22px", :border-bottom "22px solid #ffffff88", :border-left "22px solid transparent", :border-right "20px solid transparent", :position "absolute", :top "3%", :left "46%"}}]]
+  (link-neighbour :community "spoleto-NE" :S)
+  ;; => [:a {:href "#/hex/spoleto-SE"} [:div {:style {:border-right "20px solid transparent", :transform "rotate(180deg)", :bottom "3%", :top nil, :width "22px", :border-left "22px solid transparent", :right nil, :position "absolute", :height "22px", :border-bottom "22px solid #444466", :left "43%"}}]]
 
-  (link-neighbour :community "spoleto-NE" :S))
+  0)
 
 (def hex-compass-points
   "Points around a hexagon standing on its base. 
@@ -538,7 +519,7 @@
   "Three standard columns with injected title and main central panel
    page-title is a page-title function which takes the community as a parameter
    content is a content component taking the community as parameter"
-  [page-title animate? content]
+  [page-title content]
   (let [location (get-in @(rf/subscribe [::subs/current-route])
                          [:path-params :id])
         all-communities (group-by :id (:items @(rf/subscribe [::subs/communities])))
@@ -567,8 +548,8 @@
       [ui/three-columns
        {:col1 [:div {:style {:margin-top 20}} [mag-scale]]
         :col2 [:div {:style {:margin-left 15}} (content community)]
-        :col3 [:<> [:div {:style {:position "relative" #_#_:display "flex"}
-                          :class-name (when quake? "shake")}
+        :col3 [:<> [:div {:style {:position "relative" #_#_:display "flex"} ;; Pre 14.3 Safaris have issues with images in flexbox
+                          :class-name (when (and animate? quake?) "shake")}
                     [:> bs/Image {:src (str "/assets/" location " hex.png")
                                   :width "100%"
                                   :fluid false}]
@@ -578,18 +559,18 @@
                            (map
                             #(link-neighbour :community (community :id) %)
                             hex-compass-points))]]
-               (when true ;animate?
+               (when animate?
                  [:div {:style {:display "flex" :align-items "start" :margin-top 15}}
-                  (str "
-                   Every second of simulation represents " time-acc-f-in-words " of real time where the chance is " (nice% (community :p-7day)) " per week.")])]}]
+                 (db/ttt :db/Every-second
+                         "Every second of simulation represents %1 of real time in which each week has a %2 chance."
+                         time-acc-f-in-words (nice% (community :p-7day)))])]}]
       [content-base community]]]))
 
 (defn hex
   "A community-level page featuring a mapped hexagon."
   []
   (main-content-template
-   (fn [community] [:<> "How likely is a " [:i "magnitude 4 or above"] " earthquake" [:br] " within the next 7 days?"])
-   true
+   (fn [community] [:<> (db/ttt :db/How-likely-is [:<> "How likely is a" " " [:i "magnitude 4 or above"] " earthquake" [:br] " within the next 7 days?"])])
    area-status))
 
 ;;;
@@ -624,20 +605,34 @@
    (fn [community]
      (let [region (find-location-by-id :region (community :region))]
        [:span  "Mag 4+ earthquakes in " (community :title) " over time"]))
-   true
    histogram))
 
 
 ;;;
 ;;
 ;;;
+(defn pc [x] (str x "%"))
+
+
+(defn average-city
+  "mark an average city"
+  [{:keys [p X dx y fill city]}]
+  (let [p (* 100 p)]
+    [:<>
+     [:text {:style {:font-size "1.2em"} :fill fill
+             :x (pc (X (- p 2))) :y (pc (+ y 7))} (pc p)]
+
+     [:text {:x (pc (X (+ p dx))) :y (pc (+ y 14)) :fill fill} city]
+     [:line {:x1 (pc (X p)) :x2 (pc (X p)) :y1 (pc y) :y2 "50%" :stroke fill :stroke-width 2}]
+     [:circle {:cx (pc (X p)) :cy "50%" :r 5 :fill fill}]]))
+
 (defn world-averages
   [community]
   (let [X #(+ 10 (* % 2))
         dx -4
         p (community :p-7day)
-        pc (fn [x] (str x "%"))
-        community-x (X (* 100 p))]
+        community-x (X (* 100 p))
+        average-cities @(rf/subscribe [::subs/average-cities]) ]
     [ui/row {:style {:font-size "21px"}}
      [ui/col
       [:div {:style {:display "relative"
@@ -648,26 +643,34 @@
                      :background-color "#444466" #_"#80647D"
                      :color "white"
                      :height 360}}
-       [:svg {:width "100%" :height "100%"}
-        [:g
-         [:text {:x "8%" :y "12%" :fill "#fff"} "Chance of a magnitude 4 or "]
-         [:text {:x "8%" :y "19%" :fill "#fff"} "more within the next 7 days"]
-         [:text {:style {:font-size "1.5em"} :x (pc (+ community-x dx)) :y "33%" :fill "#fff"} (nice% p) " in " (community :title)]
-         [:line {:x1 (pc community-x) :x2 (pc community-x) :y1 "36%" :y2 "50%" :stroke "#fff" :stroke-width 2}]
-         [:circle {:cx (pc community-x) :cy "50%" :r 5 :fill "#fff"}]
-         (into [:g
-                [:line {:x1 "10%" :x2 "90%" :y1 "50%" :y2 "50%" :stroke "#fff" :stroke-width 3}]]
-               (map (fn [tick]
-                      (let [x* (X tick)
-                            x (str x* "%")
-                            dx (str (- x* 2) "%")]
-                        [:g
-                         [:line {:x1 x :x2 x
-                                 :y1 "47%" :y2 "53%"
-                                 :stroke "#fff" :stroke-width 3}]
-                         [:text {:x dx :y "46%" :fill "#fff8"} (str tick "%")]]))
-                    (range 0 50 10)))
-         [:text {:x "8%" :y "95%" :fill "#fff8"} "Tokyo"]]]
+       (cond
+         (nil? community) "Missing community data"
+         (nil? (community :p-7day)) "Missing community :p-7day"
+         :else [:svg {:width "100%" :height "100%"}
+                [:g
+                 [:rect {:x 0 :y "50%" :width "100%" :height "50%" :fill "#fff3"}]
+                 [:text {:x "8%" :y "12%" :fill "#fff"} "The chance of a magnitude 4 or "]
+                 [:text {:x "8%" :y "19%" :fill "#fff"} "more within the next 7 days is"]
+                 [:text {:style {:font-size "1.5em"} :fill "#fff" :x (pc (+ community-x dx)) :y "30%"} (nice% p) " in " (community :title)]
+                 [:line {:x1 (pc community-x) :x2 (pc community-x) :y1 "34%" :y2 "50%" :stroke "#fff" :stroke-width 2}]
+                 [:circle {:cx (pc community-x) :cy "50%" :r 5 :fill "#fff"}]
+                 (into [:g
+                        [:line {:x1 "10%" :x2 "90%" :y1 "50%" :y2 "50%" :stroke "#fff" :stroke-width 3}]]
+                       (map (fn [tick]
+                              (let [x* (X tick)
+                                    x (str x* "%")
+                                    dx (str (- x* 2) "%")]
+                                [:g
+                                 [:line {:x1 x :x2 x
+                                         :y1 "47%" :y2 "53%"
+                                         :stroke "#fff" :stroke-width 3}]
+                                 [:text {:x dx :y "46%" :fill "#fff8"} (str tick "%")]]))
+                            (range 0 50 10)))
+                 (when average-cities
+                   (into [:g] (map (fn [city] (average-city (assoc city :X X))) average-cities)))
+
+
+                 [:text {:x "8%" :y "95%" :fill "#fff"} "compared to an average week in these cities"]]])
 
        #_[:> bs/Image {:src "/assets/thermometer.png"
                      :alt "Map showing forecast area"
@@ -678,7 +681,6 @@
   []
   (main-content-template
    (fn [community] [:span "How does " (community :title) " compare to the world?"])
-   true
    world-averages))
 
 

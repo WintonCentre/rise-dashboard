@@ -77,6 +77,7 @@
   (pretty-factor (/ 1000 (* m p))))
 
 
+
 (defn average
   "keep calling f to find its average value"
   [f]

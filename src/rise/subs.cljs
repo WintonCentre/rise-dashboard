@@ -32,6 +32,8 @@
 
 (rf/reg-sub ::odds? (fn [db] (:odds? db)))
 
+(rf/reg-sub ::average-cities (fn [db] (:average-cities db)))
+
 
 
 

@@ -1,29 +1,73 @@
-(ns rise.db)
+(ns rise.db
+  (:require [rise.dictionaries :as dict]
+            [clojure.string :as string]))
 
-(def italian
-  "Translate the english to italian"
-  {:db/Dashboard "Earthquake dashboard"
-   :db/Countries "Countries"
-   :db/country "country"
-   :db/Communities "Communities"
-   :db/Regions "Regions"
-   :db/Italy "Italy"
-   :db/Home "Home"
-   :db/Settings "Settings"
-   :db/History "History"
-   :db/Data-source "Data source: INGV, n. 3456783567"
-   :db/Responsibility "Responsibilty: Civil Protection n.327 347684"
-   :db/Ambulance [:span [:b "Ambulance:"] " Call 118"]
-   :db/Emergency [:span [:b "Emergency number:"] " Call 112"]
-   :db/nowhere "nowhere"
-   :db/Country-regions "Italian Regions"
-   :db/Regional-communities "Regional Communities"
-   :db/Local-history ""}
-  )
+(defn ttt*
+  "Look up a the keyword in the dictionary.
+   If found then return in an undecorated span.
+   If not found return english in a pink span.
+   
+   Use this inside HTML"
+  [country-code field-key english]
+  (let [translation (get-in dict/dictionary [country-code field-key])]
+    (if translation
+      translation
+      ;[:span translation]
+      [:span.pink english])))
+
+(defn svg-ttt*
+  "Look up a the keyword in the dictionary.
+   If found then return in an undecorated text.
+   If found return english inside braces.
+   
+   This is useful inside SVG"
+  [country-code field-key english]
+  (let [translation (get-in dict/dictionary [country-code field-key])]
+    (if translation
+      translation
+      (str "{" english "}"))))
+
+(defn db-ttt*
+  [country-code v-or-text]
+  (if (vector? v-or-text)
+    (let [[op field-key english] v-or-text]
+      (cond
+        (= op [:ttt]) (ttt* country-code field-key english)
+        (= op [:svg-ttt]) (svg-ttt* country-code field-key english)
+        :else english))))
+
+;; For now, edit these definitions to change site language
+;(def ttt (partial ttt* :it))
+(def svg-ttt (partial svg-ttt* :it))
+(def db-ttt (partial db-ttt* :its))
+
+(defn ttt
+  "2 arity looks up cc in chosen dictionary
+  3+ arity looks up cc, but then does parameter interpolation on %1 %2 ...
+   args will replace %1 %2,... stopping when either args or %s run out"
+  [cc s & args]
+  (let [ts (ttt* :it cc s)]
+    (if (or (vector? ts) (zero? (count args))) ; ts may be a [:span.pink] 
+      ts
+      (let [ts (ttt* :it cc s)]
+        (first (reduce (fn [[result i] arg]
+                         [(string/replace result (str "%" (inc i)) arg) (inc i)]) [ts 0] args))))))
+
+;;;
+;; 
+;; Certain words need to be translated in the db database below 
+;; -- search for "; TRANSLATE"
+;;
+;; DO NOT translate lower-case country-names like "italy" as these are internal 
+;; identifiers only.
+;;
+;;;
+
+
 
 (def default-db
   {:mag+ 4 ; display this magnitude and greater
-   
+
    :animate? false ; whether to run the animation
    :quake? true
    :next-quake-t 15000 ; time to next quake. None if next-quake < clock
@@ -33,21 +77,37 @@
    :with-vis? false ; use visuals for the percentage
    :annular? true ; use an annular visual / use a bar chart
    :odds? false ; show odds or relative risk
+
+   :average-cities [{:p 0.01 ; probability
+                     :dx -3 ; label offset
+                     :y 60  ; vertical position as %
+                     :fill "#fff"
+                     :city "Rome"} ; TRANSLATE
+                    {:p 0.08
+                     :dx -5
+                     :y 70
+                     :fill "#fff"
+                     :city "Los Angeles"} ; TRANSLATE
+                    {:p 0.2
+                     :dx -3
+                     :y 60
+                     :fill "#fff"
+                     :city "Tokyo"}] ; TRANSLATE
    :countries {:title "Countries"
                :items [{:href :rise.views/countries
-                        :title "Italy"
+                        :title "Italy" ; TRANSLATE
                         :id "italy"
                         :map "italy.png"}
                        #_{:href :rise.views/countries
-                          :title "New Zealand"
+                          :title "New Zealand" ; TRANSLATE
                           :id "nz"
                           :map "nz.png"}
                        #_{:href :rise.views/countries
-                          :title "Switzerland"
+                          :title "Switzerland" ; TRANSLATE
                           :id "switzerland"
                           :map "switzerland.png"}
                        #_{:href :rise.views/countries
-                          :title "Iceland"
+                          :title "Iceland" ; TRANSLATE
                           :id "iceland"
                           :map "iceland.png"}]}
    :regions {:title "Regions"
@@ -66,7 +126,7 @@
                       :id "abruzzo"
                       :map "abruzzo.png"
                       :country "italy"}]}
-   :communities {:title "Communities"
+   :communities {:title "Communities" ; TRANSLATE
                  :items [{:title "Foligno"
                           :region "umbria"
                           :id "foligno"}
@@ -179,5 +239,4 @@
                           :osm-href "https://www.openstreetmap.org/relation/42105"}
                          {:title "Todi"
                           :region "umbria"
-                          :id "todi"}]}}
-  )
+                          :id "todi"}]}})
