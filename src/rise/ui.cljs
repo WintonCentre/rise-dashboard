@@ -47,19 +47,22 @@ in the routes table."
   (href :rise.views/countries {:id "italy"})
   0)
 
-
 (defn navbar-dropdown-menu
   [submenu-key]
   (let [submenu @(rf/subscribe [submenu-key])]
-    (into [:> bs/NavDropdown {:title (submenu :title) :id "basic-nav-dropdown"}]
+    (into [:> bs/NavDropdown {:title (apply db/ttt (submenu :title)) :id "basic-nav-dropdown"}]
           (map (fn [item]
                  (locals)
-                 (when (item :href) 
+                 (when (item :href)
                    [:> bs/NavDropdown.Item {:href (href (item :href) {:id (item :id)})
-                                                           :key (item :id)}
-                                   (item :title)]
-                   ))
+                                            :key (item :id)}
+                    (db/maybe-translatable (item :title))]))
                (submenu :items)))))
+
+(comment
+  @(rf/subscribe [::subs/lang])
+  (apply db/ttt [:db/Countries "Boo"])
+  0)
 
 (defn navbar
   "Straight out of the react-bootstrap example with reitit routing patched in."
@@ -70,7 +73,7 @@ in the routes table."
     [:h1 "Navbar"]
     [:> bs/Navbar {:bg "light" :expand "md"
                    :style {:border-bottom "1px solid black" :opacity "1"}}
-     [:> bs/Navbar.Brand  {:href home-url} 
+     [:> bs/Navbar.Brand  {:href home-url}
       [:img {:src logo :style {:height 40} :alt "RISE logo" :title "Dashboard Demo"}]
       [:span {:style {:margin-left 10}} (db/ttt :db/Dashboard "Earthquake dashboard")]]
      [:> bs/Navbar.Toggle {:aria-controls "basic-navbar-nav"}]
@@ -81,7 +84,7 @@ in the routes table."
        [:> bs/Nav.Link {:event-key :home
                         :href (href :rise.views/home)} (db/ttt :db/Home "Home")]
        #_[:> bs/Nav.Link {:event-key :info
-                        :href (href :rise.views/info)} "Info"]
+                          :href (href :rise.views/info)} "Info"]
        [navbar-dropdown-menu ::subs/countries]
        [navbar-dropdown-menu ::subs/regions]
        [navbar-dropdown-menu ::subs/communities]
@@ -90,9 +93,9 @@ in the routes table."
                         :href (href :rise.views/settings)} (db/ttt :db/Settings "Settings")]
 
        #_[:> bs/NavDropdown {:title "Communities" :id "basic-nav-dropdown"}
-        [:> bs/NavDropdown.Item {:href (href :rise.views/hex {:id "Spoleto"})
-                                 :key "Spoleto"}
-         "Spoleto"]]]]]))
+          [:> bs/NavDropdown.Item {:href (href :rise.views/hex {:id "Spoleto"})
+                                   :key "Spoleto"}
+           "Spoleto"]]]]]))
 
 (comment
   @(rf/subscribe [::subs/communities])
@@ -130,9 +133,9 @@ in the routes table."
                  :display "flex" :align-items "center" :justify-content "center"
                  :font-size 12}}
    [:div
-    [:span "Data source: INGV, n. 3456783567"]
+    [:span (db/ttt :db/Data-source "Data source: INGV, n. 3456783567")]
     [:br]
-    [:span "Responsibilty: Civil Protection n.327 347684"]]
+    [:span (db/ttt :db/Responsibilty "Responsibilty: Civil Protection n.327 347684")]]
    [:div {:style {:margin-left 40}}
     [:span [:b "Ambulance:"] " Call 118"]
     [:br]

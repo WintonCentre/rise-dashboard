@@ -2,58 +2,61 @@
 
 (def italian
   "
-   
-   
    Translate by replacing the english phrases inside double quotes with the italian
    
    Phrases may be simple strings inside double quotes, or they may have markup for formatting.
    
    If it's a simple string, it may contain placeholders %1, %2, %3 etc.... The site code replaces these with
-   something else - usually another simple string or number retrieved from the database. 
+   something else - usually another simple string or number retrieved from the database. You can move the placeholders
+   to wherever they make sense.
    
-   Try not to change the markup and don't change the %1/%2 placeholders.
+   If you need to change the markup in square brackets ask gmp26@cam.ac.uk how. The syntax is documented 
+   at https://github.com/weavejester/hiccup/wiki/Syntax.
    "
-  {:db/Dashboard "Cruscotto del terremoto"
-   ;:db/Countries "Countries"
-   ;:db/country "country"
-   ;:db/Communities "municipalità"
-   ;:db/Regions "Regions"
-   ;:db/Italy "Italia"
-   ;:db/Home "Home" ;"Home"
-   ;:db/Settings "Settings"
-   ;:db/History "History"
-   ;:db/Data-source "Data source: INGV, n. 3456783567"
-   ;:db/Responsibility "Responsibilty: Civil Protection n.327 347684"
-   ;:db/Ambulance [:span [:b "Ambulance:"] " Call 118"]
-   ;:db/Emergency [:span [:b "Emergency number:"] " Call 112"]
-   ;:db/nowhere "nowhere"
-   ;:db/Country-regions "Italian Regions"
-   ;:db/Regional-communities "Regional Communities"
-   ;:db/Local-history "Local earthquake history"
-   ;:db/Not-included "Not included in dashboard"
-   ;:db/Mag "Mag"
-   ;:db/Last-updated "Last updated"
-   ;:db/Next-update-due "Next update due"
-   ;:db/from-date "00:00 6th July 2021"
-   ;:db/to-date "00:00 7th July 2021"
-   ;:db/Local-history-p1 "How many earthquakes of magnitude 4 or more have hit"
-   ;:db/Local-history-p2 "in the past?"
-   ;:db/Whats-happening "What's happening here and now?"
-   ;:db/local-message "is seeing higher chances than normal because of increased seismic activity around the Mount Vittore fault system."
-   ;:db/How-does "How does"
-   ;:db/compare-to-world "compare to the world?"
-   ;:db/How-chance-compares "How does the current chance of a magnitude 4+ quake in"
-   ;:db/compare-average "compare to an average week in other places worldwide?"
-   ;:db/How-likely-is [:span "How likely is a" " " [:i "magnitude 4 or above"] " earthquake" [:br] " within the next 7 days?"]
-   ;:db/the-chance-within [:<> "The chance of an earthquake" [:br] [:nobr "within 6th July ⟷ 13th July is"]]
-   ;:db/Every-second "Every second of simulation represents %1 of real time in which each week has a %2 chance."
-   ;:db/whereas "whereas the chance in an average week is"
-   ;:db/current-chance-is "The current chance is"
-   ;:db/times-average "times %1 average."
-   ;:db/odds-against "The odds against an earthquake are"
-   ;:db/Mag4-over-time "Mag 4+ earthquakes in %1 over time"
-   ;:db/How-many-bar-chart "How many earthquakes of magnitude 4 or morehit %1 in each 50 year period?"
-   ;:db/compare-world-cities "How does %1 compare to the world?"
-   ;:db/compare-cities-1 "The chance of a magnitude 4 or"
-   ;:db/compare-cities-2 "more within the next 7 days is"
-   })
+  #:db{:Dashboard "Cruscotto del terremoto"
+       :Countries "Paesi"
+       :country "paese"
+       :Communities "Municipalità"
+       :Regions "Regioni"
+       :Navigate "Naviga verso la tua area locale."
+       :Italy "Italia"
+       :Home "Home"
+       :Settings "Impostazioni"
+       :History "Storia"
+       :Data-source "Fonte dati: INGV, n. 3456783567"
+       :Responsibility "Responsabilità: Protezione Civile n.327 347684"
+       :Ambulance [:span [:b "Ambulanza:"] " Chiama 118"]
+       :Emergency [:span [:b "Numero d'emergenza:"] " Chiama 112"]
+       :Country-regions {"italy" "Regioni Italiane"        ; 'italy', 'iceland' 'switzerland' are lookup keys - do not translate them
+                         "iceland" "Regioni Islandese"
+                         "switzerland" "Regioni Svizzere"}
+       :Regional-communities "Municipalità regionali"
+       :Local-history "Storia del terremoto locale"
+       :Not-included "Non incluso nel sito web"
+       :Mag "Magn"
+       :Last-updated "L'ultimo aggiornamento"
+       :Next-update-due "Prossimo aggiornamento sarà"
+       :from-date "00:00 6 giugno 2021"
+       :to-date "00:00 7 luglio 2021"
+       :Local-history-p1 "Quanti terremoti di magnitudo 4 o superiore hanno colpito"
+       :Local-history-p2 "in passato?"
+       :Whats-happening "Cosa sta succedendo e adesso?"
+       :local-message "%1 si sta assistendo a probabilità più alte del normale a causa di un aumento dell'attività sismica verso il sistema di faglie di Monte Vittore."
+       :How-does-location-compare "Come si pone %1 rispetto al mondo?" ; the location replaces %1
+       :How-chance-compares "Come si confronta l'attuale probabilità di un terremoto di magnitudo 4+ a %1 in paragone a una settimana media in altri posti in tutto il mondo?"
+       :compare-average "in paragone a una settimana media in altri posti in tutto il mondo?"
+       :How-likely-is [:span "Quanto è probabile un" " " [:i "terremoto di magnitudo 4" [:br] "o superiore"] " entro I prossimi 7 giorni?"]
+       :the-chance-within [:<> "La probabilità di un terremoto" [:br] [:nobr "entro 6 luglio ⟷ 13 luglio é"]]
+       :Every-second "Ogni secondo della simulazione rappresenta l' %1 del tempo reale nel quale ogni settimana ha una probabilità pari al 2%."
+       :whereas "mentre la probabilità in una settimana media è"
+       :current-chance-is "Attualmente la probabilità è %1 %2 media" ; %1 is the relative risk
+       :higher-than "volte superiore alla" ; may replace %2 above
+       :about "circa lo stesso della" ; may replace %2 above
+       :smaller-than "volte inferiore della" ; may replace %2 above
+       :odds-against "Le probabilità contro un terramoto sono"
+       :Mag4-over-time "Terremoti storici di magnitudo 4 o più"
+       :How-many-bar-chart "Quante terremoti di magnitudo 4 o superiore sono avvenuti ogni 50 anni?"
+       :compare-world-cities "Come si pone %1 rispetto al mondo?"
+       :compare-cities-1 "La probabilità di un magnitudo 4 o"
+       :compare-cities-2 "superiore entro I prossimi 7 giorni è"
+       :compared-to-these-cities "rispetto a una settimana media in queste città."})

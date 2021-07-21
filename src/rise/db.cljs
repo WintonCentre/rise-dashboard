@@ -2,7 +2,8 @@
   (:require [rise.dictionaries :as dict]
             [clojure.string :as string]
             [re-frame.core :as rf]
-            [rise.subs :as subs]))
+            [rise.subs :as subs]
+            ))
 
 (defn ttt*
   "Look up a the keyword in the dictionary.
@@ -29,15 +30,6 @@
       translation
       [:tspan {:fill "#F727FE"} english])))
 
-(defn db-ttt*
-  [country-code v-or-text]
-  (if (vector? v-or-text)
-    (let [[op field-key english] v-or-text]
-      (cond
-        (= op [:ttt]) (ttt* country-code field-key english)
-        (= op [:svg-ttt]) (svg-ttt* country-code field-key english)
-        :else english))))
-
 (defn ttt
   "1 arity looks up field-key in chosen dictionary
   2+ arity looks up cc, but then does parameter interpolation on %1 %2 ...
@@ -50,6 +42,21 @@
       #_#_let [ts (ttt* :it cc s)]
       (first (reduce (fn [[result i] arg]
                        [(string/replace result (str "%" (inc i)) arg) (inc i)]) [ts 0] args)))))
+
+(comment
+  @(rf/subscribe [::subs/lang])
+  (apply ttt [:db/Countries "Boo"])
+  0)
+
+(defn maybe-translatable
+  "Countries, Regions, and Communities are listed as 'items' in their parent map in the db.
+   If the item title needs to be translated it should appear as a [key english] value in the db.
+   If not, it may appear as a string.
+   These kinds of 'maybe-translatable' things must use this function to decode the db value in the correct language."
+  [title]
+  (if (string? title)
+    title
+    (apply ttt title)))
 
 
 #_(defn ttt
@@ -103,9 +110,9 @@
                      :y 60
                      :fill "#fff"
                      :city "Tokyo"}] ; TRANSLATE
-   :countries {:title "Countries"
+   :countries {:title [:db/Countries "Countries"]
                :items [{:href :rise.views/countries
-                        :title "Italy" ; TRANSLATE
+                        :title [:db/Italy "Italy"] 
                         :id "italy"
                         :map "italy.png"}
                        #_{:href :rise.views/countries
@@ -120,7 +127,7 @@
                           :title "Iceland" ; TRANSLATE
                           :id "iceland"
                           :map "iceland.png"}]}
-   :regions {:title "Regions"
+   :regions {:title [:db/Regions "Regions"]
              :items [{:href :rise.views/regions
                       :title "Umbria"
                       :id "umbria"
@@ -136,7 +143,7 @@
                       :id "abruzzo"
                       :map "abruzzo.png"
                       :country "italy"}]}
-   :communities {:title "Communities" ; TRANSLATE
+   :communities {:title [:db/Communities "Communities"] ; TRANSLATE
                  :items [{:title "Foligno"
                           :region "umbria"
                           :id "foligno"}

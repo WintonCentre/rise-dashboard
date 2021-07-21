@@ -76,19 +76,20 @@
   0)
 
 
-
 (defn links-to
   [items]
   (into [:<>]
         (map
          (fn [item]
            (?-> item ::item)
-           [:div  {:key (item :id)}
-            (if (item :href)
-              [:a {:href (ui/href (item :href) {:id (item :id)})}
-               (item :title)]
-              (item :title))])
+           (let [title (db/maybe-translatable (item :title))]
+             [:div  {:key (item :id)}
+              (if (item :href)
+                [:a {:href (ui/href (item :href) {:id (item :id)})}
+                 title #_(item :title)]
+                title #_(item :title))]))
          items)))
+
 (comment
   (def items {:neighbours {:NE "Spoleto-N", :SE "Spoleto", :S "Spoleto-SW"}
               :p-7day 0.014
@@ -207,12 +208,12 @@
   "Display a generic home page. Minimally, navigation from here to countries."
   []
   (let [all-countries (:items @(rf/subscribe [::subs/countries]))]
-    [ui/page "RISE Dashboard demo"
+    [ui/page ""
      [ui/row
       [ui/col {:md 5}
        [mag-scale]]
       [ui/col {:md {:span 5 :offset 1} :style {:font-size "1.4em"}}
-       "Navigate to your local area."
+       (db/ttt :db/Navigate "Navigate to your local area.")
        [links-to all-countries]]]]))
 
 (defn option-radio-group
@@ -267,11 +268,11 @@
         all-regions (:items @(rf/subscribe [::subs/regions]))
         country-regions (filter #(= (:country %) country-id) all-regions)]
     (locals)
-    [ui/page [:h1 (country :title)]
+    [ui/page [:h1 (apply db/ttt (country :title))]
      [ui/three-columns
       {:col1 [mag-scale]
        :col2 [:div {:style {:margin-left 30}}
-              [:h2 "Italian Regions"]
+              [:h2 (get (db/ttt :db/Country-regions "English Regions") country-id)]
               (links-to country-regions)]
        :col3 [:> bs/Image {:src (str "/assets/" country-id ".png")
                            :fluid true}]}]]))
@@ -290,10 +291,10 @@
         regional-communities (filter #(= (:region %) region-id) all-communities)]
     (locals)
     [ui/page [:div {:style {:margin-left 30}}
-              [:h1 [:span (region :title) " (" [:a {:href (ui/href (country :href) {:id (country :id)})} (country :title)] ")"]]]
+              [:h1 [:span (db/maybe-translatable (region :title)) " (" [:a {:href (ui/href (country :href) {:id (country :id)})} (db/maybe-translatable (country :title))] ")"]]]
      [ui/three-columns
       {:col1 [mag-scale]
-       :col2 [:div {:style {:margin-left 30}} [:h2 "Regional Communities"]
+       :col2 [:div {:style {:margin-left 30}} [:h2 (db/ttt :db/Regional-communities "Regional Communities")]
               (links-to regional-communities)]
        :col3 [:> bs/Image {:src (str "/assets/" region-id ".png")
                            :fluid true}]}]]))
@@ -418,15 +419,19 @@
           (db/ttt :db/Local-history-p2 "in the past?")]])]
      [ui/col (base-style 5)
       [:h4 [:a {:href (str "/#/hex/" (community :id))} (db/ttt :db/Whats-happening "What's happening here and now?")]]
-      [:p (community :title) " " (db/ttt :db/local-message "is seeing higher chances than normal because of increased 
-             seismic activity around the Mount Vittore fault system.")]]
+      [:p  (db/ttt :db/local-message "%1 is seeing higher chances than normal because of increased 
+             seismic activity around the Mount Vittore fault system." (community :title))]]
      [ui/col (base-style {:span 4})
       (when with-context?
         [:<>
-         [:h4 [:a {:href (str "/#/world/" (community :id))} (db/ttt :db/How-does "How does") " " 
-               (community :title) " " (db/ttt :db/compare-to-world "compare to the world?")]]
-         [:p (db/ttt :db/How-chance-compares "How does the current chance of a magnitude 4+ quake in") " " (community :title)
-          " " (db/ttt :db/compare-average "compare to an average week in other places worldwide?")]])]]))
+         [:h4 [:a {:href (str "/#/world/" (community :id))} 
+               (db/ttt :db/How-does-location-compare "How does %1 compare to the world" (community :title)) ]]
+         [:p (db/ttt :db/How-chance-compares "How does the current chance of a magnitude 4+ quake in %1 compare to an average week in other places worldwide?"
+                     (community :title))]])]]))
+(comment
+(db/ttt :db/How-does-location-compare "How does %1 compare to the world" "Spoleto")
+  )
+
 
 (defn update-status
   []
@@ -434,15 +439,21 @@
                  :margin-left 30
                  :color "#888"}}
 
-   [ui/row {:style {:width 370}}
+   [ui/row {:style {:width 570}}
         ;[:span  "Last updated"]
         ;[:span "00:00 6th July 2021"]
-    [ui/col {:xs 5} (db/ttt :db/Last-updated "Last updated")]
+    [ui/col {:xs 6} (db/ttt :db/Last-updated "Last updated")]
     [ui/col {:xs 6} [db/ttt :db/from-date "00:00 6th July 2021"]]]
 
-   [ui/row {:style {:width 370}}
-    [ui/col {:xs 5} (db/ttt :db/Next-update-due "Next update due")]
+   [ui/row {:style {:width 570}}
+    [ui/col {:xs 6} (db/ttt :db/Next-update-due "Next update due")]
     [ui/col {:xs 6} (db/ttt :db/to-date "00:00 7th July 2021")]]])
+
+(comment
+  (db/ttt :db/current-chance-is "The current chance is %1 %2 average"
+          123
+          "higher than")
+  )
 
 (defn area-status
   "show earthquake status of an area"
@@ -451,7 +462,11 @@
         mean (community :mean-7day)
         mag+ @(rf/subscribe [::subs/mag+])
         with-vis? @(rf/subscribe [::subs/with-vis?])
-        odds? @(rf/subscribe [::subs/odds?])]
+        odds? @(rf/subscribe [::subs/odds?])
+        rr%2 (condp = (compare p mean)
+               -1 (db/ttt :db/smaller-than "smaller than")
+               0 (db/ttt :db/about "about")
+               1 (db/ttt :db/higher-than "higher than"))]
     [ui/row {:style {:font-size "21px"}}
      [ui/col
       [:div {:style {:border "1px solid #CCC"
@@ -478,17 +493,13 @@
            [:span (db/ttt :db/odds-against "The odds against an earthquake are")]
            [:nobr [:div {:style {:width 85}} (large (- (js/Math.round (/ 1 p)) 1) " - 1")]]]
           [:<>
-           [:span (db/ttt :db/current-chance-is "The current chance is") " "
-            (large (let [rr (/ p mean)]
-                     (str (if (> rr 1)
-                            (js/Math.round rr) ;(* 10 (js/Math.round (/ rr 10)))
-                            (trim-s (.toPrecision (js/Number. (* rr 100)) 2))))))
-            " "
-            (db/ttt :db/times-average "times %1 average."
-                    (condp = (compare p mean)
-                      -1 "smaller than"
-                      0 "equal to"
-                      1 "higher than"))]
+           [:span (db/ttt :db/current-chance-is [:span "The current chance is %1 %2 average"]
+                          (let [rr (/ p mean)]
+                            (str (if (> rr 1)
+                                   (js/Math.round rr) ;(* 10 (js/Math.round (/ rr 10)))
+                                   (trim-s (.toPrecision (js/Number. (* rr 100)) 2)))))
+                          rr%2)
+            ]
            ])]]
 
       [update-status]]]))
@@ -555,13 +566,13 @@
         time->next-q @(rf/subscribe [::subs/next-quake-t])
         time-acc-f (events/time-acceleration-factor lambda @(rf/subscribe [::subs/average-time-to-quake]))
         time-acc-f-in-words ((keyword (str time-acc-f)) events/time-factors)]
-    (if quake? (do
+    (when (and animate? quake?)
                  ;; Do this in effects and fx. 
                  ;; Also save setTimeout returns so they can be cleared
-                 ;; otherwise we'll have aa memory leak.
-                 (js/console.log (str "Next quake in: " time->next-q " ms."))
-                 (js/setTimeout #(rf/dispatch [::events/quake? true]) time->next-q)
-                 (js/setTimeout #(rf/dispatch [::events/quake? false (max 1000 (/ (* 1000 (events/time-of-next-quake lambda)) time-acc-f))]) 800)))
+                 ;; otherwise we'll have a memory leak.
+      (js/console.log (str "Next quake in: " time->next-q " ms."))
+      (js/setTimeout #(rf/dispatch [::events/quake? true]) time->next-q)
+      (js/setTimeout #(rf/dispatch [::events/quake? false (max 1000 (/ (* 1000 (events/time-of-next-quake lambda)) time-acc-f))]) 800))
     (locals)
     [ui/page
      [:<>
@@ -697,7 +708,7 @@
                    (into [:g] (map (fn [city] (average-city (assoc city :X X))) average-cities)))
 
 
-                 [:text {:x "8%" :y "95%" :fill "#fff"} "compared to an average week in these cities"]]])
+                 [:text {:x "8%" :y "95%" :fill "#fff"} (db/ttt :db/compared-to-these-cities "compared to an average week in these cities")]]])
 
        #_[:> bs/Image {:src "/assets/thermometer.png"
                      :alt "Map showing forecast area"
