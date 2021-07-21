@@ -147,5 +147,12 @@
    (assoc db
           :annular? annular?)))
 
+(rf/reg-event-db
+ ::set-language
+ (fn
+   [db [_ language]]
+   (assoc db
+          :lang language)))
+
 
 

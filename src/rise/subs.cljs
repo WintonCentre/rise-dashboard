@@ -10,6 +10,8 @@
 ;; subscripton keys are used in views (usually) to READ db values
 ;; db keys are used in event handlers (always) to WRITE to the db
 ;;; 
+(rf/reg-sub ::lang (fn [db] (:lang db)))
+
 (rf/reg-sub ::window-width (fn [db] (:window-width db)))
 
 (rf/reg-sub ::current-route (fn [db] (:current-route db)))

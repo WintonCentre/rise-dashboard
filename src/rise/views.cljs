@@ -13,6 +13,13 @@
    [shadow.debug :refer [locals ?> ?-> ?->>]]))
 
 (comment
+  @(rf/subscribe [::subs/lang])
+  (db/ttt :db/Dashboard "Earthquake dashboard")
+  
+  0)
+
+
+(comment
   (rf/dispatch [::events/initialize-db]))
 
 ;; Utils ;;
@@ -218,13 +225,28 @@
                               :on-change #(rf/dispatch [(keyword :rise.events key-name) (= % "on")])
                               :buttons-f (fn [] [{:key (keyword key-name) :level "on" :level-name on-text}
                                                  {:key (str "not" (keyword key-name)) :level "off" :level-name off-text}])}]]])
-
+(defn language-choice
+  [id]
+  [ui/row
+   [ui/col {:md 6}
+    [bsio/radio-button-group {:id id
+                              :value-k :lang
+                              :value-f #(name @(rf/subscribe [::subs/lang]))
+                              :on-change #(rf/dispatch [::events/set-language (keyword %)])
+                              :buttons-f (fn [] [{:key :en :level "en" :level-name "English"}
+                                                 {:key :it :level "it" :level-name "Italian"}
+                                                 {:key :de :level "de" :level-name "German"}
+                                                 {:key :fr :level "fr" :level-name "French"}
+                                                 ])}]]])
 (defn settings
   "Page to set options"
   []
   [ui/page [:h1 "Set Options"]
-   [:div {:style {:height 500 :width 200 :display "flex" :flex-direction "column" :justify-content "space-between"}}
-    [option-radio-group "odds?" "odds?" "Show Odds" "Show relative risk" ]
+   [:div {:style {:height 550 :width 200 :display "flex" :flex-direction "column" :justify-content "space-between"}}
+    [:span [:label "Language choice"]
+     [language-choice "set-language"]]
+    [:br]
+    [option-radio-group "odds?" "odds?" "Show Odds" "Show relative risk"]
     [option-radio-group "setcontext" "with-context?" "With contextual pages" "Without contextual pages"]
     [option-radio-group "setvis" "with-vis?" "With visualisation" "Without visualisation"]
     [option-radio-group "annular" "annular?" "Show speedo" "Show bar"]
@@ -534,6 +556,9 @@
         time-acc-f (events/time-acceleration-factor lambda @(rf/subscribe [::subs/average-time-to-quake]))
         time-acc-f-in-words ((keyword (str time-acc-f)) events/time-factors)]
     (if quake? (do
+                 ;; Do this in effects and fx. 
+                 ;; Also save setTimeout returns so they can be cleared
+                 ;; otherwise we'll have aa memory leak.
                  (js/console.log (str "Next quake in: " time->next-q " ms."))
                  (js/setTimeout #(rf/dispatch [::events/quake? true]) time->next-q)
                  (js/setTimeout #(rf/dispatch [::events/quake? false (max 1000 (/ (* 1000 (events/time-of-next-quake lambda)) time-acc-f))]) 800)))
@@ -592,7 +617,8 @@
                    :color "white"
                    :height 355}}
      [:div {:style {:text-align "center"}}
-      "How many earthquakes of magnitude 4 or morehit " (community :title) " in each 50 year period?"]
+      (db/ttt :db/How-many-bar-chart "How many earthquakes of magnitude 4 or morehit %1 in each 50 year period?"
+              (community :title))]
      [:div {:style {:max-width 450}}
       [:> bs/Image {:src "/assets/history.png"
                     :alt "History of quakes in the area"
@@ -604,7 +630,8 @@
   (main-content-template
    (fn [community]
      (let [region (find-location-by-id :region (community :region))]
-       [:span  "Mag 4+ earthquakes in " (community :title) " over time"]))
+       [:span  (db/ttt :db/Mag4-over-time "Mag 4+ earthquakes in %1 over time"
+                       (community :title))]))
    histogram))
 
 
@@ -649,8 +676,8 @@
          :else [:svg {:width "100%" :height "100%"}
                 [:g
                  [:rect {:x 0 :y "50%" :width "100%" :height "50%" :fill "#fff3"}]
-                 [:text {:x "8%" :y "12%" :fill "#fff"} "The chance of a magnitude 4 or "]
-                 [:text {:x "8%" :y "19%" :fill "#fff"} "more within the next 7 days is"]
+                 [:text {:x "8%" :y "12%" :fill "#fff"} (db/svg-ttt :db/compare-cities-1 "The chance of a magnitude 4 or") " "]
+                 [:text {:x "8%" :y "19%" :fill "#fff"} (db/svg-ttt :db/compare-cities-2 "more within the next 7 days is") " "]
                  [:text {:style {:font-size "1.5em"} :fill "#fff" :x (pc (+ community-x dx)) :y "30%"} (nice% p) " in " (community :title)]
                  [:line {:x1 (pc community-x) :x2 (pc community-x) :y1 "34%" :y2 "50%" :stroke "#fff" :stroke-width 2}]
                  [:circle {:cx (pc community-x) :cy "50%" :r 5 :fill "#fff"}]
@@ -680,7 +707,7 @@
   "Showing community relative to world averages"
   []
   (main-content-template
-   (fn [community] [:span "How does " (community :title) " compare to the world?"])
+   (fn [community] [:span (db/ttt :db/compare-world-cities "How does %1 compare to the world?" (community :title))])
    world-averages))
 
 
