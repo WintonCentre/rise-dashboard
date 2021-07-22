@@ -121,7 +121,7 @@ in the routes table."
   [row
    [col {:lg 3 :style {:max-width 500 :margin-bottom 30 :margin-right 0 :padding-right 0}}
     col1]
-   [col {:lg 5 :style {:max-width 700 :margin-left -2 :padding-left 0}}
+   [col {:lg 5 :style {:max-width 600 :margin-left -2 :padding-left 0}}
     col2]
    [col {:lg 3 :style {:max-width 500}}
     col3]])
@@ -135,7 +135,7 @@ in the routes table."
    [:div
     [:span (db/ttt :db/Data-source "Data source: INGV, n. 3456783567")]
     [:br]
-    [:span (db/ttt :db/Responsibilty "Responsibilty: Civil Protection n.327 347684")]]
+    [:span (db/ttt :db/Responsibility "Responsibility: Civil Protection n.327 347684")]]
    [:div {:style {:margin-left 40}}
     [:span [:b "Ambulance:"] " Call 118"]
     [:br]
