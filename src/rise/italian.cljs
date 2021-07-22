@@ -13,7 +13,7 @@
    If you need to change the markup in square brackets ask gmp26@cam.ac.uk how. The syntax is documented 
    at https://github.com/weavejester/hiccup/wiki/Syntax.
    "
-  #:db{:Dashboard "Sito di web"
+  #:db{:Dashboard "Sito web"
        :Countries "Paesi"
        :country "paese"
        :Communities "Municipalità"
