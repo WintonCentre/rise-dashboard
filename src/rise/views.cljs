@@ -481,11 +481,12 @@
         [:<>
          [vis% p]]]
 
-       [ui/row {:style {:display "flex" :align-items "center" :justify-content "space-between" :padding-bottom 35}}
-        [:<> ;ui/col {:md 9}
-         [:span (db/ttt :db/whereas "whereas the chance in an average week is")]]
-        [:<> ;ui/col {:md 3}
-         [vis% mean]]]
+       [ui/row 
+        [:div {:style {:display "flex" :align-items "center" :justify-content "space-between" :padding-bottom 35}}
+         [:div  ;ui/col {:md 9}  Using divs to avoid gutter between mag-scale and main box
+          [:span (db/ttt :db/whereas "whereas the chance in an average week is")]]
+         [:div  ;ui/col {:md 3}
+          [vis% mean]]]]
 
        [ui/row {:style {:display "flex" :align-items "center" :justify-content "space-between" :padding-bottom 25}}
         (if odds?

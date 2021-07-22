@@ -1,7 +1,8 @@
-(ns rise.english)
+(ns rise.german)
 
-(def english
-  "
+
+(def german
+   "
    Translate by replacing the english phrases inside double quotes with the italian
    
    Phrases may be simple strings inside double quotes, or they may have markup for formatting.
@@ -13,7 +14,7 @@
    If you need to change the markup in square brackets ask gmp26@cam.ac.uk how. The syntax is documented 
    at https://github.com/weavejester/hiccup/wiki/Syntax.
    "
-  #:db{:Dashboard "Earthquake Dashboard"
+  #:db{:Dashboard "Erdbeben Dashboard"
        :Countries "Countries"
        :country "country"
        :Communities "Communities"
@@ -52,10 +53,10 @@
        :current-chance-is "The current chance is %1 %2 average." ; %1 is the relative risk
        :higher-than "times higher than" ; may replace %2 above
        :about "about the same as" ; may replace %2 above
-       :smaller-than "times lower than" ; may replace %2 above 
+       :smaller-than "times lower than" ; may replace %2 above      :times-average "times %1 average."
        :odds-against "The odds against an earthquake are"
        :Mag4-over-time "Mag 4+ earthquakes in %1 over time"
        :How-many-bar-chart "How many earthquakes of magnitude 4 or morehit %1 in each 50 year period?" ; %1 is location
        :compare-world-cities "How does %1 compare to the world?"
-       :compare-cities-2 "more within the next 7 days is"
+        :compare-cities-2 "more within the next 7 days is"
        :compared-to-these-cities "compared to an average week in these cities"})
