@@ -110,7 +110,7 @@ in the routes table."
        [:div {:style {:flex-grow 6}} " "]
        [preset-dropdown-menu]
        [language-dropdown-menu]
-       [:> bs/Nav.Link {:event-key :settings
+       #_[:> bs/Nav.Link {:event-key :settings
                         :href (href :rise.views/settings)} (db/ttt :db/Settings "Settings")]
 
        ]]]))
