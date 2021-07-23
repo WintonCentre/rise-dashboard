@@ -65,5 +65,4 @@
        :Tokyo "Tokyo"
        :Rome "Rome"
        :Zurich "Zurich"
-       :Sossi "Sossi"
-       })
+       :Sossi "Sossi"})

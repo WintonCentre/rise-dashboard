@@ -415,7 +415,7 @@
         [:<>
          [:h4 [:a {:href (str "/#/history/" (community :id))} (db/ttt :db/Local-history "Local earthquake history")]]
          [:p (db/ttt :db/Local-history-p1 "How many earthquakes of magnitude 4 or more have hit") " " 
-          (community :title) " "
+          (region :title) " "
           (db/ttt :db/Local-history-p2 "in the past?")]])]
      [ui/col (base-style 5)
       [:h4 [:a {:href (str "/#/hex/" (community :id))} (db/ttt :db/Whats-happening "What's happening here and now?")]]
@@ -616,26 +616,27 @@
 ;;;
 (defn histogram
   [community]
-  [ui/row {:style {:font-size "21px"}}
-   [ui/col
-    [:div {:style {:border "1px solid #CCC"
-                   :border-radius 20
-                   :display "flex"
-                   :flex-direction "column" 
-                   :padding 20
-                   :justify-content "space-between"
-                   :align-items "center"
-                   :box-shadow "1px 1px 1px 1px #CCC"
-                   :background-color "#444466" #_"#80647D"
-                   :color "white"
-                   :height 355}}
-     [:div {:style {:text-align "center"}}
-      (db/ttt :db/How-many-bar-chart "How many earthquakes of magnitude 4 or morehit %1 in each 50 year period?"
-              (community :title))]
-     [:div {:style {:max-width 450}}
-      [:> bs/Image {:src "/assets/history.png"
-                    :alt "History of quakes in the area"
-                    :fluid true}]]]]])
+  (let [region (find-location-by-id :region (community :region))]
+    [ui/row {:style {:font-size "21px"}}
+     [ui/col
+      [:div {:style {:border "1px solid #CCC"
+                     :border-radius 20
+                     :display "flex"
+                     :flex-direction "column"
+                     :padding 20
+                     :justify-content "space-between"
+                     :align-items "center"
+                     :box-shadow "1px 1px 1px 1px #CCC"
+                     :background-color "#444466" #_"#80647D"
+                     :color "white"
+                     :height 355}}
+       [:div {:style {:text-align "center"}}
+        (db/ttt :db/How-many-bar-chart "How many earthquakes of magnitude 4 or morehit %1 in each 50 year period?"
+                (region :title))]
+       [:div {:style {:max-width 450}}
+        [:> bs/Image {:src "/assets/history.png"
+                      :alt "History of quakes in the area"
+                      :fluid true}]]]]]))
 
 (defn history
   "Showing the earthquake history for an area"
@@ -644,7 +645,7 @@
    (fn [community]
      (let [region (find-location-by-id :region (community :region))]
        [:span  (db/ttt :db/Mag4-over-time "Mag 4+ earthquakes in %1 over time"
-                       (community :title))]))
+                       (region :title))]))
    histogram))
 
 
@@ -689,8 +690,8 @@
          :else [:svg {:width "100%" :height "100%"}
                 [:g
                  [:rect {:x 0 :y "50%" :width "100%" :height "50%" :fill "#fff3"}]
-                 [:text {:x "8%" :y "12%" :fill "#fff"} (db/svg-ttt :db/compare-cities-1 "The chance of a magnitude 4 or") " "]
-                 [:text {:x "8%" :y "19%" :fill "#fff"} (db/svg-ttt :db/compare-cities-2 "more within the next 7 days is") " "]
+                 [:text {:x "8%" :y "12%" :fill "#fff"} (db/ttt :db/compare-cities-1 "The chance of a magnitude 4 or")]
+                 [:text {:x "8%" :y "19%" :fill "#fff"} (db/ttt :db/compare-cities-2 "more within the next 7 days is")]
                  [:text {:style {:font-size "1.5em"} :fill "#fff" :x (pc (+ community-x dx)) :y "30%"} (nice% p) " in " (community :title)]
                  [:line {:x1 (pc community-x) :x2 (pc community-x) :y1 "34%" :y2 "50%" :stroke "#fff" :stroke-width 2}]
                  [:circle {:cx (pc community-x) :cy "50%" :r 5 :fill "#fff"}]
