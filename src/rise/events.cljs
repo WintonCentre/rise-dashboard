@@ -154,5 +154,52 @@
    (assoc db
           :lang language)))
 
+(def reset-settings
+  {:animate? false
+    :with-context? false
+    :with-vis? false
+    :annular? false
+    :odds? false})
 
+(def presets
+  "Anything listed inside the set #{} is selected.
+   Everything else is off"
+  {:preset1 #{:odds?
+              :with-vis?
+              :annular? ;speedo
+              :animate?}
+   :preset2 #{} ; RR, no vis, no animation
+   :preset3 #{:odds?
+              :with-vis? ;bar
+              :animate?}
+   :preset4 #{:with-vis?
+              :annular? ;speedo
+              }
+   :preset5 #{:with-context?}})
+
+(comment
+  (merge reset-settings
+         (map (fn [k]
+                [k true])
+              (get presets :preset5)))
+  ;; => {:animate? false, :with-context? true, :with-vis? false, :annular? false, :odds? false}
+  
+    (merge reset-settings
+           (map (fn [k]
+                  [k true])
+                nil))
+    ;; => {:animate? false, :with-context? false, :with-vis? false, :annular? false, :odds? false}
+
+  0)
+;; => nil
+
+;; Presets for testing. These choose certain selections
+(rf/reg-event-db
+ ::set-preset
+ (fn
+   [db [_ preset-id]]
+   (merge db 
+          (merge reset-settings
+                 (map (fn [k] [k true])
+                      (get presets preset-id))))))
 

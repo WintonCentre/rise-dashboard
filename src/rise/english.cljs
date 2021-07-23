@@ -41,7 +41,7 @@
        :Local-history-p1 "How many earthquakes of magnitude 4 or more have hit"
        :Local-history-p2 "in the past?"
        :Whats-happening "What's happening here and now?"
-       :local-message "is seeing higher chances than normal because of increased seismic activity around the Mount Vittore fault system."
+       :local-message "%1 is seeing higher chances than normal because of increased seismic activity around the Mount Vittore fault system."
        :How-does-location-compare "How does %1 compare to the world?" ; the location replaces %1
        :How-chance-compares "How does the current chance of a magnitude 4 or more quake in %1 compare to an average week in other places worldwide?"
        :compare-average "compare to an average week in other places worldwide?"
@@ -57,5 +57,13 @@
        :Mag4-over-time "Mag 4+ earthquakes in %1 over time"
        :How-many-bar-chart "How many earthquakes of magnitude 4 or morehit %1 in each 50 year period?" ; %1 is location
        :compare-world-cities "How does %1 compare to the world?"
+       :compare-cities-1 "The chance of a magnitude 4 or"
        :compare-cities-2 "more within the next 7 days is"
-       :compared-to-these-cities "compared to an average week in these cities"})
+       :compared-to-these-cities "compared to an average week in these cities"
+       :Athens "Athens"
+       :LosAngeles "Los Angeles"
+       :Tokyo "Tokyo"
+       :Rome "Rome"
+       :Zurich "Zurich"
+       :Sossi "Sossi"
+       })

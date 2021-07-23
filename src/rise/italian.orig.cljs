@@ -13,12 +13,12 @@
    If you need to change the markup in square brackets ask gmp26@cam.ac.uk how. The syntax is documented 
    at https://github.com/weavejester/hiccup/wiki/Syntax.
    "
-  #:db{:Dashboard "Dashboard"
+  #:db{:Dashboard "Sito web"
        :Countries "Paesi"
        :country "paese"
        :Communities "Municipalità"
        :Regions "Regioni"
-       :Navigate "Naviga verso la tua municipalità."
+       :Navigate "Naviga verso la tua area locale."
        :Italy "Italia"
        :Switzerland "Svizzera"
        :Iceland "Islanda"
@@ -42,23 +42,23 @@
        :to-date "00:00 7 luglio 2021"
        :Local-history-p1 "Quanti terremoti di magnitudo 4 o superiore hanno colpito"
        :Local-history-p2 "in passato?"
-       :Whats-happening "Cosa sta succedendo qui e ora?"
-       :local-message "A %1 si assiste a probabilità più elevate del normale a causa di un aumento dell'attività sismica verso il sistema di faglie di Monte Vittore."
+       :Whats-happening "Cosa sta succedendo e adesso?"
+       :local-message "A %1 si sta assistendo a probabilità più alte del normale a causa di un aumento dell'attività sismica verso il sistema di faglie di Monte Vittore."
        :How-does-location-compare "Come si pone %1 rispetto al mondo?" ; the location replaces %1
-       :How-chance-compares "Come si confronta l'attuale probabilità di un terremoto di magnitudo 4+ a %1 con una settimana media in altri posti nel mondo?"
-       :compare-average "paragonata a una settimana media in altri posti nel mondo?"
-       :How-likely-is [:span "Quanto è probabile un" " " [:i "terremoto di magnitudo 4" [:br] "o superiore"] " entro i prossimi 7 giorni?"]
+       :How-chance-compares "Come si confronta l'attuale probabilità di un terremoto di magnitudo 4+ a %1 paragonata a una settimana media in altri posti in tutto il mondo?"
+       :compare-average "paragonata a una settimana media in altri posti in tutto il mondo?"
+       :How-likely-is [:span "Quanto è probabile un" " " [:i "terremoto di magnitudo 4" [:br] "o superiore"] " entro I prossimi 7 giorni?"]
        :the-chance-within [:<> "La probabilità di un terremoto" [:br] [:nobr "entro 6 luglio ⟷ 13 luglio é"]]
        :Every-second "Ogni secondo della simulazione rappresenta l' %1 del tempo reale nel quale ogni settimana ha una probabilità pari al 2%."
        :whereas "mentre la probabilità in una settimana media è"
        :current-chance-is "Attualmente la probabilità è %1 %2 media" ; %1 is the relative risk
        :higher-than "volte superiore alla" ; may replace %2 above
-       :about "simile alla" ; may replace %2 above
+       :about "circa lo stesso della" ; may replace %2 above
        :smaller-than "volte inferiore della" ; may replace %2 above
-       :odds-against "Le quote contro un terremoto sono"
+       :odds-against "Le quote contro un terramoto sono"
        :Mag4-over-time "Terremoto di Mag 4+ a %1 nel corso degli anni"
-       :How-many-bar-chart "Quanti terremoti di magnitudo 4 o superiore sono accaduti ogni 50 anni?"
+       :How-many-bar-chart "Quante terremoti di magnitudo 4 o superiore hanno colpito ogni 50 anni?"
        :compare-world-cities "Come si pone %1 rispetto al mondo?"
-       :compare-cities-1 "La probabilità di un magnitudo 4 o superiore"
-       :compare-cities-2 "entro i prossimi 7 giorni è"
+       :compare-cities-1 "La probabilità di un magnitudo 4 o"
+       :compare-cities-2 "superiore entro I prossimi 7 giorni è"
        :compared-to-these-cities "rispetto a una settimana media in queste città."})

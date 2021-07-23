@@ -95,12 +95,12 @@
    :annular? true ; use an annular visual / use a bar chart
    :odds? false ; show odds or relative risk
 
-   :average-cities [{:p 0.01 ; probability
-                     :dx -3 ; label offset
-                     :y 60  ; vertical position as %
+   :average-cities [{:p 0.05 ; probability
+                     :dx 0 ; label offset
+                     :y 55  ; vertical position as %
                      :fill "#fff"
-                     :city "Rome"} ; TRANSLATE
-                    {:p 0.08
+                     :city "Athens"} ; TRANSLATE
+                    {:p 0.04
                      :dx -5
                      :y 70
                      :fill "#fff"

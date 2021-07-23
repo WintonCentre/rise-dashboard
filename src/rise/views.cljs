@@ -309,8 +309,8 @@
 (defn bar
   [{:keys [p r w text]}]
 
-  [:div {:style {:width 100 :height 100 :display "flex" :flex-direction "column" :justify-content "space-between" :align-items "center"}}
-   (when text  [:div {:style {:margin "auto auto" :font-size "1.4em"}} text])
+  [:div {:style {:width 100 :height 100 :display "flex" :flex-direction "column" :justify-content "center" :align-items "flex-end"}}
+   (when text  text [:div {:style {:margin "0" :font-size "1.4em"}} text])
    (when @(rf/subscribe [::subs/with-vis?])
      (when-not @(rf/subscribe [::subs/annular?])
        [:<>
@@ -471,6 +471,7 @@
      [ui/col
       [:div {:style {:border "1px solid #CCC"
                      :border-radius 20
+                     :min-height 370
                      :padding (str (if with-vis? 15 30) "px 30px")
                      :box-shadow "1px 1px 1px 1px #CCC"
                      :background-color "#444466" #_"#80647D"
@@ -482,9 +483,9 @@
          [vis% p]]]
 
        [ui/row 
-        [:div {:style {:display "flex" :align-items "center" :justify-content "space-between" :padding-bottom 35}}
+        [:div {:style {:width "100%" :display "flex" :align-items "center" :justify-content "space-between" :padding-bottom 35}}
          [:div  ;ui/col {:md 9}  Using divs to avoid gutter between mag-scale and main box
-          [:span (db/ttt :db/whereas "whereas the chance in an average week is")]]
+          [:div (db/ttt :db/whereas "whereas the chance in an average week is")]]
          [:div  ;ui/col {:md 3}
           [vis% mean]]]]
 
@@ -659,11 +660,11 @@
   (let [p (* 100 p)]
     [:<>
      [:text {:style {:font-size "1.2em"} :fill fill
-             :x (pc (X (- p 2))) :y (pc (+ y 7))} (pc p)]
+             :x (pc (X (+ p dx))) :y (pc (+ y 7))} (pc p)]
 
      [:text {:x (pc (X (+ p dx))) :y (pc (+ y 14)) :fill fill} city]
-     [:line {:x1 (pc (X p)) :x2 (pc (X p)) :y1 (pc y) :y2 "50%" :stroke fill :stroke-width 2}]
-     [:circle {:cx (pc (X p)) :cy "50%" :r 5 :fill fill}]]))
+     [:line {:x1 (pc (X (+ p dx))) :x2 (pc (X p)) :y1 (pc y) :y2 "50%" :stroke fill :stroke-width 2}]
+     [:circle {:cx (pc (X (+ p dx))) :cy "50%" :r 5 :fill fill}]]))
 
 (defn world-averages
   [community]
@@ -706,7 +707,7 @@
                                  [:text {:x dx :y "46%" :fill "#fff8"} (str tick "%")]]))
                             (range 0 50 10)))
                  (when average-cities
-                   (into [:g] (map (fn [city] (average-city (assoc city :X X))) average-cities)))
+                   (into [:g] (map (fn [city] (average-city (assoc city :X X :dx 0))) average-cities)))
 
 
                  [:text {:x "8%" :y "95%" :fill "#fff"} (db/ttt :db/compared-to-these-cities "compared to an average week in these cities")]]])

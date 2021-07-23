@@ -46,7 +46,7 @@
        :How-does-location-compare "Wie hoch ist die Wahrscheinlichkeit in %1 im Vergleich zur Welt?" ; the location replaces %1
        :How-chance-compares "Wie hoch ist die aktuelle Wahrscheinlichkeit eines Erdbebens der Magnitude von 4 oder höher in %1 im Vergleich zu einer durchschnittlichen Woche an anderen Orten der Welt?"
        :compare-average "im Vergleich zu einer durchschnittlichen Woche an anderen Orten der Welt?"
-       :How-likely-is [:span "Wie wahrscheinlich ist ein " [:i "Magnituden 4 oder höher"] " Erdbeben in den nächsten 7 Tagen?"]
+       :How-likely-is [:span "Wie wahrscheinlich ist ein " [:i "Magnituden 4 oder höher"] " Erdbeben" [:br] "in den nächsten 7 Tagen?"]
        :the-chance-within [:<> "Die Wahrscheinlichkeit eines Erdbebens" [:br] [:nobr "zwischen 6. Juli ⟷ 13. Juli ist"]]
        :Every-second "Jede Sekunde der Simulation entspricht %1 der realen Zeit, in der jede Woche eine Wahrscheinlichkeit von %2 hat." ;%1 is a unit of time, %2 is weekly chance
        :whereas "Im Gegensatz dazu beträgt die Wahrscheinlichkeit in einer durchschnittlichen Woche "

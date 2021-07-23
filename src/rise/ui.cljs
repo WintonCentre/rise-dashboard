@@ -64,6 +64,25 @@ in the routes table."
   (apply db/ttt [:db/Countries "Boo"])
   0)
 
+(defn preset-dropdown-menu
+  []
+  
+  (into [:> bs/NavDropdown {:title "Presets" :id "presets-dropdown"}]
+        (map (fn [preset-id]
+               [:> bs/NavDropdown.Item 
+                {:on-select #(rf/dispatch [::events/set-preset preset-id])} 
+                (name preset-id)])
+             (keys events/presets))))
+
+(defn language-dropdown-menu
+  []
+  (into [:> bs/NavDropdown {:title "Language" :id "language-dropdown"}]
+        (map (fn [lang-name]
+               [:> bs/NavDropdown.Item
+                {:on-select #(rf/dispatch [::events/set-language (keyword lang-name)])}
+                lang-name])
+             ["en" "it" "de"])))
+
 (defn navbar
   "Straight out of the react-bootstrap example with reitit routing patched in."
   [{:keys [home-url logo]}]
@@ -89,13 +108,12 @@ in the routes table."
        [navbar-dropdown-menu ::subs/regions]
        [navbar-dropdown-menu ::subs/communities]
        [:div {:style {:flex-grow 6}} " "]
+       [preset-dropdown-menu]
+       [language-dropdown-menu]
        [:> bs/Nav.Link {:event-key :settings
                         :href (href :rise.views/settings)} (db/ttt :db/Settings "Settings")]
 
-       #_[:> bs/NavDropdown {:title "Communities" :id "basic-nav-dropdown"}
-          [:> bs/NavDropdown.Item {:href (href :rise.views/hex {:id "Spoleto"})
-                                   :key "Spoleto"}
-           "Spoleto"]]]]]))
+       ]]]))
 
 (comment
   @(rf/subscribe [::subs/communities])
