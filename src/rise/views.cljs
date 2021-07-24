@@ -548,8 +548,6 @@
       [:div
        "Seconds Elapsed: " @seconds-elapsed])))
 
-
-
 (defn main-content-template
   "Three standard columns with injected title and main central panel
    page-title is a page-title function which takes the community as a parameter
@@ -566,16 +564,19 @@
         quake? @(rf/subscribe [::subs/quake?])
         lambda (:p-7day community)
         time->next-q @(rf/subscribe [::subs/next-quake-t])
-        time-acc-f (events/time-acceleration-factor lambda @(rf/subscribe [::subs/average-time-to-quake]))
-        time-acc-f-in-words ((keyword (str time-acc-f)) events/time-factors)]
+        lang @(rf/subscribe [::subs/lang])
+        time-acc-f (events/time-acceleration-factor lang lambda @(rf/subscribe [::subs/average-time-to-quake]))
+        ;time-acc-f-in-words ((keyword (str time-acc-f)) events/time-factors)
+        time-acc-f-in-words (get-in events/time-factors [lang (keyword (str time-acc-f))])
+        ]
+
     (when (and animate? quake?)
                  ;; Do this in effects and fx. 
-                 ;; Also save setTimeout returns so they can be cleared
-                 ;; otherwise we'll have a memory leak.
+                 ;; Also save setTimeout returns so they can be cleared before starting another timer
       (js/console.log (str "Next quake in: " time->next-q " ms."))
       (js/setTimeout #(rf/dispatch [::events/quake? true]) time->next-q)
       (js/setTimeout #(rf/dispatch [::events/quake? false (max 1000 (/ (* 1000 (events/time-of-next-quake lambda)) time-acc-f))]) 800))
-    (locals)
+
     [ui/page
      [:<>
       [ui/row {:style {:margin-bottom 20 :display "flex" :align-items "flex-end"}}
@@ -664,8 +665,8 @@
              :x (pc (X (+ p dx))) :y (pc (+ y 7))} (pc p)]
 
      [:text {:x (pc (X (+ p dx))) :y (pc (+ y 14)) :fill fill} city]
-     [:line {:x1 (pc (X (+ p dx))) :x2 (pc (X p)) :y1 (pc y) :y2 "50%" :stroke fill :stroke-width 2}]
-     [:circle {:cx (pc (X (+ p dx))) :cy "50%" :r 5 :fill fill}]]))
+     [:line {:x1 (pc (X (+ p dx))) :x2 (pc (X p)) :y1 (pc y) :y2 "42%" :stroke fill :stroke-width 2}]
+     [:circle {:cx (pc (X (+ p dx))) :cy "42%" :r 5 :fill fill}]]))
 
 (defn world-averages
   [community]
@@ -688,30 +689,34 @@
          (nil? community) "Missing community data"
          (nil? (community :p-7day)) "Missing community :p-7day"
          :else [:svg {:width "100%" :height "100%"}
-                [:g
-                 [:rect {:x 0 :y "50%" :width "100%" :height "50%" :fill "#fff3"}]
-                 [:text {:x "8%" :y "12%" :fill "#fff"} (db/ttt :db/compare-cities-1 "The chance of a magnitude 4 or")]
-                 [:text {:x "8%" :y "19%" :fill "#fff"} (db/ttt :db/compare-cities-2 "more within the next 7 days is")]
+                [:g {:transform "translate(-25 0)"}
+                 [:rect {:x 0 :y "42%" :width "120%" :height "60%" :fill "#fff3"}]
+                 [:text {:x "8%" :y "10%" :fill "#fff"} (db/ttt :db/compare-cities-1 "The chance of a magnitude 4 or")]
+                 [:text {:x "8%" :y "17%" :fill "#fff"} (db/ttt :db/compare-cities-2 "more within the next 7 days is")]
                  [:text {:style {:font-size "1.5em"} :fill "#fff" :x (pc (+ community-x dx)) :y "30%"} (nice% p) " in " (community :title)]
-                 [:line {:x1 (pc community-x) :x2 (pc community-x) :y1 "34%" :y2 "50%" :stroke "#fff" :stroke-width 2}]
-                 [:circle {:cx (pc community-x) :cy "50%" :r 5 :fill "#fff"}]
+                 [:line {:x1 (pc community-x) :x2 (pc community-x) :y1 "36%" :y2 "42%" :stroke "#fff" :stroke-width 2}]
+                 [:circle {:cx (pc community-x) :cy "42%" :r 5 :fill "#fff"}]
                  (into [:g
-                        [:line {:x1 "10%" :x2 "90%" :y1 "50%" :y2 "50%" :stroke "#fff" :stroke-width 3}]]
+                        [:line {:x1 "10%" :x2 "90%" :y1 "42%" :y2 "42%" :stroke "#fff" :stroke-width 3}]]
                        (map (fn [tick]
                               (let [x* (X tick)
                                     x (str x* "%")
                                     dx (str (- x* 2) "%")]
                                 [:g
                                  [:line {:x1 x :x2 x
-                                         :y1 "47%" :y2 "53%"
-                                         :stroke "#fff" :stroke-width 3}]
-                                 [:text {:x dx :y "46%" :fill "#fff8"} (str tick "%")]]))
+                                         :y1 "39%" :y2 "45%"
+                                         :stroke "#fff8" :stroke-width 1}]
+                                 [:text {:x dx :y "38%" :fill "#fff8" :font-size 14} (str tick "%")]]))
                             (range 0 50 10)))
                  (when average-cities
                    (into [:g] (map (fn [city] (average-city (assoc city :X X :dx 0))) average-cities)))
 
-
-                 [:text {:x "8%" :y "95%" :fill "#fff"} (db/ttt :db/compared-to-these-cities "compared to an average week in these cities")]]])
+                 
+                 [:text {:x "8%"
+                         :y (if (db/ttt :db/compared-to-these-cities-2 "in these cities") 
+                              "87%" "89%")
+                         :fill "#fff"} (db/ttt :db/compared-to-these-cities "compared to an average week in these cities")]
+                 [:text {:x "8%" :y "95%" :fill "#fff"} (db/ttt :db/compared-to-these-cities-2 "in these cities")]]])
 
        #_[:> bs/Image {:src "/assets/thermometer.png"
                      :alt "Map showing forecast area"

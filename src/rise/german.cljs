@@ -58,6 +58,7 @@
        :Mag4-over-time "Mag 4+ Erdbeben in %1 über die Zeit"
        :How-many-bar-chart "Wie viele Erdbeben mit einer Magnitude 4 oder höher ereignen sich in %1 in einer Zeitspanne von 50 Jahren?" ; %1 is location
        :compare-world-cities "Wie hoch ist die Wahrscheinlichkeit in %1 im Vergleich zur Welt?"
-       :compare-cities-1 "Die Wahrscheinlichkeit eines Erdbebens der Magnitude 4 oder"
-       :compare-cities-2 "mehr in den nächsten 7 Tagen ist"
-       :compared-to-these-cities "verglichen mit einer durchschnittlichen Woche in diesen Städten"})
+       :compare-cities-1 "Die Wahrscheinlichkeit eines Erdbebens der"
+       :compare-cities-2 "Magnitude 4 oder mehr in den nächsten 7 Tagen ist"
+       :compared-to-these-cities "verglichen mit einer durchschnittlichen Woche"
+       :compared-to-these-cities-2 "in diesen Städten"})

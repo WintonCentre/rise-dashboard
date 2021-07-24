@@ -38,23 +38,74 @@
 ;; earthquake timer
 ;;;
 
-(def time-factors {:1 "1 week"
-                   :2 "2 weeks"
-                   :3 "3 weeks"
-                   :4 "1 month"
-                   :8 "2 months"
-                   :12 "3 months"
-                   :16 "4 months"
-                   :26 "6 months"
-                   :52 "1 year"
-                   :104 "2 years"
-                   :156 "3 years"
-                   :208 "4 years"
-                   :260 "5 years"
-                   :312 "6 years"
-                   :364 "7 years"
-                   :416 "8 years"
-                   :520 "10 years"})
+
+;;;
+;; This is OK for the UI test rig, but very high and very low probabilities are
+;; clamped to this range. Very low can be extended in the table. 
+;; But very high probability giving less than a week intervals would require the
+;; displayed phrase to switch away from using weeks.
+;;;
+
+
+;;
+;; Needs reorganising so we don't need to key by language and so the texts 
+;; can be edited in the language files english.cljs, german.cljs etc.
+;;
+;; Replace texts here with dictionary keywords? 
+;; And then return time-factors to being language agnostic
+;;
+(def time-factors {:en {:1 "1 week"
+                        :2 "2 weeks"
+                        :3 "3 weeks"
+                        :4 "1 month"
+                        :8 "2 months"
+                        :12 "3 months"
+                        :16 "4 months"
+                        :26 "6 months"
+                        :52 "1 year"
+                        :104 "2 years"
+                        :156 "3 years"
+                        :208 "4 years"
+                        :260 "5 years"
+                        :312 "6 years"
+                        :364 "7 years"
+                        :416 "8 years"
+                        :520 "10 years"}
+                   :de {:1 "1 Woche"
+                        :2 "2 Wochen"
+                        :3 "3 Wochen"
+                        :4 "1 Monat"
+                        :8 "2 Monate"
+                        :12 "3 Monate"
+                        :16 "4 Monate"
+                        :26 "6 Monate"
+                        :52 "1 Jahr"
+                        :104 "2 Jahren"
+                        :156 "3 Jahren"
+                        :208 "4 Jahren"
+                        :260 "5 Jahren"
+                        :312 "6 Jahren"
+                        :364 "7 Jahren"
+                        :416 "8 Jahren"
+                        :520 "10 years"}
+                   :it {:1 "1 settimana"
+                        :2 "2 settimana"
+                        :3 "3 settimana"
+                        :4 "1 mese"
+                        :8 "2  mesi"
+                        :12 "3 mesi"
+                        :16 "4 mesi"
+                        :26 "6 mesi"
+                        :52 "1 anno"
+                        :104 "2 anni"
+                        :156 "3 anni"
+                        :208 "4 anni"
+                        :260 "5 anni"
+                        :312 "6 anni"
+                        :364 "7 anni"
+                        :416 "8 anni"
+                        :520 "10 anni"}
+                   })
 
 (defn closest 
   "returns the closest value to x in coll"
@@ -63,8 +114,8 @@
 
 (defn pretty-factor
   "returns the closest factor to x from time factors"
-  [x]
-  (let [coll (mapv #(js/parseInt (name %)) (keys time-factors))]
+  [lang x]
+  (let [coll (mapv #(js/parseInt (name %)) (keys (time-factors lang)))]
     (closest x coll)))
 
 (defn time-of-next-quake
@@ -73,8 +124,8 @@
 
 (defn time-acceleration-factor
   "Scaling factor to get an average time of m between earthquakes of probability p"
-  [p m]
-  (pretty-factor (/ 1000 (* m p))))
+  [lang p m]
+  (pretty-factor lang (/ 1000 (* m p))))
 
 
 
@@ -85,7 +136,7 @@
 
 
   (comment
-    (time-acceleration-factor 0.022 15000)
+    (time-acceleration-factor :en 0.022 15000)
     (time-of-next-quake 0.5)
     (average #(time-of-next-quake 0.5))
     0

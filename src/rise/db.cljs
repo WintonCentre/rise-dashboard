@@ -97,17 +97,17 @@
 
    :average-cities [{:p 0.05 ; probability
                      :dx 0 ; label offset
-                     :y 55  ; vertical position as %
+                     :y 47  ; vertical position as %
                      :fill "#fff"
                      :city "Athens"} ; TRANSLATE
                     {:p 0.04
                      :dx -5
-                     :y 70
+                     :y 62
                      :fill "#fff"
                      :city "Los Angeles"} ; TRANSLATE
                     {:p 0.2
                      :dx -3
-                     :y 60
+                     :y 52
                      :fill "#fff"
                      :city "Tokyo"}] ; TRANSLATE
    :countries {:title [:db/Countries "Countries"]
