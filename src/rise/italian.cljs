@@ -22,6 +22,7 @@
        :Italy "Italia"
        :Switzerland "Svizzera"
        :Iceland "Islanda"
+       :Zurich-Canton "Il cantone di Zurigo"
        :Home "Home"
        :Settings "Impostazioni"
        :History "Storia"

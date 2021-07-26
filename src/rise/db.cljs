@@ -134,7 +134,7 @@
                       :map "umbria.png"
                       :country "italy"}
                      {:href :rise.views/regions
-                      :title "Zurich"
+                      :title [:db/Zurich-Canton "Canton of Zurich"]
                       :id "zurich-canton"
                       :map "zurich-canton.png"
                       :country "switzerland"}

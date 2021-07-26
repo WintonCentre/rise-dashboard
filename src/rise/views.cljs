@@ -415,7 +415,7 @@
         [:<>
          [:h4 [:a {:href (str "/#/history/" (community :id))} (db/ttt :db/Local-history "Local earthquake history")]]
          [:p (db/ttt :db/Local-history-p1 "How many earthquakes of magnitude 4 or more have hit") " " 
-          (region :title) " "
+          (db/maybe-translatable (region :title)) " "
           (db/ttt :db/Local-history-p2 "in the past?")]])]
      [ui/col (base-style 5)
       [:h4 [:a {:href (str "/#/hex/" (community :id))} (db/ttt :db/Whats-happening "What's happening here and now?")]]
@@ -581,7 +581,7 @@
      [:<>
       [ui/row {:style {:margin-bottom 20 :display "flex" :align-items "flex-end"}}
        [ui/col {:md 3 :style {:display "inline-block" :font-size "2.2em" :font-weight  "500"}}
-        [:nobr (community :title)] " (" [:a {:href (ui/href (region :href) {:id (region :id)})} (region :title)] ")"]
+        [:nobr (community :title)] " (" [:a {:href (ui/href (region :href) {:id (region :id)})} (db/maybe-translatable (region :title))] ")"]
        [ui/col {:md 8 :style {:display "inline-block" :font-size "2em" :font-weight  "500"}}
         [page-title community]]]
       [ui/three-columns
@@ -633,7 +633,7 @@
                      :height 355}}
        [:div {:style {:text-align "center"}}
         (db/ttt :db/How-many-bar-chart "How many earthquakes of magnitude 4 or morehit %1 in each 50 year period?"
-                (region :title))]
+                (db/maybe-translatable (region :title)))]
        [:div {:style {:max-width 450}}
         [:> bs/Image {:src "/assets/history.png"
                       :alt "History of quakes in the area"
@@ -646,7 +646,7 @@
    (fn [community]
      (let [region (find-location-by-id :region (community :region))]
        [:span  (db/ttt :db/Mag4-over-time "Mag 4+ earthquakes in %1 over time"
-                       (region :title))]))
+                       (db/maybe-translatable (region :title)))]))
    histogram))
 
 
