@@ -20,6 +20,8 @@
        :Regions "Regions"
        :Navigate "Navigate to your location."
        :Italy "Italy"
+       :Switzerland "Switzerland"
+       :Iceland "Iceland"
        :Home "Home"
        :Settings "Settings"
        :History "History"

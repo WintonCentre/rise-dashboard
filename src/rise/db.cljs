@@ -112,17 +112,17 @@
                      :city "Tokyo"}] ; TRANSLATE
    :countries {:title [:db/Countries "Countries"]
                :items [{:href :rise.views/countries
-                        :title [:db/Italy "Italy"] 
+                        :title [:db/Italy "Italy"]
                         :id "italy"
                         :map "italy.png"}
                        #_{:href :rise.views/countries
                           :title "New Zealand" ; TRANSLATE
                           :id "nz"
                           :map "nz.png"}
-                       #_{:href :rise.views/countries
-                          :title "Switzerland" ; TRANSLATE
-                          :id "switzerland"
-                          :map "switzerland.png"}
+                       {:href :rise.views/countries
+                        :title [:db/Switzerland "Switzerland"] ; TRANSLATE
+                        :id "switzerland"
+                        :map "switzerland.png"}
                        #_{:href :rise.views/countries
                           :title "Iceland" ; TRANSLATE
                           :id "iceland"
@@ -134,25 +134,142 @@
                       :map "umbria.png"
                       :country "italy"}
                      {:href :rise.views/regions
-                      :title "Lazio"
-                      :id "lazio"
-                      :map "lazio.png"
-                      :country "italy"}
+                      :title "Zurich"
+                      :id "zurich-canton"
+                      :map "zurich-canton.png"
+                      :country "switzerland"}
                      {:href :rise.views/regions
-                      :title "Abruzzo"
-                      :id "abruzzo"
-                      :map "abruzzo.png"
-                      :country "italy"}]}
+                      :title "Valais"
+                      :id "valais"
+                      :map "valais.png"
+                      :country "switzerland"}
+                     #_{:href :rise.views/regions
+                        :title "Lazio"
+                        :id "lazio"
+                        :map "lazio.png"
+                        :country "italy"}
+                     #_{:href :rise.views/regions
+                        :title "Abruzzo"
+                        :id "abruzzo"
+                        :map "abruzzo.png"
+                        :country "italy"}]}
    :communities {:title [:db/Communities "Communities"] ; TRANSLATE
-                 :items [{:title "Foligno"
+                 :items [#_{:title "Foligno"
+                            :region "umbria"
+                            :id "foligno"}
+                         #_{:title "Orvieto"
+                            :region "umbria"
+                            :id "orvieto"}
+                         #_{:title "Perugia"
+                            :region "umbria"
+                            :id "perugia"}
+                         ;;
+                         ;; Norcia
+                         ;;
+                         {:href :rise.views/hex
+                          :title "Norcia"
+                          :id "norcia"
+                          :map "norcia hex.png"
+                          :latitude 42.739
+                          :longitude 12.7376
                           :region "umbria"
-                          :id "foligno"}
-                         {:title "Orvieto"
+                          :country "italy"
+                          :p-7day 0.022
+                          :mean-7day 0.00015
+                          :neighbours {:N "norcia-N"
+                                       :NE "norcia-NE"
+                                       :NW "norcia-NW"
+                                       :S "norcia-S"
+                                       :SE "norcia-SE"
+                                       :SW "norcia-SW"}
+                          :osm-href "https://www.openstreetmap.org/relation/42105"}
+                         {:href :rise.views/hex
+                          :title "Norcia–N"
+                          :id "norcia-N"
+                          :map "norcia-N hex.png"
+                          :latitude 42.739
+                          :longitude 12.7376
                           :region "umbria"
-                          :id "orvieto"}
-                         {:title "Perugia"
+                          :country "italy"
+                          :p-7day 0.012
+                          :mean-7day 0.00005
+                          :neighbours {:SE "norcia-NE"
+                                       :SW "norcia-NW"
+                                       :S "norcia"}
+                          :osm-href "https://www.openstreetmap.org/relation/42105"}
+                         {:href :rise.views/hex
+                          :title "Norcia-NE"
+                          :id "norcia-NE"
+                          :map "norcia-NE.png"
+                          :latitude 42.739
+                          :longitude 12.7376
                           :region "umbria"
-                          :id "perugia"}
+                          :country "italy"
+                          :p-7day 0.16
+                          :mean-7day 0.00012
+                          :neighbours {:NW "norcia-N"
+                                       :SW "norcia"
+                                       :S "norcia-SE"}
+                          :osm-href "https://www.openstreetmap.org/relation/42105"}
+                         {:href :rise.views/hex
+                          :title "Norcia-SE"
+                          :id "norcia-SE"
+                          :map "norcia-SE.png"
+                          :latitude 42.739
+                          :longitude 12.7376
+                          :region "umbria"
+                          :country "italy"
+                          :p-7day 0.023
+                          :mean-7day 0.00015
+                          :neighbours {:N "norcia-NE"
+                                       :NW "norcia"
+                                       :SW "norcia-S"}
+                          :osm-href "https://www.openstreetmap.org/relation/42105"}
+                         {:href :rise.views/hex
+                          :title "Norcia-S"
+                          :id "norcia-S"
+                          :map "norcia-S.png"
+                          :latitude 42.739
+                          :longitude 12.7376
+                          :region "umbria"
+                          :country "italy"
+                          :p-7day 0.001
+                          :mean-7day 0.00005
+                          :neighbours {:NE "norcia-SE"
+                                       :N "norcia"
+                                       :NW "norcia-SW"}
+                          :osm-href "https://www.openstreetmap.org/relation/42105"}
+                         {:href :rise.views/hex
+                          :title "Norcia-SW"
+                          :id "norcia-SW"
+                          :map "norcia-SW.png"
+                          :latitude 42.739
+                          :longitude 12.7376
+                          :region "umbria"
+                          :country "italy"
+                          :p-7day 0.00012
+                          :mean-7day 0.00044
+                          :neighbours {:NE "norcia"
+                                       :SE "norcia-S"
+                                       :N "norcia-NW"}
+                          :osm-href "https://www.openstreetmap.org/relation/42105"}
+                         {:href :rise.views/hex
+                          :title "Norcia-NW"
+                          :id "norcia-NW"
+                          :map "norcia-NW.png"
+                          :latitude 42.739
+                          :longitude 12.7376
+                          :region "umbria"
+                          :country "italy"
+                          :p-7day 0.014
+                          :mean-7day 0.00011
+                          :neighbours {:NE "norcia-N"
+                                       :SE "norcia"
+                                       :S "norcia-SW"}
+                          :osm-href "https://www.openstreetmap.org/relation/42105"}
+                         ;;
+                         ;; Spoleto
+                         ;; 
                          {:href :rise.views/hex
                           :title "Spoleto"
                           :id "spoleto"
@@ -254,9 +371,215 @@
                                        :SE "spoleto"
                                        :S "spoleto-SW"}
                           :osm-href "https://www.openstreetmap.org/relation/42105"}
-                         {:title "Todi"
-                          :region "umbria"
-                          :id "todi"}]}})
+                         ;;
+                         ;; Zurich
+                         ;;
+                         {:href :rise.views/hex
+                          :title "Zurich"
+                          :id "zurich"
+                          :map "zurich hex.png"
+                          :latitude 42.739
+                          :longitude 12.7376
+                          :region "zurich-canton"
+                          :country "switzerland"
+                          :p-7day 0.0095
+                          :mean-7day 0.00001
+                          :neighbours {:N "zurich-N"
+                                       :NE "zurich-NE"
+                                       :NW "zurich-NW"
+                                       :S "zurich-S"
+                                       :SE "zurich-SE"
+                                       :SW "zurich-SW"}
+                          :osm-href "https://www.openstreetmap.org/relation/42105"}
+                         {:href :rise.views/hex
+                          :title "Zurich–N"
+                          :id "zurich-N"
+                          :map "zurich-N hex.png"
+                          :latitude 42.739
+                          :longitude 12.7376
+                          :region "zurich-canton"
+                          :country "switzerland"
+                          :p-7day 0.0299
+                          :mean-7day 0.00003
+                          :neighbours {:SE "zurich-NE"
+                                       :SW "zurich-NW"
+                                       :S "zurich"}
+                          :osm-href "https://www.openstreetmap.org/relation/42105"}
+                         {:href :rise.views/hex
+                          :title "Zurich-NE"
+                          :id "zurich-NE"
+                          :map "zurich-NE.png"
+                          :latitude 42.739
+                          :longitude 12.7376
+                          :region "zurich-canton"
+                          :country "switzerland"
+                          :p-7day 0.16
+                          :mean-7day 0.00012
+                          :neighbours {:NW "zurich-N"
+                                       :SW "zurich"
+                                       :S "zurich-SE"}
+                          :osm-href "https://www.openstreetmap.org/relation/42105"}
+                         {:href :rise.views/hex
+                          :title "Zurich-SE"
+                          :id "zurich-SE"
+                          :map "zurich-SE.png"
+                          :latitude 42.739
+                          :longitude 12.7376
+                          :region "zurich-canton"
+                          :country "switzerland"
+                          :p-7day 0.023
+                          :mean-7day 0.00015
+                          :neighbours {:N "zurich-NE"
+                                       :NW "zurich"
+                                       :SW "zurich-S"}
+                          :osm-href "https://www.openstreetmap.org/relation/42105"}
+                         {:href :rise.views/hex
+                          :title "Zurich-S"
+                          :id "zurich-S"
+                          :map "zurich-S.png"
+                          :latitude 42.739
+                          :longitude 12.7376
+                          :region "zurich-canton"
+                          :country "switzerland"
+                          :p-7day 0.001
+                          :mean-7day 0.00005
+                          :neighbours {:NE "zurich-SE"
+                                       :N "zurich"
+                                       :NW "zurich-SW"}
+                          :osm-href "https://www.openstreetmap.org/relation/42105"}
+                         {:href :rise.views/hex
+                          :title "Zurich-SW"
+                          :id "zurich-SW"
+                          :map "zurich-SW.png"
+                          :latitude 42.739
+                          :longitude 12.7376
+                          :region "zurich-canton"
+                          :country "switzerland"
+                          :p-7day 0.00012
+                          :mean-7day 0.00044
+                          :neighbours {:NE "zurich"
+                                       :SE "zurich-S"
+                                       :N "zurich-NW"}
+                          :osm-href "https://www.openstreetmap.org/relation/42105"}
+                         {:href :rise.views/hex
+                          :title "Zurich-NW"
+                          :id "zurich-NW"
+                          :map "zurich-NW.png"
+                          :latitude 42.739
+                          :longitude 12.7376
+                          :region "zurich-canton"
+                          :country "switzerland"
+                          :p-7day 0.014
+                          :mean-7day 0.00011
+                          :neighbours {:NE "zurich-N"
+                                       :SE "zurich"
+                                       :S "zurich-SW"}
+                          :osm-href "https://www.openstreetmap.org/relation/42105"}
+                         ;;;
+                         ;; Sion
+                         ;;;
+                         {:href :rise.views/hex
+                          :title "Sion"
+                          :id "sion"
+                          :map "sion hex.png"
+                          :latitude 42.739
+                          :longitude 12.7376
+                          :region "valais"
+                          :country "switzerland"
+                          :p-7day 0.0099
+                          :mean-7day 0.00032
+                          :neighbours {:N "sion-N"
+                                       :NE "sion-NE"
+                                       :NW "sion-NW"
+                                       :S "sion-S"
+                                       :SE "sion-SE"
+                                       :SW "sion-SW"}
+                          :osm-href "https://www.openstreetmap.org/relation/42105"}
+                         {:href :rise.views/hex
+                          :title "Sion-N"
+                          :id "sion-N"
+                          :map "sion-N hex.png"
+                          :latitude 42.739
+                          :longitude 12.7376
+                          :region "valais"
+                          :country "switzerland"
+                          :p-7day 0.0303
+                          :mean-7day 0.00049
+                          :neighbours {:SE "sion-NE"
+                                       :SW "sion-NW"
+                                       :S "sion"}
+                          :osm-href "https://www.openstreetmap.org/relation/42105"}
+                        
+                         {:href :rise.views/hex
+                          :title "Sion-NE"
+                          :id "sion-NE"
+                          :map "sion-NE.png"
+                          :latitude 42.739
+                          :longitude 12.7376
+                          :region "valais"
+                          :country "switzerland"
+                          :p-7day 0.16
+                          :mean-7day 0.00012
+                          :neighbours {:NW "sion-N"
+                                       :SW "sion"
+                                       :S "sion-SE"}
+                          :osm-href "https://www.openstreetmap.org/relation/42105"}
+                         {:href :rise.views/hex
+                          :title "Sion-SE"
+                          :id "sion-SE"
+                          :map "sion-SE.png"
+                          :latitude 42.739
+                          :longitude 12.7376
+                          :region "valais"
+                          :country "switzerland"
+                          :p-7day 0.023
+                          :mean-7day 0.00015
+                          :neighbours {:N "sion-NE"
+                                       :NW "sion"
+                                       :SW "sion-S"}
+                          :osm-href "https://www.openstreetmap.org/relation/42105"}
+                         {:href :rise.views/hex
+                          :title "Sion-S"
+                          :id "sion-S"
+                          :map "sion-S.png"
+                          :latitude 42.739
+                          :longitude 12.7376
+                          :region "valais"
+                          :country "switzerland"
+                          :p-7day 0.001
+                          :mean-7day 0.00005
+                          :neighbours {:NE "sion-SE"
+                                       :N "sion"
+                                       :NW "sion-SW"}
+                          :osm-href "https://www.openstreetmap.org/relation/42105"}
+                         {:href :rise.views/hex
+                          :title "Sion-SW"
+                          :id "sion-SW"
+                          :map "sion-SW.png"
+                          :latitude 42.739
+                          :longitude 12.7376
+                          :region "valais"
+                          :country "switzerland"
+                          :p-7day 0.00012
+                          :mean-7day 0.00044
+                          :neighbours {:NE "sion"
+                                       :SE "sion-S"
+                                       :N "sion-NW"}
+                          :osm-href "https://www.openstreetmap.org/relation/42105"}
+                         {:href :rise.views/hex
+                          :title "Sion-NW"
+                          :id "sion-NW"
+                          :map "sion-NW.png"
+                          :latitude 42.739
+                          :longitude 12.7376
+                          :region "valais"
+                          :country "switzerland"
+                          :p-7day 0.014
+                          :mean-7day 0.00011
+                          :neighbours {:NE "sion-N"
+                                       :SE "sion"
+                                       :S "sion-SW"}
+                          :osm-href "https://www.openstreetmap.org/relation/42105"}]}})
 
 ;; For now, edit these definitions to change site language
 ;(def ttt (partial ttt* :it))

@@ -70,7 +70,9 @@
                         :312 "6 years"
                         :364 "7 years"
                         :416 "8 years"
-                        :520 "10 years"}
+                        :520 "10 years"
+                        :5200 "100 years"
+                        :52000 "1000 years"}
                    :de {:1 "1 Woche"
                         :2 "2 Wochen"
                         :3 "3 Wochen"
@@ -87,7 +89,9 @@
                         :312 "6 Jahren"
                         :364 "7 Jahren"
                         :416 "8 Jahren"
-                        :520 "10 years"}
+                        :520 "10 Jahren"
+                        :5200 "100 Jahren"
+                        :52000 "1000 Jahren"}
                    :it {:1 "1 settimana"
                         :2 "2 settimana"
                         :3 "3 settimana"
@@ -104,7 +108,9 @@
                         :312 "6 anni"
                         :364 "7 anni"
                         :416 "8 anni"
-                        :520 "10 anni"}
+                        :520 "10 anni"
+                        :5200 "100 anni"
+                        :52000 "1000 anni"}
                    })
 
 (defn closest 

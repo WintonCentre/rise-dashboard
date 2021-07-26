@@ -20,7 +20,9 @@
        :Communities "Communities"
        :Regions "Regions"
        :Navigate "Navigate to your location."
-       :Italy "Italy"
+       :Italy "Italie"
+       :Switzerland "Suisse"
+       :Iceland "Islande"
        :Home "Home"
        :Settings "Settings"
        :History "History"
@@ -58,5 +60,5 @@
        :Mag4-over-time "Mag 4+ earthquakes in %1 over time"
        :How-many-bar-chart "How many earthquakes of magnitude 4 or morehit %1 in each 50 year period?" ; %1 is location
        :compare-world-cities "How does %1 compare to the world?"
-        :compare-cities-2 "more within the next 7 days is"
+       :compare-cities-2 "more within the next 7 days is"
        :compared-to-these-cities "compared to an average week in these cities"})
