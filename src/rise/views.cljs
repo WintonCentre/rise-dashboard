@@ -453,6 +453,152 @@
   (db/ttt :db/current-chance-is "The current chance is %1 %2 average"
           123
           "higher than")
+
+)
+;;;
+;;
+;; Continued fractions give us fractions with low denominators that are best fits to any given
+;; real. Useful when trying to find low numbers when quoting odds.
+;;
+;;; 
+(defn c-fraction
+  "Convert (real) p to a continued fraction held in a lazy-seq."
+  [p]
+  (let [m (js/Math.floor p)
+        f (- p m)]
+    (if (< f 1e-8)
+      (lazy-seq [m])
+      (lazy-seq (cons m (c-fraction (/ 1 f)))))))
+
+(defn real->real
+  "Evaluate real as continued fraction truncated at n-terms and converted to p/q fraction,
+   but then we're returning p/q as a real again to check the algorithm"
+  [d n-terms]
+  {:pre [(pos-int? n-terms)]}
+  (let [ns (reverse (take n-terms (c-fraction d)))]
+    (condp = n-terms
+      1 (first ns)
+      (reduce
+       (fn [acc n]
+         (println [acc n] ::reaf->f)
+         (if (zero? n)
+           (reduced (/ 1 acc))
+           (+ n (/ 1 acc))))
+       (first ns)
+       (rest ns)))))
+
+(defn real->f
+  "Evaluate real as continued fraction truncated at n-terms and converted to a p/q fraction
+   returned as [p q].
+   This should give a 'best' rational approximation."
+  [d n-terms]
+  {:pre [(pos-int? n-terms)]}
+  (let [ns (reverse (take n-terms (c-fraction d)))]
+    (condp = n-terms
+      1 (first ns)
+      (reduce
+       (fn [[p q :as acc] n]
+         (println [acc n] ::real->f)
+         [(+ (* n p) q) p])
+       [(first ns) 1]
+       (rest ns)))))
+
+(defn get-odds
+  "Convert a probability to a 'nice' odds value returned as an [on against] vector.
+   Report as odds against only if (> against on).
+   
+   By default 4 continued fraction terms are used."
+  ([prob]
+   (get-odds prob 4))
+  ([prob n]
+   (let [[p q] (real->f prob n)]
+     [p (- q p)])))
+
+(defn good-odds
+  "Same as get-odds, but we search for a continued fraction approximation that
+   has numbers less than or equal to 3."
+  [prob]
+  (->> (for [n-terms [6 5 4 3 2]
+             :let [odds (get-odds prob n-terms)]]
+         odds)
+       (filter #(<= (apply min %) 3))
+       first))
+
+(comment
+  (filter #(<= (apply min %) 3) '([209 1004] [51 245] [5 24] [1 5] [1 4]))
+
+  (get-odds 0.6)
+  ;; => [3 2]
+
+  (get-odds 0.6002)
+  ;; => [2 1]
+
+  (get-odds 0.6002 5) ; 5 term may be better here
+  ;; => [3 2]
+
+  (good-odds 0.6002)
+  (get-odds 0.1723 2)
+  (good-odds 0.1723)
+
+
+  (good-odds 0.966)
+  (good-odds 0.000123)
+  ;; => [24 1]
+
+  (get-odds 0.83)
+  ;; => [5 1]
+
+  (get-odds 0.83 5)
+  ;; => [39 8]  ; 5 terms gives higher precision but nasty numbers
+
+  (get-odds 0.83 6) ; convergence on 6 terms
+  ;; => [83 17]
+
+  (real->f 0.6 0)
+  (real->f 0.6 1)
+  (real->f 0.6 2)
+  (real->f 0.6 3)
+  (real->f 0.6 4)
+  (real->f 0.6 5)
+  (real->real 0.6 5)
+
+  (real->f 0.6002 4)
+  ;; => [2 3]
+
+  (real->f 0.6002 5)
+  ;; => [3 5]
+
+  (real->f 0.6002 6)
+  ;; => [599 998]
+
+
+  (real->f 0.833333333 5)
+
+  (c-fraction 2)
+
+  (take 1 (c-fraction 0.6))
+  ;; => (0)
+
+  (take 2 (c-fraction 0.6))
+  ;; => (0 1)
+
+  (take 3 (c-fraction 0.6))
+  ;; => (0 1 1)
+
+  (take 4 (c-fraction 0.6))
+  ;; => (0 1 1 2)
+
+  (take 5 (c-fraction 0.6))
+  ;; => (0 1 1 2)
+
+  (take 12 (c-fraction 3.245))
+  ;; => (3 4 12 3 1)
+
+  (take 12 (c-fraction (/ 1 3.245)))
+  ;; => (0 3 4 12 3 1)   ; reciprocal of a continued fraction induces shift
+
+  (take 20 (c-fraction (js/Math.exp 1))) ; e has a nice expansion in continued fractions
+  ;; => (2 1 2 1 1 4 1 1 6 1 1 8 1 1 10 1 1 12 1 1)
   )
 
 (defn area-status
@@ -491,9 +637,15 @@
 
        [ui/row {:style {:display "flex" :align-items "center" :justify-content "space-between" :padding-bottom 25}}
         (if odds?
-          [:<>
-           [:span (db/ttt :db/odds-against "The odds against an earthquake are")]
-           [:nobr [:div {:style {:width 85}} (large (- (js/Math.round (/ 1 p)) 1) " - 1")]]]
+          (let [odds (good-odds p)]
+            
+            (if (apply < odds)
+              [:<>
+               [:span (db/ttt :db/odds-against "The odds against an earthquake are")]
+               [:nobr [:div {:style {:width 85}} (string/join " - " (reverse odds)) #_(large (- (js/Math.round (/ 1 p)) 1) " - 1")]]]
+              [:<>
+               [:span (db/ttt :db/odds-on "The odds on an earthquake are")]
+               [:nobr [:div {:style {:width 85}} (string/join " - " odds)#_(large (- (js/Math.round (/ 1 p)) 1) " - 1")]]]))
           [:<>
            [:span (db/ttt :db/current-chance-is [:span "The current chance is %1 %2 average"]
                           (let [rr (/ p mean)]

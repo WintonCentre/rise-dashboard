@@ -174,8 +174,8 @@
                           :longitude 12.7376
                           :region "umbria"
                           :country "italy"
-                          :p-7day 0.022
-                          :mean-7day 0.00015
+                          :p-7day 0.30
+                          :mean-7day 0.03
                           :neighbours {:N "norcia-N"
                                        :NE "norcia-NE"
                                        :NW "norcia-NW"
@@ -191,8 +191,8 @@
                           :longitude 12.7376
                           :region "umbria"
                           :country "italy"
-                          :p-7day 0.012
-                          :mean-7day 0.00005
+                          :p-7day 0.26
+                          :mean-7day 0.01
                           :neighbours {:SE "norcia-NE"
                                        :SW "norcia-NW"
                                        :S "norcia"}

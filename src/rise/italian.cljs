@@ -50,14 +50,14 @@
        :compare-average "paragonata a una settimana media in altri posti nel mondo?"
        :How-likely-is [:span "Quanto è probabile un" " " [:i "terremoto di magnitudo 4" [:br] "o superiore"] " entro i prossimi 7 giorni?"]
        :the-chance-within [:<> "La probabilità di un terremoto" [:br] [:nobr "entro 6 luglio ⟷ 13 luglio é"]]
-       :Every-second "Ogni secondo della simulazione rappresenta l' %1 del tempo reale nel quale ogni settimana ha una probabilità pari al 2%."
+       :Every-second "Ogni secondo della simulazione rappresenta %1 del tempo reale nel quale ogni settimana ha una probabilità pari al 2%."
        :whereas "mentre la probabilità in una settimana media è"
        :current-chance-is "Attualmente la probabilità è %1 %2 media" ; %1 is the relative risk
        :higher-than "volte superiore alla" ; may replace %2 above
        :about "simile alla" ; may replace %2 above
        :smaller-than "volte inferiore della" ; may replace %2 above
        :odds-against "Le quote contro un terremoto sono"
-       :Mag4-over-time "Terremoto di Mag 4+ a %1 nel corso degli anni"
+       :Mag4-over-time "Terremoto di Mag 4+ di %1 nel corso degli anni"
        :How-many-bar-chart "Quanti terremoti di magnitudo 4 o superiore sono accaduti ogni 50 anni?"
        :compare-world-cities "Come si pone %1 rispetto al mondo?"
        :compare-cities-1 "La probabilità di un magnitudo 4 o superiore"

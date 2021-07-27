@@ -93,8 +93,8 @@
                         :5200 "100 Jahren"
                         :52000 "1000 Jahren"}
                    :it {:1 "1 settimana"
-                        :2 "2 settimana"
-                        :3 "3 settimana"
+                        :2 "2 settimane"
+                        :3 "3 settimane"
                         :4 "1 mese"
                         :8 "2  mesi"
                         :12 "3 mesi"
