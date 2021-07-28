@@ -464,11 +464,11 @@
 ;;;
 ;;
 ;; Continued fractions give us fractions with low denominators that are best fits to any given
-;; real. Useful when trying to find low numbers when quoting odds.
+;; real. Useful when trying to find low num representations of .
 ;;
 ;;; 
 (defn c-fraction
-  "Convert (real) p to a continued fraction held in a lazy-seq."
+  "Convert a real number p to a continued fraction held in a lazy-seq."
   [p]
   (let [m (js/Math.floor p)
         f (- p m)]
@@ -478,7 +478,7 @@
 
 (defn real->real
   "Evaluate real as continued fraction truncated at n-terms and converted to p/q fraction,
-   but then we're returning p/q as a real again to check the algorithm"
+   but then we're returning p/q as a real again."
   [d n-terms]
   {:pre [(pos-int? n-terms)]}
   (let [ns (reverse (take n-terms (c-fraction d)))]
@@ -495,19 +495,19 @@
 
 (defn real->f
   "Evaluate real as continued fraction truncated at n-terms and converted to a p/q fraction
-   returned as [p q].
+   returning the result as [p q].
    This should give a 'best' rational approximation."
   [d n-terms]
-  {:pre [(pos-int? n-terms)]}
-  (let [ns (reverse (take n-terms (c-fraction d)))]
-    (condp = n-terms
-      1 (first ns)
-      (reduce
-       (fn [[p q :as acc] n]
-         (println [acc n] ::real->f)
-         [(+ (* n p) q) p])
-       [(first ns) 1]
-       (rest ns)))))
+  {:pre [(pos? d)
+         (pos-int? n-terms)]}
+  (let [ns (reverse (take n-terms (c-fraction d)))
+        f-0 [(first ns) 1]]
+    (if (= n-terms 1)
+      f-0
+      (reduce (fn [[p q] n] 
+                [(+ (* n p) q) p])
+              f-0
+              (rest ns)))))
 
 (defn get-odds
   "Convert a probability to a 'nice' odds value returned as an [on against] vector.
@@ -577,6 +577,7 @@
   (real->f 0.6002 6)
   ;; => [599 998]
 
+  (real->f 12.3452 1)
 
   (real->f 0.833333333 5)
 

@@ -39,7 +39,7 @@
        :Mag "Mag"
        :Last-updated "L'ultimo aggiornamento"
        :Next-update-due "Il prossimo aggiornamento sarà"
-       :from-date "00:00 6 giugno 2021"
+       :from-date "00:00 6 lugno 2021"
        :to-date "00:00 7 luglio 2021"
        :Local-history-p1 "Quanti terremoti di magnitudo 4 o superiore hanno colpito"
        :Local-history-p2 "in passato?"
