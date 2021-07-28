@@ -155,9 +155,9 @@ in the routes table."
     [:br]
     [:span (db/ttt :db/Responsibility "Responsibility: Civil Protection n.327 347684")]]
    [:div {:style {:margin-left 40}}
-    [:span [:b "Ambulance:"] " Call 118"]
+    [:span (db/ttt :db/Ambulance [:<> [:b "Ambulance:"] " Call 118"])]
     [:br]
-    [:span [:b "Emergency number:"] " Call 112"]]])
+    [:span (db/ttt :db/Emergency [:<> [:b "Emergency number:"] " Call 112"])]]])
 
 (defn root-component
   "The root of the component tree which is mounted on the main app html element"

@@ -45,7 +45,8 @@
        :Local-history-p1 "Wie viele Erdbeben mit einer Magnitude von 4 oder höher haben sich"
        :Local-history-p2 "in der Vergangenheit ereignet?"
        :Whats-happening "Was passiert jetzt und hier?"
-       :local-message "Aufgrund erhöhter seismischer Aktivität im Bereich der Mount-Vittore-Verwerfung ist die Wahrscheinlichkeit für ein Erdbeben höher als sonst."
+       :local-message "Aufgrund erhöhter seismischer Aktivität im Bereich des lokalen Verwerfungssystems ist die Wahrscheinlichkeit für ein Erdbeben höher als sonst."
+       :local-quiet-message "In %1 hat es bisher keine nennenswerten seismischen Aktivitäten gegeben. Ein Erdbeben kann jedoch jederzeit ohne Vorwarnung auftreten."
        :How-does-location-compare "Wie hoch ist die Wahrscheinlichkeit in %1 im Vergleich zur Welt?" ; the location replaces %1
        :How-chance-compares "Wie hoch ist die aktuelle Wahrscheinlichkeit eines Erdbebens der Magnitude von 4 oder höher in %1 im Vergleich zu einer durchschnittlichen Woche an anderen Orten der Welt?"
        :compare-average "im Vergleich zu einer durchschnittlichen Woche an anderen Orten der Welt?"

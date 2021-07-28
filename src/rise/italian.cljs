@@ -45,6 +45,7 @@
        :Local-history-p2 "in passato?"
        :Whats-happening "Cosa sta succedendo qui e ora?"
        :local-message "A %1 si assiste a probabilità più elevate del normale a causa di un aumento dell'attività sismica verso il sistema di faglie di Monte Vittore."
+       :local-quiet-message "Non c'è stata alcuna attività sismica significativa a %1. Tuttavia, un terremoto può sempre verificarsi senza preavviso."
        :How-does-location-compare "Come si pone %1 rispetto al mondo?" ; the location replaces %1
        :How-chance-compares "Come si confronta l'attuale probabilità di un terremoto di magnitudo 4+ a %1 con una settimana media in altri posti nel mondo?"
        :compare-average "paragonata a una settimana media in altri posti nel mondo?"
@@ -57,7 +58,7 @@
        :about "simile alla" ; may replace %2 above
        :smaller-than "volte inferiore della" ; may replace %2 above
        :odds-against "Le quote contro un terremoto sono"
-       :Mag4-over-time "Terremoto di Mag 4+ di %1 nel corso degli anni"
+       :Mag4-over-time "Terremoto di Mag 4+ in %1 nel corso degli anni"
        :How-many-bar-chart "Quanti terremoti di magnitudo 4 o superiore sono accaduti ogni 50 anni?"
        :compare-world-cities "Come si pone %1 rispetto al mondo?"
        :compare-cities-1 "La probabilità di un magnitudo 4 o superiore"
