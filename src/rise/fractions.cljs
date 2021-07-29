@@ -11,8 +11,7 @@
 
 (defn real->f
   "Evaluate real as continued fraction truncated at n-terms and converted to a p/q fraction
-   returning the result as [p q].
-   This should give a 'best' rational approximation."
+   returning the result as [p q]."
   [d n-terms]
   {:pre [(pos? d)
          (pos-int? n-terms)]}
@@ -28,18 +27,8 @@
 
 (comment
   (real->f Math/PI 1)
-  ;; => [3 1]
-
   (real->f Math/PI 2)
-  ;; => [22 7]
-
   (real->f Math/PI 3)
-  ;; => [333 106]
-
   (real->f Math/PI 4)
-  ;; => [355 113]
-
   (real->f Math/PI 5)
-  ;; => [103993 33102]
-
   )

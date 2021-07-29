@@ -44,7 +44,7 @@
        :Local-history-p1 "How many earthquakes of magnitude 4 or more have hit"
        :Local-history-p2 "in the past?"
        :Whats-happening "What's happening here and now?"
-       :local-message "%1 is seeing higher chances than normal because of increased seismic activity around the Mount Vittore fault system."
+       :local-message "%1 is seeing higher chances than normal because of increased seismic activity around the Mount Vettore fault system."
        :local-quiet-message "There has been no significant seismic activity in %1. However, an earthquake can always occur with no warning."
        :How-does-location-compare "How does %1 compare to the world?" ; the location replaces %1
        :How-chance-compares "How does the current chance of a magnitude 4 or more quake in %1 compare to an average week in other places worldwide?"

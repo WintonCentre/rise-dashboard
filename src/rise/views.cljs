@@ -408,7 +408,7 @@
                                             :flex-direction "column"
                                             :padding 45
                                             :align-items "flex-start"
-                                            :justify-content "space-between"}})]
+                                            :justify-content "flex-start"}})]
     [ui/row
      [ui/col (base-style 3)
       (when with-context?
@@ -425,7 +425,7 @@
               (< (community :p-7day) (* 1.2 (community :mean-7day))))
         [:p (db/ttt :db/local-quiet-message "%1 is currently in a quiet period." (community :title))]
         [:p  (db/ttt :db/local-message "%1 is seeing higher chances than normal because of increased 
-             seismic activity around the Mount Vittore fault system." (community :title))]
+             seismic activity around the Mount Vettore fault system." (community :title))]
         )]
      [ui/col (base-style {:span 4})
       (when with-context?
@@ -606,6 +606,8 @@
 
   (take 20 (c-fraction (js/Math.exp 1))) ; e has a nice expansion in continued fractions
   ;; => (2 1 2 1 1 4 1 1 6 1 1 8 1 1 10 1 1 12 1 1)
+
+  (real->f js/Math.PI 2)
   )
 
 (defn area-status
