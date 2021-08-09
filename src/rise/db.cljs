@@ -455,8 +455,8 @@
                           :longitude 12.7376
                           :region "zurich-canton"
                           :country "switzerland"
-                          :p-7day 0.00012
-                          :mean-7day 0.00044
+                          :p-7day 0.00001
+                          :mean-7day 0.00010
                           :neighbours {:NE "zurich"
                                        :SE "zurich-S"
                                        :N "zurich-NW"}
