@@ -5,18 +5,26 @@
    [re-frame.core :as rf]
    ["react-bootstrap" :as bs]
    [reagent.core :as r]
+   [reagent.format :as ref]
    [rise.subs :as subs]
    [rise.events :as events]
    [rise.ui :as ui]
    [rise.bsio :as bsio]
    [rise.db :as db]
-   [shadow.debug :refer [locals ?> ?-> ?->>]]))
+   [shadow.debug :refer [locals ?> ?-> ?->>]]
+   [goog.string :as gstr]
+   [goog.string.format :as gsf])
+  )
+
 
 (comment
   @(rf/subscribe [::subs/lang])
   (db/ttt :db/Dashboard "Earthquake dashboard")
-  
-  0)
+  (gstr/format "Cost: %4.2f" 100234)
+  (ref/format  "Cost: %05d" 100)
+  ()
+  0
+  )
 
 
 (comment
@@ -435,8 +443,7 @@
          [:p (db/ttt :db/How-chance-compares "How does the current chance of a magnitude 4+ quake in %1 compare to an average week in other places worldwide?"
                      (community :title))]])]]))
 (comment
-(db/ttt :db/How-does-location-compare "How does %1 compare to the world" "Spoleto")
-  )
+(db/ttt :db/How-does-location-compare "How does %1 compare to the world" "Spoleto"))
 
 
 (defn update-status
@@ -470,11 +477,12 @@
 (defn c-fraction
   "Convert a real number p to a continued fraction held in a lazy-seq."
   [p]
-  (let [m (js/Math.floor p)
-        f (- p m)]
-    (if (< f 1e-8)
-      (lazy-seq [m])
-      (lazy-seq (cons m (c-fraction (/ 1 f)))))))
+  (lazy-seq
+   (let [m (js/Math.floor p)
+         f (- p m)]
+     (if (< f 1e-8)
+       [m]
+       (cons m (c-fraction (/ 1 f)))))))
 
 (defn real->real
   "Evaluate real as continued fraction truncated at n-terms and converted to p/q fraction,
@@ -509,16 +517,65 @@
               f-0
               (rest ns)))))
 
+(comment 
+  (real->f 1.2 3)
+  (real->f 1.2 4)
+  (real->f 1.2 5)
+0)
+
+(defn int-sf
+  "Provides a representation of an integer to given number of sig figs.
+   Single arity defaults to 2 sf"
+  ([n]
+   (int-sf n 2))
+  ([n sig-figs]
+   (let [n (Math/round n)
+         pow10 (Math/pow 10 (- (Math/floor (Math/log10 n)) (dec sig-figs)))]
+     (* pow10 (Math/round (/ n pow10))))))
+
+(comment
+  (int-sf 8)
+  ;; => 8
+
+  (int-sf 12)
+  ;; => 12
+
+  (int-sf 123)
+  ;; => 120
+
+  (int-sf 1234)
+  ;; => 1200
+
+  (int-sf 12345678)
+  ;; => 12000000
+
+  (int-sf 12345678 5)
+  ;; => 12346000
+
+
+  )
+
+
 (defn get-odds
   "Convert a probability to a 'nice' odds value returned as an [on against] vector.
-   Report as odds against only if (> against on).
+   Interpret the result as odds on if p > 0.5. Odds against if p < 0.5. Evens if p == 0.5
    
    By default 4 continued fraction terms are used."
   ([prob]
    (get-odds prob 4))
   ([prob n]
    (let [[p q] (real->f prob n)]
-     [p (- q p)])))
+     (map int-sf [p (- q p)]))))
+
+(comment
+  (get-odds 0.9999)
+  (get-odds 0.0001)
+  (get-odds 0.5)
+  (get-odds 0.000012)
+
+  0
+  )
+
 
 (defn good-odds
   "Same as get-odds, but we search for a continued fraction approximation that
@@ -543,6 +600,8 @@
   ;; => [3 2]
 
   (good-odds 0.6002)
+
+  (good-odds 1.2)
   (get-odds 0.1723 2)
   (good-odds 0.1723)
 
@@ -646,15 +705,16 @@
 
        [ui/row {:style {:display "flex" :align-items "center" :justify-content "space-between" :padding-bottom 25}}
         (if odds?
-          (let [odds (good-odds p)]
+          (let [odds (good-odds p)
+                row-style {:style {:width "100%" :display "flex" :flex-direction "row" :justify-content "space-between"}}]
             
-            (if (apply < odds)
-              [:<>
-               [:span (db/ttt :db/odds-against "The odds against an earthquake are")]
-               [:nobr [:div {:style {:width 85}} (string/join " - " (reverse odds)) #_(large (- (js/Math.round (/ 1 p)) 1) " - 1")]]]
-              [:<>
-               [:span (db/ttt :db/odds-on "The odds on an earthquake are")]
-               [:nobr [:div {:style {:width 85}} (string/join " - " odds)#_(large (- (js/Math.round (/ 1 p)) 1) " - 1")]]]))
+            (if (< p 0.5)
+              [:div row-style
+               (db/ttt :db/odds-against "The odds against an earthquake are")
+               [:nobr (string/join " - " (reverse odds))]]
+              [:div row-style
+               (db/ttt :db/odds-on "The odds on an earthquake are")
+               [:nobr (string/join " - " odds)]]))
           [:<>
            [:span (db/ttt :db/current-chance-is [:span "The current chance is %1 %2 average"]
                           (let [rr (/ p mean)]

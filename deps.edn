@@ -2,8 +2,8 @@
 {:deps {org.clojure/clojure {:mvn/version "1.10.3"}
         org.clojure/core.memoize {:mvn/version "1.0.236"}
         winton-utils/winton-utils          {:mvn/version "0.2.1"}
-        aero/aero {:mvn/version "1.1.6"}
-}
+        reagent-utils/reagent-utils {:mvn/version "0.3.3"}
+        aero/aero {:mvn/version "1.1.6"}}
  :paths ["src" "test" "resources" "target"]
  :aliases {;; if we wish to configure bootstrap css with sass:sass 
            :sass ["-M" "sass4clj.main" --source-paths]
