@@ -398,7 +398,7 @@
 (defn vis%
   "An arc with p rendered as a percentage at the centre"
   [p]
-  (let [p 0.00001]
+  (let [p 0.00001git ]
     (let [annular? @(rf/subscribe [::subs/annular?])
           with-vis? @(rf/subscribe [::subs/with-vis?])
           params {:p p
