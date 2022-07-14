@@ -2,6 +2,7 @@
   [:require
    [rise.english :as en]
    [rise.italian :as it]
+   [rise.icelandic :as is]
    [rise.german :as de]
    [rise.french :as fr]])
 ;;
@@ -12,4 +13,5 @@
   {:en en/english
    :it it/italian
    :de de/german
+   :is is/icelandic
    :fr fr/french})

@@ -340,12 +340,15 @@
     "Return an arc. p is a fraction of a turn, r is the radius at the centre of the arc, w is the width of the arc
    To get a pie chart the whole circle and not just the annulus, we need (= w r).
    "
-    [{:keys [p r w text]}]
-    (let [cr (- r (/ w 2))
+    [{:keys [p r w text ]}]
+    (let [
+          cr (- r (/ w 2))
           d (* 2 r)
           dash (* js/Math.PI cr p)
-          gap (- (* 2 js/Math.PI cr) (* 2 dash))]
+          gap (- (* 2 js/Math.PI cr) (* 2 dash))
+        ]
 
+      (locals)
       [:div {:style {:width d :height d}}
        [:div {:style {:display "flex" :direction "row" :justify-content "center" :align-items "center"}}
         (when @(rf/subscribe [::subs/with-vis?])
@@ -355,7 +358,7 @@
              [:circle {:cx r :cy r :r cr :fill "none" :stroke "#ffffff88" :stroke-width w}]
              [:circle {:cx r :cy r :r cr :fill "none" :stroke "#ffffff" #_"#327bff" :stroke-width w
                        :stroke-dasharray (str dash " " gap " " dash)
-                       :style {:transform "rotate(-90deg)"
+                       :style {:transform (str "rotate(" (* 90 (dec (* 2 p))) "deg)")
                                :transform-origin "50% 50%"}}]]]])
         (when text  [:div {:style {:margin "auto auto"}} text])]]))
 
@@ -395,16 +398,17 @@
 (defn vis%
   "An arc with p rendered as a percentage at the centre"
   [p]
-  (let [annular? @(rf/subscribe [::subs/annular?])
-        with-vis? @(rf/subscribe [::subs/with-vis?])
-        params {:p p
-                :r 55
-                :w 12
-                :b 3
-                :text (nice% p)}]
-    (if (and annular? with-vis?)
-      [arc params]
-      [bar params])))
+  (let [p 0.00001]
+    (let [annular? @(rf/subscribe [::subs/annular?])
+          with-vis? @(rf/subscribe [::subs/with-vis?])
+          params {:p p
+                  :r 55
+                  :w 12
+                  :b 3
+                  :text (nice% p)}]
+      (if (and annular? with-vis?)
+        [arc params]
+        [bar params]))))
 
 (defn content-base
   "The bottom of the page, occupying cols 1, 2 and 3"
@@ -688,7 +692,7 @@
                      :min-height 370
                      :padding (str (if with-vis? 15 30) "px 30px")
                      :box-shadow "1px 1px 1px 1px #CCC"
-                     :background-color "#444466" #_"#80647D"
+                     :background-color "#686261" #_"#80647D"
                      :color "white"}}
        [ui/row {:style {:display "flex" :align-items "center" :justify-content "space-between"
                         :padding-bottom (when with-vis? 25)}}
