@@ -182,7 +182,7 @@
                     :margin-top 15
 
                     :height "302"
-                    #_#_:border "1px solid red"}}
+                    #_#_:border "1px solid red"}} 
 
       (example-quake "Norcia 2016 M=6.5" 6.7 6.5 "#666")
       (example-quake "L'Aquila 2009 M=6.1" 6.1 6.1 "#666")
@@ -190,9 +190,8 @@
       (example-quake "Amatrice 2017 M=4.3" 4.5 4.3 "#666")]]
 
 
-    [:div {;:style {:margin-right 15}
-           :class "d-flex flex-column align-items-start justify-content-start"}
-     [:div {:style {:width  0
+    [:div {:class "d-flex flex-column align-items-start justify-content-start"}
+     [:div {:style {:width  0 
                     :height 0
                     :border-style "solid" ;
                     :border-width "0 40px 15px 40px" ;
@@ -217,12 +216,14 @@
   []
   (let [all-countries (:items @(rf/subscribe [::subs/countries]))]
     [ui/page ""
-     [ui/row
-      [ui/col {:md 5}
-       [mag-scale]]
-      [ui/col {:md {:span 5 :offset 1} :style {:font-size "1.4em"}}
+     [ui/row 
+      [ui/col {:md {:span 6 :offset 1} :style {:font-size "1.4em"}}
        (db/ttt :db/Navigate "Navigate to your local area.")
-       [links-to all-countries]]]]))
+       [links-to all-countries]]
+      [ui/col {:md 5}
+       (db/ttt :db/Magnitude "Magnitude")
+       [:div {:style {:margin-left 10}}
+        [mag-scale]]]]]))
 
 (defn option-radio-group
   [id key-name on-text off-text]
@@ -278,11 +279,16 @@
     (locals)
     [ui/page [:h1 (apply db/ttt (country :title))]
      [ui/three-columns
-      {:col1 [mag-scale]
+      {:col3 [:div {:style {:display "flex"
+                            :flex-direction "column"
+                            :justify-content "center"}}
+              "Magnitude"
+              [:div {:style {:margin-left 15}}
+               [mag-scale]]]
        :col2 [:div {:style {:margin-left 30}}
               [:h2 (get (db/ttt :db/Country-regions "English Regions") country-id)]
               (links-to country-regions)]
-       :col3 [:> bs/Image {:src (str "/assets/" country-id ".png")
+       :col1 [:> bs/Image {:src (str "/assets/" country-id ".png")
                            :fluid true}]}]]))
 
 
@@ -301,10 +307,15 @@
     [ui/page [:div {:style {:margin-left 30}}
               [:h1 [:span (db/maybe-translatable (region :title)) " (" [:a {:href (ui/href (country :href) {:id (country :id)})} (db/maybe-translatable (country :title))] ")"]]]
      [ui/three-columns
-      {:col1 [mag-scale]
+      {:col3 [:div {:style {:display "flex"
+                            :flex-direction "column"
+                            :justify-content "center"}}
+              "Magnitude"
+              [:div {:style {:margin-left 15}}
+               [mag-scale]]]
        :col2 [:div {:style {:margin-left 30}} [:h2 (db/ttt :db/Regional-communities "Regional Communities")]
               (links-to regional-communities)]
-       :col3 [:> bs/Image {:src (str "/assets/" region-id ".png")
+       :col1 [:> bs/Image {:src (str "/assets/" region-id ".png")
                            :fluid true}]}]]))
 
 (defn large

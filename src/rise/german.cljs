@@ -38,6 +38,7 @@
        :Local-history "Lokale Erdbebengeschichte"
        :Not-included "In dieser Prognose nicht berücksichtigt"
        :Mag "Mag"
+       :Magnitude "Erdbebenstärke"
        :Last-updated "Letztes Update"
        :Next-update-due "Nächstes Update fällig"
        :from-date "00:00 6. Juli 2021"

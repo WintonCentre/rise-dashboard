@@ -37,6 +37,7 @@
        :Local-history "Storia del terremoto locale"
        :Not-included "Non incluso nella previsione"
        :Mag "Mag"
+       :Magnitude "Magnitudo"
        :Last-updated "L'ultimo aggiornamento"
        :Next-update-due "Il prossimo aggiornamento sarà"
        :from-date "00:00 6 luglio 2021"
