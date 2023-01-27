@@ -138,7 +138,7 @@
                    :height "6ex"
                    :display "flex"
                    :align-items "center"
-                   :justify-content "center"}} [:span (db/ttt :db/Mag "Mag") " " mag]]]))
+                   :justify-content "center"}} [:span #_#_(db/ttt :db/Mag "Mag") " " mag]]]))
 
 (defn mag-y
   "Linear map so mag-y 10 -> 0 and mag-y 4 -> 302 (the height of the mag scale)"

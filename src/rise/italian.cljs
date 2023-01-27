@@ -13,7 +13,7 @@
    If you need to change the markup in square brackets ask gmp26@cam.ac.uk how. The syntax is documented 
    at https://github.com/weavejester/hiccup/wiki/Syntax.
    "
-  #:db{:Dashboard "Dashboard"
+  #:db{:Dashboard "Previsioni di terremoti"
        :Countries "Paesi"
        :country "paese"
        :Communities "Municipalità"
@@ -35,7 +35,7 @@
                          "switzerland" "Regioni Svizzere"}
        :Regional-communities "Municipalità regionali"
        :Local-history "Storia del terremoto locale"
-       :Not-included "Non incluso nel sito web"
+       :Not-included "Non incluso nella previsione"
        :Mag "Mag"
        :Last-updated "L'ultimo aggiornamento"
        :Next-update-due "Il prossimo aggiornamento sarà"
