@@ -50,7 +50,7 @@
        :How-does-location-compare "Come si pone %1 rispetto al mondo?" ; the location replaces %1
        :How-chance-compares "Come si confronta l'attuale probabilità di un terremoto di magnitudo 4+ a %1 con una settimana media in altri posti nel mondo?"
        :compare-average "paragonata a una settimana media in altri posti nel mondo?"
-       :How-likely-is [:span "Quanto è probabile un" " " [:i "terremoto di magnitudo 4" [:br] "o superiore"] " entro i prossimi 7 giorni?"]
+       :How-likely-is [:span "Quanto è probabile un" " " [:i "terremoto di magnitudo 4" #_[:br] "o superiore"] " entro i prossimi 7 giorni?"]
        :the-chance-within [:<> "La probabilità di un terremoto" [:br] [:nobr "entro 6 luglio ⟷ 13 luglio é"]]
        :Every-second "Ogni secondo della simulazione rappresenta %1 del tempo reale nel quale ogni settimana ha una probabilità pari al 2%."
        :whereas "mentre la probabilità in una settimana media è"

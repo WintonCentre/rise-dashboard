@@ -813,13 +813,13 @@
       [ui/row {:style {:margin-bottom 20 :display "flex" :align-items "flex-end"}}
        [ui/col {:md 3 :style {:display "inline-block" :font-size "2.2em" :font-weight  "500"}}
         [:nobr (community :title)] " (" [:a {:href (ui/href (region :href) {:id (region :id)})} (db/maybe-translatable (region :title))] ")"]
-       [ui/col {:md 8 :style {:display "inline-block" :font-size "2em" :font-weight  "500"}}
-        [page-title community]]]
+       [ui/col {:md 5 :style {:display "inline-block" :font-size "2em" :font-weight  "500"}}
+        [page-title community]]
+       [ui/col {:md 4 :style {:display "inline-block" :font-size "2em" :font-weight  "500"}} (db/ttt :db/Magnitude "Magnitude")]]
       [ui/three-columns
        {:col3 #_[:div {:style {:margin-top 20}} [mag-scale]] [:div {:style {:display "flex"
                                                                             :flex-direction "column"
-                                                                            :justify-content "center"}}
-                                                              [:p {:style {:text-align "center"}} [:b (db/ttt :db/Magnitude "Magnitude")]]
+                                                                            :justify-content "center"}} 
                                                               [:div {:style {:margin-left 15}}
                                                                [mag-scale]]]
         :col2 [:div {:style {:margin-left 15}} (content community)]
