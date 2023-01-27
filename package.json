@@ -25,10 +25,10 @@
         "shadow-cljs-server": "shadow-cljs server"
     },
     "dependencies": {
-        "react": "18.2.0",
-        "react-bootstrap": "2.7.0",
-        "react-dom": "18.2.0",
-        "ws": "^8.12.0"
+        "react": "17.0.1",
+        "react-bootstrap": "1.5.1",
+        "react-dom": "17.0.1",
+        "ws": "^5.2.3"
     },
     "devDependencies": {
         "rimraf": "^4.1.2",

@@ -18,7 +18,7 @@
        :country "paese"
        :Communities "Municipalità"
        :Regions "Regioni"
-       :Navigate "Naviga verso la tua municipalità."
+       :Navigate "Naviga verso la tua municipalità:"
        :Italy "Italia"
        :Switzerland "Svizzera"
        :Iceland "Islanda"

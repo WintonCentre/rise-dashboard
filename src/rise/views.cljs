@@ -134,7 +134,7 @@
                    :height "6ex"
                    :display "flex"
                    :align-items "center"
-                   :justify-content "center"}} [:span #_#_(db/ttt :db/Mag "Mag") " " mag]]
+                   :justify-content "center"}} [:span mag]]
     [:div {:style {:color (if (= color "#ACACAC") color "black")
                    :padding-left 15
                    :padding-right 25
@@ -183,20 +183,19 @@
 
                     :height "302"
                     #_#_:border "1px solid red"}} 
-
       (example-quake "Norcia 2016 M=6.5" 6.7 6.5 "#666")
       (example-quake "L'Aquila 2009 M=6.1" 6.1 6.1 "#666")
       (example-quake "Emilia 2012 M=5.8" 5.5 5.8 "#666")
       (example-quake "Amatrice 2017 M=4.3" 4.5 4.3 "#666")]]
 
 
-    [:div {:class "d-flex flex-column align-items-start justify-content-start"}
+    [:div {:class "d-flex flex-column align-items-start justify-content-center"}
      [:div {:style {:width  0 
                     :height 0
                     :border-style "solid" ;
                     :border-width "0 40px 15px 40px" ;
                     :border-color " transparent transparent #6b5967 transparent"}};
-      ]
+      ] 
      (mag-button 9 "#6B5967")
      (mag-button 8 "#80647C")
      (mag-button 7 "#946E8C")
@@ -220,8 +219,8 @@
       [ui/col {:md {:span 6 :offset 1} :style {:font-size "1.4em"}}
        (db/ttt :db/Navigate "Navigate to your local area.")
        [links-to all-countries]]
-      [ui/col {:md 5}
-       (db/ttt :db/Magnitude "Magnitude")
+      [ui/col {:md 5} 
+       [:p {:style {:text-align "center"}} [:b (db/ttt :db/Magnitude "Magnitude")]]
        [:div {:style {:margin-left 10}}
         [mag-scale]]]]]))
 
@@ -282,7 +281,7 @@
       {:col3 [:div {:style {:display "flex"
                             :flex-direction "column"
                             :justify-content "center"}}
-              "Magnitude"
+              [:p {:style {:text-align "center"}} [:b (db/ttt :db/Magnitude "Magnitude")]]
               [:div {:style {:margin-left 15}}
                [mag-scale]]]
        :col2 [:div {:style {:margin-left 30}}
@@ -310,7 +309,7 @@
       {:col3 [:div {:style {:display "flex"
                             :flex-direction "column"
                             :justify-content "center"}}
-              "Magnitude"
+              [:p {:style {:text-align "center"}} [:b (db/ttt :db/Magnitude "Magnitude")]]
               [:div {:style {:margin-left 15}}
                [mag-scale]]]
        :col2 [:div {:style {:margin-left 30}} [:h2 (db/ttt :db/Regional-communities "Regional Communities")]
@@ -817,9 +816,14 @@
        [ui/col {:md 8 :style {:display "inline-block" :font-size "2em" :font-weight  "500"}}
         [page-title community]]]
       [ui/three-columns
-       {:col1 [:div {:style {:margin-top 20}} [mag-scale]]
+       {:col3 #_[:div {:style {:margin-top 20}} [mag-scale]] [:div {:style {:display "flex"
+                                                                            :flex-direction "column"
+                                                                            :justify-content "center"}}
+                                                              [:p {:style {:text-align "center"}} [:b (db/ttt :db/Magnitude "Magnitude")]]
+                                                              [:div {:style {:margin-left 15}}
+                                                               [mag-scale]]]
         :col2 [:div {:style {:margin-left 15}} (content community)]
-        :col3 [:<> [:div {:style {:position "relative" #_#_:display "flex"} ;; Pre 14.3 Safaris have issues with images in flexbox
+        :col1 [:<> [:div {:style {:position "relative" #_#_:display "flex"} ;; Pre 14.3 Safaris have issues with images in flexbox
                           :class-name (when (and animate? quake?) "shake")}
                     [:> bs/Image {:src (str "/assets/" location " hex.png")
                                   :width "100%"

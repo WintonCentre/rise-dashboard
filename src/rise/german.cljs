@@ -19,7 +19,7 @@
        :country "Land"
        :Communities "Gemeinden"
        :Regions "Regionen"
-       :Navigate "Wählen Sie Ihren Standort."
+       :Navigate "Wählen Sie Ihren Standort:"
        :Italy "Italien"
        :Switzerland "Schweiz"
        :Iceland "Iceland"
