@@ -124,11 +124,7 @@
   ([mag color text]
    ;(mag-button mag color text)
    [:div {:style {:display "flex"
-                  :align-items "center"}}
-    [:div {:style {:color (if (= color "#ACACAC") color "black")
-                   :padding-left 15
-                   :padding-right 25
-                   :font-size (if (= color "#ACACAC") "1.2em" "1em")}} text]
+                  :align-items "center"}} 
     [:div {:style {:background-color color
                    :border "1px solid white"
                    :border-top "none"
@@ -138,7 +134,11 @@
                    :height "6ex"
                    :display "flex"
                    :align-items "center"
-                   :justify-content "center"}} [:span #_#_(db/ttt :db/Mag "Mag") " " mag]]]))
+                   :justify-content "center"}} [:span #_#_(db/ttt :db/Mag "Mag") " " mag]]
+    [:div {:style {:color (if (= color "#ACACAC") color "black")
+                   :padding-left 15
+                   :padding-right 25
+                   :font-size (if (= color "#ACACAC") "1.2em" "1em")}} text]]))
 
 (defn mag-y
   "Linear map so mag-y 10 -> 0 and mag-y 4 -> 302 (the height of the mag scale)"
@@ -159,11 +159,10 @@
   [text slot mag color]
 
   [:g {:style {:width "100%"}}
-   [:line {:x1 "85%" :x2 "100%" :y1 (mag-y slot) :y2 (mag-y mag) :stroke color :stroke-width 2}]
-   [:circle {:cx "100%" :cy (mag-y mag) :r 4 :fill color}]
-   [:rect {:x 5 :width "calc(100% -  30px)" :y (- (mag-y slot) 12) :height 22 :rx 10 :fill "#fff" :stroke-width 1 :stroke color}]
-   [:text {:x 10 :y (+ 4 (mag-y slot)) :fill color} text]]
-  )
+   [:line {:x1 "79px" :x2 "99px" :y1 (mag-y mag) :y2 (mag-y slot) :stroke color :stroke-width 2}]
+   [:circle {:cx "79px" :cy (mag-y mag) :r 4 :fill color}]
+   [:rect {:x 90 :width "calc(100% -  95px)" :y (- (mag-y slot) 12) :height 22 :rx 10 :fill "#fff" :stroke-width 1 :stroke color}]
+   [:text {:x 95 :y (+ 4 (mag-y slot)) :fill color} text]])
 
 (defn mag-scale
   "Draw magnitude scale with example quakes on it"
@@ -178,8 +177,8 @@
      [:svg {;:viewbox "0 0 100 200"
             :width "calc(100% - 80px)"
             :style {:position "relative"
-                    :right 0
-                    #_#_:left 0
+                    #_#_:right 0
+                    :left 0
                     :margin-top 15
 
                     :height "302"
@@ -192,7 +191,7 @@
 
 
     [:div {;:style {:margin-right 15}
-           :class "d-flex flex-column align-items-end justify-content-start"}
+           :class "d-flex flex-column align-items-start justify-content-start"}
      [:div {:style {:width  0
                     :height 0
                     :border-style "solid" ;
