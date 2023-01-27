@@ -1,7 +1,7 @@
 {:source-paths ["src" "test"]
 
  :dependencies
- [[reagent               "1.0.0"]
+ [[reagent               "1.1.0"]
   [reagent-utils/reagent-utils         "0.3.3"]
   [re-frame              "1.2.0"]
   [aero/aero             "1.1.6"]
@@ -10,9 +10,9 @@
   [day8.re-frame/http-fx "0.2.2"]
   [winton-utils          "0.2.1"]
   [medley/medley         "1.3.0"]
-  [binaryage/devtools    "1.0.2"]
+  [binaryage/devtools    "1.0.6"]
   [cljs-css-modules      "0.2.1"]
-  [cider/cider-nrepl "0.21.0"]]
+  [cider/cider-nrepl "0.28.5"]]
 
  :dev-http
  {3000 "resources/public"}
