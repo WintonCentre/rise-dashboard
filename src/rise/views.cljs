@@ -171,7 +171,7 @@
   #_(let [w @(rf/subscribe [::subs/window-width])])
   [:<>
 
-   [ui/row {:class "d-flex flex-row justify-content-end"}
+   [ui/row {:class "d-flex flex-row justify-content-start"}
     [:div {:style {:position "absolute"
                    ;:border "1px solid green"
                    :width #_(/ w 4) "100%"}}
@@ -179,6 +179,7 @@
             :width "calc(100% - 80px)"
             :style {:position "relative"
                     :right 0
+                    #_#_:left 0
                     :margin-top 15
 
                     :height "302"
@@ -191,7 +192,7 @@
 
 
     [:div {;:style {:margin-right 15}
-           :class "d-flex flex-column align-items-end justify-content-end"}
+           :class "d-flex flex-column align-items-end justify-content-start"}
      [:div {:style {:width  0
                     :height 0
                     :border-style "solid" ;
@@ -204,8 +205,8 @@
      (mag-button 6 "#B58283" #_"L'Aquila 2009, M=6.1")
      (mag-button 5 "#D2937A" #_"Emilia 2012, M=5.8")
      (mag-button 4 "#E7A174" #_"Amatrice (RI) 2017 M=4.3")]]
-   [ui/row {:class "d-flex flex-row justify-content-end"}
-    [:div {:class "d-flex flex-column align-items-end justify-content-end"
+   [ui/row {:class "d-flex flex-row justify-content-start"}
+    [:div {:class "d-flex flex-column align-items-start justify-content-start"
            :style {:margin-top 20}}
      (mag-button "1-3" "#ACACAC" (db/ttt :db/Not-included "Not included in dashboard"))]]])
 
