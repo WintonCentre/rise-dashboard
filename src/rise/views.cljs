@@ -815,7 +815,9 @@
         [:nobr (community :title)] " (" [:a {:href (ui/href (region :href) {:id (region :id)})} (db/maybe-translatable (region :title))] ")"]
        [ui/col {:md 5 :style {:display "inline-block" :font-size "2em" :font-weight  "500"}}
         [page-title community]]
-       [ui/col {:md 4 :style {:display "inline-block" :font-size "2em" :font-weight  "500"}} (db/ttt :db/Magnitude "Magnitude")]]
+       [ui/col {:md 4 :style {:display "inline-block" #_#_:font-size "2em" :font-weight  "500"}} [:div 
+                                                                                              [:p {:style {:font-size "1.4em"}} "Past examples of magnitude 4 and above earthquakes:"]
+                                                                                              [:p {:style {:margin 0}} (db/ttt :db/Magnitude "Magnitude")]]]]
       [ui/three-columns
        {:col3 #_[:div {:style {:margin-top 20}} [mag-scale]] [:div {:style {:display "flex"
                                                                             :flex-direction "column"
