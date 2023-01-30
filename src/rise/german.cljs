@@ -69,4 +69,5 @@
        :compared-to-these-cities "verglichen mit einer durchschnittlichen Woche"
        :compared-to-these-cities-2 "in diesen Städten"
        :use-the-map "Wählen Sie auf der Karte das Gebiet aus, für das Sie eine Vorhersage wünschen:"
-       :past-examples "Frühere Beispiele für Erdbeben der Stärke 4 und darüber:"})
+       :past-examples "Frühere Beispiele für Erdbeben der Stärke 4 und darüber:"
+       :click-here "Klicken Sie hier, um mehr zu erfahren..."})

@@ -73,4 +73,5 @@
        :Zurich "Zurich"
        :Sossi "Sossi"
        :use-the-map "Use the map to select the area you want a forecast for:"
-       :past-examples "Past examples of magnitude 4 and above earthquakes:"})
+       :past-examples "Past examples of magnitude 4 and above earthquakes:"
+       :click-here "Click here to find out more..."})

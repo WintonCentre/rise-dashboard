@@ -434,7 +434,8 @@
          [:h4 [:a {:href (str "/#/history/" (community :id))} (db/ttt :db/Local-history "Local earthquake history")]]
          [:p (db/ttt :db/Local-history-p1 "How many earthquakes of magnitude 4 or more have hit") " "
           (db/maybe-translatable (region :title)) " "
-          (db/ttt :db/Local-history-p2 "in the past?")]])]
+          (db/ttt :db/Local-history-p2 "in the past?")]
+         [:a {:href ""} (db/ttt :db/click-here "Click here to find out more...")]])]
      [ui/col (base-style 5)
       [:h4 [:a {:href (str "/#/hex/" (community :id))} (db/ttt :db/Whats-happening "What's happening here and now?")]]
       (if (or (= (community :id) "norcia-S")

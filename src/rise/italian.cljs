@@ -67,4 +67,5 @@
        :compare-cities-2 "entro i prossimi 7 giorni è"
        :compared-to-these-cities "rispetto a una settimana media in queste città."
        :use-the-map "Utilizzare la mappa per selezionare l'area per la quale si desidera una previsione:"
-       :past-examples "Esempi passati di terremoti di magnitudo 4 e superiore:"})
+       :past-examples "Esempi passati di terremoti di magnitudo 4 e superiore:"
+       :click-here "Clicca qui per saperne di più..."})
