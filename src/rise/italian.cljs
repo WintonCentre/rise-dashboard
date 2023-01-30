@@ -68,4 +68,7 @@
        :compared-to-these-cities "rispetto a una settimana media in queste città."
        :use-the-map "Utilizzare la mappa per selezionare l'area per la quale si desidera una previsione:"
        :past-examples "Esempi passati di terremoti di magnitudo 4 e superiore:"
-       :click-here "Clicca qui per saperne di più..."})
+       :click-here "Clicca qui per saperne di più..."
+       :what-can-I-do "Cosa posso fare con queste informazioni?"
+       :much-less-certain "Le previsioni dei terremoti sono molto meno certe di quelle meteorologiche, perché non possiamo vedere cosa succede nel sottosuolo, ma possono fornire informazioni utili a chi deve prendere decisioni."
+       :explanation "Spiegazione di questa previsione:"})

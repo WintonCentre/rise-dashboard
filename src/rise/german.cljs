@@ -70,4 +70,7 @@
        :compared-to-these-cities-2 "in diesen Städten"
        :use-the-map "Wählen Sie auf der Karte das Gebiet aus, für das Sie eine Vorhersage wünschen:"
        :past-examples "Frühere Beispiele für Erdbeben der Stärke 4 und darüber:"
-       :click-here "Klicken Sie hier, um mehr zu erfahren..."})
+       :click-here "Klicken Sie hier, um mehr zu erfahren..."
+       :what-can-I-do "Was kann ich mit diesen Informationen anfangen?"
+       :much-less-certain "Erdbebenvorhersagen sind viel unsicherer als Wettervorhersagen, da wir nicht sehen können, was unter der Erde passiert, aber sie können den Entscheidungsträgern nützliche Informationen liefern."
+       :explanation "Erläuterung zu dieser Prognose:"})

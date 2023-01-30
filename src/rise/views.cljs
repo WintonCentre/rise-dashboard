@@ -436,23 +436,42 @@
           (db/maybe-translatable (region :title)) " "
           (db/ttt :db/Local-history-p2 "in the past?")]
          [:a {:href ""} (db/ttt :db/click-here "Click here to find out more...")]])]
-     [ui/col (base-style 5)
-      [:h4 [:a {:href (str "/#/hex/" (community :id))} (db/ttt :db/Whats-happening "What's happening here and now?")]]
-      (if (or (= (community :id) "norcia-S")
-              (= (community :id) "zurich")
-              (= (community :id) "sion")
-              (< (community :p-7day) (* 1.2 (community :mean-7day))))
-        [:p (db/ttt :db/local-quiet-message "%1 is currently in a quiet period." (community :title))]
-        [:p  (db/ttt :db/local-message "%1 is seeing higher chances than normal because of increased 
+     [ui/col (merge (base-style 5) {:style {:font-size 16
+                                            :display "flex"
+                                            :flex-direction "column"
+                                            :padding 45
+                                            :align-items "flex-start"
+                                            :justify-content "flex-start"
+                                            :border "1px solid black"
+                                            :border-radius "25px"}})
+      [:div 
+       [:h4 {:style {:text-align "center"}}(db/ttt :db/explanation "Explanation for this forecast:") #_[:a {:href (str "/#/hex/" (community :id))} (db/ttt :db/Whats-happening "What's happening here and now?")]]
+       [:br]
+       (if (or (= (community :id) "norcia-S")
+               (= (community :id) "zurich")
+               (= (community :id) "sion")
+               (< (community :p-7day) (* 1.2 (community :mean-7day))))
+         [:<>
+          [:p (db/ttt :db/local-quiet-message "%1 is currently in a quiet period." (community :title))]
+          [:a {:href ""} (db/ttt :db/click-here "Click here to find out more...")]
+          ]
+         [:<>
+          [:p  (db/ttt :db/local-message "%1 is seeing higher chances than normal because of increased 
              seismic activity around the Mount Vettore fault system." (community :title))]
-        )]
+          [:a {:href ""} (db/ttt :db/click-here "Click here to find out more...")]
+          ]
+         )]]
      [ui/col (base-style {:span 4})
       (when with-context?
         [:<>
-         [:h4 [:a {:href (str "/#/world/" (community :id))}
-               (db/ttt :db/How-does-location-compare "How does %1 compare to the world" (community :title))]]
-         [:p (db/ttt :db/How-chance-compares "How does the current chance of a magnitude 4+ quake in %1 compare to an average week in other places worldwide?"
-                     (community :title))]])]]))
+         [:h4 [:a {:href "" #_(str "/#/world/" (community :id))}
+               (db/ttt :db/what-can-I-do "What can I do with this information?")
+               #_(db/ttt :db/How-does-location-compare "How does %1 compare to the world" (community :title))]]
+         [:p (db/ttt :db/much-less-certain "Earthquake forecasts are much less certain than weather forecasts as we cannot see what is happening underground, but they can give useful information to those making decisions.") 
+          #_(db/ttt :db/How-chance-compares "How does the current chance of a magnitude 4+ quake in %1 compare to an average week in other places worldwide?"
+                     (community :title))]
+         [:a {:href ""} (db/ttt :db/click-here "Click here to find out more...")]
+         ])]]))
 (comment
 (db/ttt :db/How-does-location-compare "How does %1 compare to the world" "Spoleto"))
 

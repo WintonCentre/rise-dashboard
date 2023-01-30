@@ -74,4 +74,7 @@
        :Sossi "Sossi"
        :use-the-map "Use the map to select the area you want a forecast for:"
        :past-examples "Past examples of magnitude 4 and above earthquakes:"
-       :click-here "Click here to find out more..."})
+       :click-here "Click here to find out more..."
+       :what-can-I-do "What can I do with this information?"
+       :much-less-certain "Earthquake forecasts are much less certain than weather forecasts as we cannot see what is happening underground, but they can give useful information to those making decisions."
+       :explanation "Explanation for this forecast:"})
