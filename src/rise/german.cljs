@@ -52,6 +52,7 @@
        :How-chance-compares "Wie hoch ist die aktuelle Wahrscheinlichkeit eines Erdbebens der Magnitude von 4 oder höher in %1 im Vergleich zu einer durchschnittlichen Woche an anderen Orten der Welt?"
        :compare-average "im Vergleich zu einer durchschnittlichen Woche an anderen Orten der Welt?"
        :How-likely-is [:span "Wie wahrscheinlich ist ein " [:i "Magnituden 4 oder höher"] " Erdbeben in den nächsten 7 Tagen?"]
+       :current-forecast [:span "Aktuelle Vorhersage für ein" " " [:i "Magnituden 4 oder höher"] " in dem von Ihnen ausgewählten Gebiet:"]
        :the-chance-within [:<> "Die Wahrscheinlichkeit eines Erdbebens" [:br] [:nobr "zwischen 6. Juli ⟷ 13. Juli ist"]]
        :Every-second "Jede Sekunde der Simulation entspricht %1 der realen Zeit, in der jede Woche eine Wahrscheinlichkeit von %2 hat." ;%1 is a unit of time, %2 is weekly chance
        :whereas "Im Gegensatz dazu beträgt die Wahrscheinlichkeit in einer durchschnittlichen Woche "
@@ -66,4 +67,6 @@
        :compare-cities-1 "Die Wahrscheinlichkeit eines Erdbebens der"
        :compare-cities-2 "Magnitude 4 oder mehr in den nächsten 7 Tagen ist"
        :compared-to-these-cities "verglichen mit einer durchschnittlichen Woche"
-       :compared-to-these-cities-2 "in diesen Städten"})
+       :compared-to-these-cities-2 "in diesen Städten"
+       :use-the-map "Wählen Sie auf der Karte das Gebiet aus, für das Sie eine Vorhersage wünschen:"
+       :past-examples "Frühere Beispiele für Erdbeben der Stärke 4 und darüber:"})

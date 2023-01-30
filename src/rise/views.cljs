@@ -810,20 +810,25 @@
 
     [ui/page
      [:<>
-      [ui/row {:style {:margin-bottom 20 :display "flex" :align-items "flex-end"}}
-       [ui/col {:md 3 :style {:display "inline-block" :font-size "2.2em" :font-weight  "500"}}
-        [:nobr (community :title)] " (" [:a {:href (ui/href (region :href) {:id (region :id)})} (db/maybe-translatable (region :title))] ")"]
+      [ui/row {:style {:margin-bottom 20 :display "flex" :align-items "flex-start"}}
+       [ui/col {:md 3 :style {:display "inline-block" :font-size "1.4em" :font-weight "500"}}
+        [:div
+         [:p (db/ttt :db/use-the-map "Use the map to select the area you want a forecast for:")]
+         ]]
        [ui/col {:md 5 :style {:display "inline-block" :font-size "2em" :font-weight  "500"}}
         [page-title community]]
-       [ui/col {:md 4 :style {:display "inline-block" #_#_:font-size "2em" :font-weight  "500"}} [:div 
-                                                                                              [:p {:style {:font-size "1.4em"}} "Past examples of magnitude 4 and above earthquakes:"]
-                                                                                              [:p {:style {:margin 0}} (db/ttt :db/Magnitude "Magnitude")]]]]
+       [ui/col {:md 4 :style {:display "inline-block" #_#_:font-size "2em" :font-weight  "500"}} [:div {:style {:display "flex"
+                                                                                                                :flex-direction "column"
+                                                                                                                :justify-content "space-between"}}
+                                                                                                  [:p {:style {:font-size "1.4em"}} (db/ttt :db/past-examples "Past examples of magnitude 4 and above earthquakes:")] 
+                                                                                                  [:br]
+                                                                                                  [:p {:style {:margin 0}} (db/ttt :db/Magnitude "Magnitude")]]]]
       [ui/three-columns
-       {:col3 #_[:div {:style {:margin-top 20}} [mag-scale]] [:div {:style {:display "flex"
-                                                                            :flex-direction "column"
-                                                                            :justify-content "center"}} 
-                                                              [:div {:style {:margin-left 15}}
-                                                               [mag-scale]]]
+       {:col3 [:div {:style {:display "flex"
+                             :flex-direction "column"
+                             :justify-content "center"}}
+               [:div {:style {:margin-left 15}}
+                [mag-scale]]]
         :col2 [:div {:style {:margin-left 15}} (content community)]
         :col1 [:<> [:div {:style {:position "relative" #_#_:display "flex"} ;; Pre 14.3 Safaris have issues with images in flexbox
                           :class-name (when (and animate? quake?) "shake")}
@@ -835,7 +840,9 @@
                      (into [:<>]
                            (map
                             #(link-neighbour :community (community :id) %)
-                            hex-compass-points))]]
+                            hex-compass-points))] 
+                    ]
+               [:div [:nobr (community :title)] " (" [:a {:href (ui/href (region :href) {:id (region :id)})} (db/maybe-translatable (region :title))] ")"]
                (when animate?
                  [:div {:style {:display "flex" :align-items "start" :margin-top 15}}
                  (db/ttt :db/Every-second
@@ -847,7 +854,7 @@
   "A community-level page featuring a mapped hexagon."
   []
   (main-content-template
-   (fn [community] [:<> (db/ttt :db/How-likely-is [:<> "How likely is a" " " [:i "magnitude 4 or above"] " earthquake" [:br] " within the next 7 days?"])])
+   (fn [community] [:<> (db/ttt :db/current-forecast [:<> "Current forecast for a" " " [:i "magnitude 4 or above"] " earthquake in the area you have selected:"])])
    area-status))
 
 ;;;

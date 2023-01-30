@@ -51,6 +51,7 @@
        :How-chance-compares "How does the current chance of a magnitude 4 or more quake in %1 compare to an average week in other places worldwide?"
        :compare-average "compare to an average week in other places worldwide?"
        :How-likely-is [:span "How likely is a" " " [:i "magnitude 4 or above"] " earthquake" #_[:br] " within the next 7 days?"]
+       :current-forecast [:span "Current forecast for a" " " [:i "magnitude 4 or above"] " earthquake in the area you have selected:"]
        :the-chance-within [:<> "The chance of an earthquake" [:br] [:nobr "within 6th July ⟷ 13th July is"]]
        :Every-second "Every second of simulation represents %1 of real time in which each week has a %2 chance." ;%1 is a unit of time, %2 is weekly chance
        :whereas "whereas the chance in an average week is "
@@ -70,4 +71,6 @@
        :Tokyo "Tokyo"
        :Rome "Rome"
        :Zurich "Zurich"
-       :Sossi "Sossi"})
+       :Sossi "Sossi"
+       :use-the-map "Use the map to select the area you want a forecast for:"
+       :past-examples "Past examples of magnitude 4 and above earthquakes:"})

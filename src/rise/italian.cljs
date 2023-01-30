@@ -50,7 +50,8 @@
        :How-does-location-compare "Come si pone %1 rispetto al mondo?" ; the location replaces %1
        :How-chance-compares "Come si confronta l'attuale probabilità di un terremoto di magnitudo 4+ a %1 con una settimana media in altri posti nel mondo?"
        :compare-average "paragonata a una settimana media in altri posti nel mondo?"
-       :How-likely-is [:span "Quanto è probabile un" " " [:i "terremoto di magnitudo 4" #_[:br] "o superiore"] " entro i prossimi 7 giorni?"]
+       :How-likely-is [:span "Quanto è probabile un" " " [:i "terremoto di magnitudo 4 o superiore"] " entro i prossimi 7 giorni?"]
+       :current-forecast [:span "Previsione attuale di un" " " [:i "terremoto di magnitudo 4 o superiore"] " nell'area selezionata:"]
        :the-chance-within [:<> "La probabilità di un terremoto" [:br] [:nobr "entro 6 luglio ⟷ 13 luglio é"]]
        :Every-second "Ogni secondo della simulazione rappresenta %1 del tempo reale nel quale ogni settimana ha una probabilità pari al 2%."
        :whereas "mentre la probabilità in una settimana media è"
@@ -64,4 +65,6 @@
        :compare-world-cities "Come si pone %1 rispetto al mondo?"
        :compare-cities-1 "La probabilità di un magnitudo 4 o superiore"
        :compare-cities-2 "entro i prossimi 7 giorni è"
-       :compared-to-these-cities "rispetto a una settimana media in queste città."})
+       :compared-to-these-cities "rispetto a una settimana media in queste città."
+       :use-the-map "Utilizzare la mappa per selezionare l'area per la quale si desidera una previsione:"
+       :past-examples "Esempi passati di terremoti di magnitudo 4 e superiore:"})
