@@ -13,7 +13,9 @@
    [rise.db :as db]
    [shadow.debug :refer [locals ?> ?-> ?->>]]
    [goog.string :as gstr]
-   [goog.string.format :as gsf])
+   [goog.string.format :as gsf]
+   [cljs-time.core :as t]
+   [cljs-time.format :as f])
   )
 
 
@@ -464,7 +466,7 @@
      [ui/col (base-style {:span 4})
       (when with-context?
         [:<>
-         [:h4 [:a {:href "" #_(str "/#/world/" (community :id))}
+         [:h4 [:a {:href #_"" (str "/#/world/" (community :id))}
                (db/ttt :db/what-can-I-do "What can I do with this information?")
                #_(db/ttt :db/How-does-location-compare "How does %1 compare to the world" (community :title))]]
          [:p (db/ttt :db/much-less-certain "Earthquake forecasts are much less certain than weather forecasts as we cannot see what is happening underground, but they can give useful information to those making decisions.") 
@@ -699,6 +701,53 @@
   (real->f js/Math.PI 2)
   )
 
+(def time-formatter (f/formatter #_"yyyyMMdd" #_:basic-date-time "dd-MM-yyyy"))
+
+(defn new-area-status
+  "Show earthquake status of an area conform to the recommendations"
+  [community]
+  (let [p (community :p-7day)
+        mean (community :mean-7day)
+        mag+ @(rf/subscribe [::subs/mag+])
+        with-vis? @(rf/subscribe [::subs/with-vis?])
+        odds? @(rf/subscribe [::subs/odds?])
+        rr%2 (condp = (compare p mean)
+               -1 (db/ttt :db/smaller-than "smaller than")
+               0 (db/ttt :db/about "about")
+               1 (db/ttt :db/higher-than "higher than"))
+        date1 (f/unparse time-formatter (t/today))
+        date2 (f/unparse time-formatter (t/plus (t/today) (t/weeks 1)))]
+    [:<>
+     [:div {:style {:font-size "18px"#_"21px"
+                    :border "1px solid #CCC"
+                    :border-radius 20
+                    :min-height 370
+                    :padding (str (if with-vis? 15 30) "px 30px")
+                    :box-shadow "1px 1px 1px 1px #CCC"
+                    :background-color #_"#444466" "#80647D"
+                    :color "white"
+                    :text-align "center"
+                    :overflow "scroll"
+                    :max-height "400px"}}
+      [:p  "With current levels of seismic activity the chance of
+          an earthquake of magnitude 4 or more happening in this 
+           area between"]
+      [:p (str date1 " <-> " date2 " is: ") #_(str (f/parse time-formatter (t/today-at 12 00)) " <-----> " (f/parse time-formatter (t/plus (t/today-at 12 00) (t/weeks 1))))]
+
+      [:p {:style {:font-size "25px"}} (nice% p) #_"1.0%"]
+      [:p "Imagine "[:b "100,000" ] " areas with exactly the same 
+          chance of an earthquake as this one."]
+      [:p (str "Within the week of " date1 " <-> " date2 " with
+          a " (nice% p) " chance we would expect:")]
+      [:p "An earthquake of magnitude 4+ to happen in " [:b (* p 100000)] " of them"]
+      [:p "No earthquake of magnitude 4+ to happen in " [:b (* (- 1 p) 100000)] " of them"]
+      [:p [:a {:href ""} "Show me this number in context"]]]
+     [update-status]]
+    
+    )
+  )
+
+
 (defn area-status
   "show earthquake status of an area"
   [community]
@@ -718,7 +767,7 @@
                      :min-height 370
                      :padding (str (if with-vis? 15 30) "px 30px")
                      :box-shadow "1px 1px 1px 1px #CCC"
-                     :background-color "#444466" #_"#80647D"
+                     :background-color #_"#444466" "#80647D"
                      :color "white"}}
        [ui/row {:style {:display "flex" :align-items "center" :justify-content "space-between"
                         :padding-bottom (when with-vis? 25)}}
@@ -875,7 +924,7 @@
   []
   (main-content-template
    (fn [community] [:<> (db/ttt :db/current-forecast [:<> "Current forecast for a" " " [:i "magnitude 4 or above"] " earthquake in the area you have selected:"])])
-   area-status))
+   new-area-status))
 
 ;;;
 ;;
