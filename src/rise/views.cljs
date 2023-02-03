@@ -778,17 +778,17 @@
         [:p (str date1 " <-> " date2 " is: ")]
 
         [:p {:style {:font-size "25px"}} (nice% p)]
+        [:p {:style {:margin-bottom "5px"}} "To put this in context:"]
 
         (cond
           (nil? community) "Missing community data"
           (nil? (community :p-7day)) "Missing community :p-7day"
           :else [:svg {:width "100%" :height "100%"}
                  [:g {:transform "translate(-25 0)"}
-                  [:rect {:x 0 :y "42%" :width "120%" :height "60%" :fill "#fff3"}]
-                  [:text {:x "8%" :y "10%" :fill "#fff"} "To put this in context:"]
+                  [:rect {:x 0 :y "42%" :width "120%" :height "60%" :fill "#fff3"}] 
                   #_[:text {:x "8%" :y "10%" :fill "#fff"} (db/ttt :db/compare-cities-1 "The chance of a magnitude 4 or")]
                   #_[:text {:x "8%" :y "17%" :fill "#fff"} (db/ttt :db/compare-cities-2 "more within the next 7 days is")]
-                  [:text {:style {:font-size "1.5em"} :fill "#fff" :x (pc (+ community-x dx)) :y "30%"} (nice% p) " in " (community :title)]
+                  [:text {:style {:font-size "1.2em"} :fill "#fff" :x (pc (+ community-x dx)) :y "25%"} (nice% p) " in " (community :title)]
                   [:line {:x1 (pc community-x) :x2 (pc community-x) :y1 "36%" :y2 "42%" :stroke "#fff" :stroke-width 2}]
                   [:circle {:cx (pc community-x) :cy "42%" :r 5 :fill "#fff"}]
                   (into [:g
