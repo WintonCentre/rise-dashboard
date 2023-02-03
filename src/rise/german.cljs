@@ -36,6 +36,8 @@
                          "switzerland" "Schweiz Regionen"}
        :Regional-communities "Gemeinden"
        :Local-history "Lokale Erdbebengeschichte"
+       :how-to-survive "Wie man ein Erdbeben überlebt"
+       :useful-tips "Klicken Sie hier für nützliche Tipps, was Sie vor, während und nach einem Erdbeben tun können."
        :Not-included "In dieser Prognose nicht berücksichtigt"
        :Mag "Mag"
        :Magnitude "Erdbebenstärke"
@@ -69,6 +71,7 @@
        :compared-to-these-cities "verglichen mit einer durchschnittlichen Woche"
        :compared-to-these-cities-2 "in diesen Städten"
        :use-the-map "Wählen Sie auf der Karte das Gebiet aus, für das Sie eine Vorhersage wünschen:"
+       :what-might-like "Wie könnte sie aussehen?"
        :past-examples "Frühere Beispiele für Erdbeben der Stärke 4 und darüber:"
        :click-here "Klicken Sie hier, um mehr zu erfahren..."
        :what-can-I-do "Was kann ich mit diesen Informationen anfangen?"

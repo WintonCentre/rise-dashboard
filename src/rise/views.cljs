@@ -433,11 +433,13 @@
      [ui/col (base-style 3)
       (when with-context?
         [:<>
-         [:h4 [:a {:href (str "/#/history/" (community :id))} (db/ttt :db/Local-history "Local earthquake history")]]
-         [:p (db/ttt :db/Local-history-p1 "How many earthquakes of magnitude 4 or more have hit") " "
+         [:h4 [:a {:href (str "/#/history/" (community :id))} (db/ttt :db/how-to-survive "How to survive an earthquake") #_(db/ttt :db/Local-history "Local earthquake history")]]
+         [:p (db/ttt :db/useful-tips "Click here for useful tips on what to do 
+                                      before, during, and after an earthquake.")]
+         #_[:p (db/ttt :db/Local-history-p1 "How many earthquakes of magnitude 4 or more have hit") " "
           (db/maybe-translatable (region :title)) " "
           (db/ttt :db/Local-history-p2 "in the past?")]
-         [:a {:href ""} (db/ttt :db/click-here "Click here to find out more...")]])]
+         ])]
      [ui/col (merge (base-style 5) {:style {:font-size 16
                                             :display "flex"
                                             :flex-direction "column"
@@ -889,7 +891,8 @@
        [ui/col {:md 4 :style {:display "inline-block" #_#_:font-size "2em" :font-weight  "500"}} [:div {:style {:display "flex"
                                                                                                                 :flex-direction "column"
                                                                                                                 :justify-content "space-between"}}
-                                                                                                  [:p {:style {:font-size "1.4em"}} (db/ttt :db/past-examples "Past examples of magnitude 4 and above earthquakes:")] 
+                                                                                                  [:p {:style {:font-size "1.4em" :font-weight  "500"}} (db/ttt :db/what-might-like "What might it be like?")]
+                                                                                                  [:p {:style {:font-size "1.2em"}} (db/ttt :db/past-examples "Past examples of magnitude 4 and above earthquakes:")] 
                                                                                                   [:br]
                                                                                                   [:p {:style {:margin 0}} (db/ttt :db/Magnitude "Magnitude")]]]]
       [ui/three-columns

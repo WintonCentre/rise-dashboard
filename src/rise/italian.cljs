@@ -35,6 +35,8 @@
                          "switzerland" "Regioni Svizzere"}
        :Regional-communities "Municipalità regionali"
        :Local-history "Storia del terremoto locale"
+       :how-to-survive "Come sopravvivere a un terremoto"
+       :useful-tips "Cliccate qui per avere consigli utili su cosa fare prima, durante e dopo un terremoto."
        :Not-included "Non incluso nella previsione"
        :Mag "Mag"
        :Magnitude "Magnitudo"
@@ -67,6 +69,7 @@
        :compare-cities-2 "entro i prossimi 7 giorni è"
        :compared-to-these-cities "rispetto a una settimana media in queste città."
        :use-the-map "Utilizzare la mappa per selezionare l'area per la quale si desidera una previsione:"
+       :what-might-like "Come potrebbe essere?"
        :past-examples "Esempi passati di terremoti di magnitudo 4 e superiore:"
        :click-here "Clicca qui per saperne di più..."
        :what-can-I-do "Cosa posso fare con queste informazioni?"

@@ -35,6 +35,8 @@
                          "switzerland" "Swiss Regions"}
        :Regional-communities "Regional Communities"
        :Local-history "Local earthquake history"
+       :how-to-survive "How to survive an earthquake"
+       :useful-tips "Click here for useful tips on what to do before, during, and after an earthquake."
        :Not-included "Not included in forecast"
        :Mag "Mag"
        :Magnitude "Magnitude"
@@ -73,6 +75,7 @@
        :Zurich "Zurich"
        :Sossi "Sossi"
        :use-the-map "Use the map to select the area you want a forecast for:"
+       :what-might-like "What might it be like?"
        :past-examples "Past examples of magnitude 4 and above earthquakes:"
        :click-here "Click here to find out more..."
        :what-can-I-do "What can I do with this information?"
