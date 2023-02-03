@@ -209,6 +209,19 @@
            :style {:margin-top 20}}
      (mag-button "1-3" "#ACACAC" (db/ttt :db/Not-included "Not included in dashboard"))]]])
 
+(defn pc [x] (str x "%"))
+
+(defn average-city
+  "mark an average city"
+  [{:keys [p X dx y fill city]}]
+  (let [p (* 100 p)]
+    [:<>
+     [:text {:style {:font-size "1.2em"} :fill fill
+             :x (pc (X (+ p dx))) :y (pc (+ y 7))} (pc p)]
+
+     [:text {:x (pc (X (+ p dx))) :y (pc (+ y 14)) :fill fill} city]
+     [:line {:x1 (pc (X (+ p dx))) :x2 (pc (X p)) :y1 (pc y) :y2 "42%" :stroke fill :stroke-width 2}]
+     [:circle {:cx (pc (X (+ p dx))) :cy "42%" :r 5 :fill fill}]]))
 
 ;;; Views ;;;
 
@@ -715,52 +728,91 @@
         odds? @(rf/subscribe [::subs/odds?])
         in-percentage? @(rf/subscribe [::subs/in-percentage?])
         date1 (f/unparse time-formatter (t/today))
-        date2 (f/unparse time-formatter (t/plus (t/today) (t/weeks 1)))]
+        date2 (f/unparse time-formatter (t/plus (t/today) (t/weeks 1)))
+        X #(+ 10 (* % 2))
+        dx -4
+        community-x (X (* 100 p))
+        average-cities @(rf/subscribe [::subs/average-cities])]
     [:<>
      (if in-percentage?
        [:div {:style {:font-size "18px" #_"21px" 
                       :border "1px solid #CCC"
                       :border-radius 20
-                      :min-height 370
+                      :min-height 400
                       :padding "10px" #_(str (if with-vis? 15 30) "px 30px")
                       :box-shadow "1px 1px 1px 1px #CCC"
                       :background-color #_"#444466" "#80647D"
                       :color "white"
                       :text-align "center"
-                      :overflow "scroll" 
-                      :max-height "370px"}}
-        [:p  "With current levels of seismic activity the chance of
+                      #_#_:overflow "scroll" 
+                      :max-height "400px"}}
+        [:p {:style {:margin-bottom "5px"}} "With current levels of seismic activity the chance of
           an earthquake of magnitude 4 or more happening in this 
            area between"]
         [:p (str date1 " <-> " date2 " is: ")]
 
         [:p {:style {:font-size "25px"}} (nice% p)]
-        [:p "Imagine " [:b "100,000"] " areas with exactly the same 
+        [:p {:style {:margin-bottom "5px"}} "Imagine " [:b "100,000"] " areas with exactly the same 
           chance of an earthquake as this one."]
-        [:p (str "Within the week of " date1 " <-> " date2 " with
+        [:p {:style {:margin-bottom "5px"}} (str "Within the week of " date1 " <-> " date2 " with
           a " (nice% p) " chance we would expect:")]
-        [:p "An earthquake of magnitude 4+ to happen in " [:b (* p 100000)] " of them"]
-        [:p "No earthquake of magnitude 4+ to happen in " [:b (* (- 1 p) 100000)] " of them"]
+        [:p {:style {:margin-bottom "5px"}} "An earthquake of magnitude 4+ to happen in " [:b (* p 100000)] " of them"]
+        [:p {:style {:margin-bottom "5px"}} "No earthquake of magnitude 4+ to happen in " [:b (* (- 1 p) 100000)] " of them"]
         [:p [:button-link {:on-click #(rf/dispatch [::events/in-percentage? false])} 
              (db/ttt :db/show-me "Show me this number in context")]]]
 
        [:div {:style {:font-size "18px" #_"21px"
                       :border "1px solid #CCC"
                       :border-radius 20
-                      :min-height 370
+                      :min-height 400
                       :padding "10px" #_(str (if with-vis? 15 30) "px 30px")
                       :box-shadow "1px 1px 1px 1px #CCC"
                       :background-color #_"#444466" "#80647D"
                       :color "white"
                       :text-align "center"
-                      :overflow "scroll" 
-                      :max-height "370px"}}
-        [:p  "With current levels of seismic activity the chance of
+                      #_#_:overflow "scroll"
+                      :max-height "400px"}}
+        [:p {:style {:margin-bottom "5px"}} "With current levels of seismic activity the chance of
           an earthquake of magnitude 4 or more happening in this 
            area between"]
-[:p (str date1 " <-> " date2 " is: ")]
+        [:p (str date1 " <-> " date2 " is: ")]
 
-[:p {:style {:font-size "25px"}} (nice% p)]
+        [:p {:style {:font-size "25px"}} (nice% p)]
+
+        (cond
+          (nil? community) "Missing community data"
+          (nil? (community :p-7day)) "Missing community :p-7day"
+          :else [:svg {:width "100%" :height "100%"}
+                 [:g {:transform "translate(-25 0)"}
+                  [:rect {:x 0 :y "42%" :width "120%" :height "60%" :fill "#fff3"}]
+                  [:text {:x "8%" :y "10%" :fill "#fff"} "To put this in context:"]
+                  #_[:text {:x "8%" :y "10%" :fill "#fff"} (db/ttt :db/compare-cities-1 "The chance of a magnitude 4 or")]
+                  #_[:text {:x "8%" :y "17%" :fill "#fff"} (db/ttt :db/compare-cities-2 "more within the next 7 days is")]
+                  [:text {:style {:font-size "1.5em"} :fill "#fff" :x (pc (+ community-x dx)) :y "30%"} (nice% p) " in " (community :title)]
+                  [:line {:x1 (pc community-x) :x2 (pc community-x) :y1 "36%" :y2 "42%" :stroke "#fff" :stroke-width 2}]
+                  [:circle {:cx (pc community-x) :cy "42%" :r 5 :fill "#fff"}]
+                  (into [:g
+                         [:line {:x1 "10%" :x2 "90%" :y1 "42%" :y2 "42%" :stroke "#fff" :stroke-width 3}]]
+                        (map (fn [tick]
+                               (let [x* (X tick)
+                                     x (str x* "%")
+                                     dx (str (- x* 2) "%")]
+                                 [:g
+                                  [:line {:x1 x :x2 x
+                                          :y1 "39%" :y2 "45%"
+                                          :stroke "#fff8" :stroke-width 1}]
+                                  [:text {:x dx :y "38%" :fill "#fff8" :font-size 14} (str tick "%")]]))
+                             (range 0 50 10)))
+                  (when average-cities
+                    (into [:g] (map (fn [city] (average-city (assoc city :X X :dx 0))) average-cities)))
+
+
+                  [:text {:x "8%"
+                          :y (if (db/ttt :db/compared-to-these-cities-2 "in these cities")
+                               "87%" "89%")
+                          :fill "#fff"} (db/ttt :db/compared-to-these-cities "compared to an average week in these cities")]
+                  [:text {:x "8%" :y "95%" :fill "#fff"} (db/ttt :db/compared-to-these-cities-2 "in these cities")]]])
+
         [:p [:button-link {:on-click #(rf/dispatch [::events/in-percentage? true])}
              (db/ttt :db/back-to "Back to explanation of the percentage")]]])
      
@@ -908,13 +960,13 @@
          ]]
        [ui/col {:md 5 :style {:display "inline-block" :font-size "2em" :font-weight  "500"}}
         [page-title community]]
-       [ui/col {:md 4 :style {:display "inline-block" #_#_:font-size "2em" :font-weight  "500"}} [:div {:style {:display "flex"
-                                                                                                                :flex-direction "column"
-                                                                                                                :justify-content "space-between"}}
-                                                                                                  [:p {:style {:font-size "1.4em" :font-weight  "500"}} (db/ttt :db/what-might-like "What might it be like?")]
-                                                                                                  [:p {:style {:font-size "1.2em"}} (db/ttt :db/past-examples "Past examples of magnitude 4 and above earthquakes:")] 
-                                                                                                  [:br]
-                                                                                                  [:p {:style {:margin 0}} (db/ttt :db/Magnitude "Magnitude")]]]]
+       [ui/col {:md 4 :style {:display "inline-block"}} [:div {:style {:display "flex"
+                                                                       :flex-direction "column"
+                                                                       :justify-content "space-between"}}
+                                                         [:p {:style {:font-size "1.4em" :font-weight "500"}} (db/ttt :db/what-might-like "What might it be like?")]
+                                                         [:p {:style {:font-size "1.2em"}} (db/ttt :db/past-examples "Past examples of magnitude 4 and above earthquakes:")]
+                                                         [:br]
+                                                         [:p {:style {:margin 0}} (db/ttt :db/Magnitude "Magnitude")]]]]
       [ui/three-columns
        {:col3 [:div {:style {:display "flex"
                              :flex-direction "column"
@@ -990,20 +1042,7 @@
 ;;;
 ;;
 ;;;
-(defn pc [x] (str x "%"))
 
-
-(defn average-city
-  "mark an average city"
-  [{:keys [p X dx y fill city]}]
-  (let [p (* 100 p)]
-    [:<>
-     [:text {:style {:font-size "1.2em"} :fill fill
-             :x (pc (X (+ p dx))) :y (pc (+ y 7))} (pc p)]
-
-     [:text {:x (pc (X (+ p dx))) :y (pc (+ y 14)) :fill fill} city]
-     [:line {:x1 (pc (X (+ p dx))) :x2 (pc (X p)) :y1 (pc y) :y2 "42%" :stroke fill :stroke-width 2}]
-     [:circle {:cx (pc (X (+ p dx))) :cy "42%" :r 5 :fill fill}]]))
 
 (defn world-averages
   [community]
