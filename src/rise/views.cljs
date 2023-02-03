@@ -713,37 +713,57 @@
         mag+ @(rf/subscribe [::subs/mag+])
         with-vis? @(rf/subscribe [::subs/with-vis?])
         odds? @(rf/subscribe [::subs/odds?])
-        rr%2 (condp = (compare p mean)
-               -1 (db/ttt :db/smaller-than "smaller than")
-               0 (db/ttt :db/about "about")
-               1 (db/ttt :db/higher-than "higher than"))
+        in-percentage? @(rf/subscribe [::subs/in-percentage?])
         date1 (f/unparse time-formatter (t/today))
         date2 (f/unparse time-formatter (t/plus (t/today) (t/weeks 1)))]
     [:<>
-     [:div {:style {:font-size "18px"#_"21px"
-                    :border "1px solid #CCC"
-                    :border-radius 20
-                    :min-height 370
-                    :padding (str (if with-vis? 15 30) "px 30px")
-                    :box-shadow "1px 1px 1px 1px #CCC"
-                    :background-color #_"#444466" "#80647D"
-                    :color "white"
-                    :text-align "center"
-                    :overflow "scroll"
-                    :max-height "400px"}}
-      [:p  "With current levels of seismic activity the chance of
+     (if in-percentage?
+       [:div {:style {:font-size "18px" #_"21px" 
+                      :border "1px solid #CCC"
+                      :border-radius 20
+                      :min-height 370
+                      :padding "10px" #_(str (if with-vis? 15 30) "px 30px")
+                      :box-shadow "1px 1px 1px 1px #CCC"
+                      :background-color #_"#444466" "#80647D"
+                      :color "white"
+                      :text-align "center"
+                      :overflow "scroll" 
+                      :max-height "370px"}}
+        [:p  "With current levels of seismic activity the chance of
           an earthquake of magnitude 4 or more happening in this 
            area between"]
-      [:p (str date1 " <-> " date2 " is: ") #_(str (f/parse time-formatter (t/today-at 12 00)) " <-----> " (f/parse time-formatter (t/plus (t/today-at 12 00) (t/weeks 1))))]
+        [:p (str date1 " <-> " date2 " is: ")]
 
-      [:p {:style {:font-size "25px"}} (nice% p) #_"1.0%"]
-      [:p "Imagine "[:b "100,000" ] " areas with exactly the same 
+        [:p {:style {:font-size "25px"}} (nice% p)]
+        [:p "Imagine " [:b "100,000"] " areas with exactly the same 
           chance of an earthquake as this one."]
-      [:p (str "Within the week of " date1 " <-> " date2 " with
+        [:p (str "Within the week of " date1 " <-> " date2 " with
           a " (nice% p) " chance we would expect:")]
-      [:p "An earthquake of magnitude 4+ to happen in " [:b (* p 100000)] " of them"]
-      [:p "No earthquake of magnitude 4+ to happen in " [:b (* (- 1 p) 100000)] " of them"]
-      [:p [:a {:href ""} "Show me this number in context"]]]
+        [:p "An earthquake of magnitude 4+ to happen in " [:b (* p 100000)] " of them"]
+        [:p "No earthquake of magnitude 4+ to happen in " [:b (* (- 1 p) 100000)] " of them"]
+        [:p [:button-link {:on-click #(rf/dispatch [::events/in-percentage? false])} 
+             (db/ttt :db/show-me "Show me this number in context")]]]
+
+       [:div {:style {:font-size "18px" #_"21px"
+                      :border "1px solid #CCC"
+                      :border-radius 20
+                      :min-height 370
+                      :padding "10px" #_(str (if with-vis? 15 30) "px 30px")
+                      :box-shadow "1px 1px 1px 1px #CCC"
+                      :background-color #_"#444466" "#80647D"
+                      :color "white"
+                      :text-align "center"
+                      :overflow "scroll" 
+                      :max-height "370px"}}
+        [:p  "With current levels of seismic activity the chance of
+          an earthquake of magnitude 4 or more happening in this 
+           area between"]
+[:p (str date1 " <-> " date2 " is: ")]
+
+[:p {:style {:font-size "25px"}} (nice% p)]
+        [:p [:button-link {:on-click #(rf/dispatch [::events/in-percentage? true])}
+             (db/ttt :db/back-to "Back to explanation of the percentage")]]])
+     
      [update-status]]
     
     )

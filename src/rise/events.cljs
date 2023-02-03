@@ -205,6 +205,14 @@
           :annular? annular?)))
 
 (rf/reg-event-db
+ ::in-percentage?
+ (fn
+   [db [_ bool]]
+   (assoc db
+          :in-percentage? bool)))
+
+
+(rf/reg-event-db
  ::set-language
  (fn
    [db [_ language]]

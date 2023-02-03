@@ -95,6 +95,8 @@
    :annular? true ; use an annular visual / use a bar chart
    :odds? false ; show odds or relative risk
 
+   :in-percentage? true ;used to switch views in the new area status window
+   
    :average-cities [{:p 0.05 ; probability
                      :dx 0 ; label offset
                      :y 47  ; vertical position as %
@@ -509,7 +511,7 @@
                                        :SW "sion-NW"
                                        :S "sion"}
                           :osm-href "https://www.openstreetmap.org/relation/42105"}
-                        
+
                          {:href :rise.views/hex
                           :title "Sion-NE"
                           :id "sion-NE"
