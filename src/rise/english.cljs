@@ -91,4 +91,20 @@
                         chance of an earthquake as this one."]
        :within-week "Within the week of %1 <-> %2 with a %3 chance we would expect:"
        :is "%1 <-> %2 is:"
-       :happen "An earthquake of magnitude 4+ to happen in"})
+       :happen "An earthquake of magnitude 4+ to happen in"
+       :not-happen "No earthquake of magnitude 4+ to happen in"
+       :of-them "of them"
+       :put-in-context "To put this in context:"
+       :Jan "Jan"
+       :Feb "Feb"
+       :Mar "Mar"
+       :Apr "Apr"
+       :May "May"
+       :Jun "Jun"
+       :Jul "Jul"
+       :Aug "Aug"
+       :Sep "Sep"
+       :Oct "Oct"
+       :Nov "Nov"
+       :Dec "Dec"
+       })

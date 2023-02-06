@@ -76,4 +76,28 @@
        :much-less-certain "Le previsioni dei terremoti sono molto meno certe di quelle meteorologiche, perché non possiamo vedere cosa succede nel sottosuolo, ma possono fornire informazioni utili a chi deve prendere decisioni."
        :explanation "Spiegazione di questa previsione:"
        :show-me "Mostrami questo numero nel contesto"
-       :back-to "Torna alla spiegazione della percentuale"})
+       :back-to "Torna alla spiegazione della percentuale"
+
+       :current-levels "Con gli attuali livelli di attività sismica, 
+                        la possibilità che un terremoto di magnitudo 
+                        4 o più si verifichi in questa zona tra"
+       :imagine-100000 [:<> "Immaginate " [:b "100,000"] " aree con esattamente 
+                            la stessa probabilità di un terremoto come questo."]
+       :within-week "Entro la settimana del %1 <-> %2 con una probabilità del %3 ci aspetteremmo:"
+       :is "%1 <-> %2 è:"
+       :happen "Un terremoto di magnitudo 4+ si verificherà in"
+       :not-happen "Nessun terremoto di magnitudo 4+ si è verificato in"
+       :of-them "di loro"
+       :put-in-context "Per contestualizzare il tutto:"
+       :Jan "Gen"
+       :Feb "Feb"
+       :Mar "Mar"
+       :Apr "Apr"
+       :May "Mag"
+       :Jun "Giu"
+       :Jul "Lug"
+       :Aug "Ago"
+       :Sep "Set"
+       :Oct "Ott"
+       :Nov "Nov"
+       :Dec "Dic"})

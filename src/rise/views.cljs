@@ -725,7 +725,7 @@
 
 (def month-names
   "A vector of abbreviations for the twelve months, in order."
-  ["Jan" "Feb" "Mar" "Apr" "May" "Jun" "Jul" "Aug" "Sep" "Oct" "Nov" "Dec"])
+  ["Jan" "Feb" "Mar" "Apr" "May" "Jun" "July" "Aug" "Sep" "Oct" "Nov" "Dec"])
 
 (defn month-name
   "Returns the abbreviation for a month in the range [1..12]."
@@ -740,10 +740,8 @@
 (defn format-date
   "Converts an ISO 8601 date string to one of the format \"(D)D Mon YYYY\"."
   [date]
-  (let [[day month year] (parse-iso-date date)]
-    (str day " " (month-name month) " " year)))
-
-
+  (let [[day month year] (parse-iso-date date)] 
+    (str day " " (db/ttt (keyword "db" (month-name month)) (month-name month)) " " year)))
 
 ;;
 ; ----
@@ -785,7 +783,7 @@
          [:p {:style {:margin-bottom "5px"}} (db/ttt :db/within-week [:span "Within the week of %1 <-> %2 with
           a %3 chance we would expect:"] date1 date2 (nice% p))]
          [:p {:style {:margin-bottom "5px"}} [:span (db/ttt :db/happen "An earthquake of magnitude 4+ to happen in") " " [:b (* p 100000)] " " (db/ttt :db/of-them "of them")]]
-         [:p {:style {:margin-bottom "5px"}} "No earthquake of magnitude 4+ to happen in " [:b (* (- 1 p) 100000)] " of them"]
+         [:p {:style {:margin-bottom "5px"}} [:span (db/ttt :db/not-happen "No earthquake of magnitude 4+ to happen in") " " [:b (* (- 1 p) 100000)] " " (db/ttt :db/of-them "of them")]]
          [:p [:button-link {:on-click #(rf/dispatch [::events/in-percentage? false])} 
               (db/ttt :db/show-me "Show me this number in context")]]]
         
@@ -802,7 +800,7 @@
                   [:svg {:width "100%" :height "100%"}
                    [:g {:transform "translate(-25 0)"}
                     [:rect {:x 0 :y "42%" :width "120%" :height "60%" :fill "#fff3"}]
-                    [:text {:x "40%" :y "10%" :fill "#fff"} "To put this in context:"] 
+                    [:text {:x "8%" :y "10%" :fill "#fff"} (db/ttt :db/put-in-context "To put this in context:")] 
                     [:text {:style {:font-size "1.2em"} :fill "#fff" :x (pc (+ community-x dx)) :y "30%"} (nice% p) " in " (community :title)]
                     [:line {:x1 (pc community-x) :x2 (pc community-x) :y1 "36%" :y2 "42%" :stroke "#fff" :stroke-width 2}]
                     [:circle {:cx (pc community-x) :cy "42%" :r 5 :fill "#fff"}]

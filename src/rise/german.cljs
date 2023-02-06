@@ -78,4 +78,29 @@
        :much-less-certain "Erdbebenvorhersagen sind viel unsicherer als Wettervorhersagen, da wir nicht sehen können, was unter der Erde passiert, aber sie können den Entscheidungsträgern nützliche Informationen liefern."
        :explanation "Erläuterung zu dieser Prognose:"
        :show-me "Zeigen Sie mir diese Zahl im Kontext"
-       :back-to "Zurück zur Erklärung des Prozentsatzes"})
+       :back-to "Zurück zur Erklärung des Prozentsatzes"
+
+       :current-levels "Angesichts der derzeitigen seismischen Aktivität ist 
+                        die Wahrscheinlichkeit, dass sich in diesem Gebiet ein 
+                        Erdbeben der Stärke 4 oder mehr zwischen"
+       :imagine-100000 [:<> "Stellen Sie sich " [:b "100,000"] " Gebiete vor, in 
+                           denen die Wahrscheinlichkeit eines Erdbebens genau so 
+                           groß ist wie in diesem."]
+       :within-week "Innerhalb der Woche von %1 <-> %2 mit einer Wahrscheinlichkeit von %3 würden wir erwarten:"
+       :is "%1 <-> %2 ist:"
+       :happen "Ein Erdbeben der Stärke 4+, das sich in"
+       :not-happen "Kein Erdbeben der Stärke 4+ in"
+       :of-them "von ihnen"
+       :put-in-context "Um dies in einen Zusammenhang zu bringen:"
+       :Jan "Jan"
+       :Feb "Feb"
+       :Mar "Mär"
+       :Apr "Apr"
+       :May "Mai"
+       :Jun "Jun"
+       :Jul "Jul"
+       :Aug "Aug"
+       :Sep "Sep"
+       :Oct "Okt"
+       :Nov "Nov"
+       :Dec "Dez"})
