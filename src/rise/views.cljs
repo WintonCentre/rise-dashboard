@@ -722,10 +722,6 @@
   "Show earthquake status of an area conform to the recommendations"
   [community]
   (let [p (community :p-7day)
-        mean (community :mean-7day)
-        mag+ @(rf/subscribe [::subs/mag+])
-        with-vis? @(rf/subscribe [::subs/with-vis?])
-        odds? @(rf/subscribe [::subs/odds?])
         in-percentage? @(rf/subscribe [::subs/in-percentage?])
         date1 (f/unparse time-formatter (t/today))
         date2 (f/unparse time-formatter (t/plus (t/today) (t/weeks 1)))
@@ -733,88 +729,101 @@
         dx -4
         community-x (X (* 100 p))
         average-cities @(rf/subscribe [::subs/average-cities])]
-    [:<>
-     (if in-percentage?
-       [:div {:style {:font-size "18px" #_"21px" 
-                      :border "1px solid #CCC"
-                      :border-radius 20
-                      :min-height 400
-                      :padding "10px" #_(str (if with-vis? 15 30) "px 30px")
-                      :box-shadow "1px 1px 1px 1px #CCC"
-                      :background-color #_"#444466" "#80647D"
-                      :color "white"
-                      :text-align "center"
-                      #_#_:overflow "scroll" 
-                      :max-height "400px"}}
-        [:p {:style {:margin-bottom "5px"}} "With current levels of seismic activity the chance of
+    [:<> 
+     [:div {:style {:font-size "18px"
+                    :border "1px solid #CCC"
+                    :border-radius 20
+                    :min-height (if in-percentage? 360 550)
+                    :padding "0px"
+                    :box-shadow "1px 1px 1px 1px #CCC"
+                    :background-color #_"#444466" "#80647D"
+                    :color "white"
+                    :text-align "center"}}
+      [:p {:style {:margin-bottom "5px"
+                   :padding "10px"}} "With current levels of seismic activity the chance of
           an earthquake of magnitude 4 or more happening in this 
            area between"]
-        [:p (str date1 " <-> " date2 " is: ")]
+      [:p (str date1 " <-> " date2 " is: ")]
 
-        [:p {:style {:font-size "25px"}} (nice% p)]
-        [:p {:style {:margin-bottom "5px"}} "Imagine " [:b "100,000"] " areas with exactly the same 
+      [:p {:style {:font-size "25px"
+                   :margin-bottom "0px"}} (nice% p)]
+      (if in-percentage?
+        [:<>
+         [:p {:style {:margin-bottom "5px"}} "Imagine " [:b "100,000"] " areas with exactly the same 
           chance of an earthquake as this one."]
-        [:p {:style {:margin-bottom "5px"}} (str "Within the week of " date1 " <-> " date2 " with
+         [:p {:style {:margin-bottom "5px"}} (str "Within the week of " date1 " <-> " date2 " with
           a " (nice% p) " chance we would expect:")]
-        [:p {:style {:margin-bottom "5px"}} "An earthquake of magnitude 4+ to happen in " [:b (* p 100000)] " of them"]
-        [:p {:style {:margin-bottom "5px"}} "No earthquake of magnitude 4+ to happen in " [:b (* (- 1 p) 100000)] " of them"]
-        [:p [:button-link {:on-click #(rf/dispatch [::events/in-percentage? false])} 
-             (db/ttt :db/show-me "Show me this number in context")]]]
+         [:p {:style {:margin-bottom "5px"}} "An earthquake of magnitude 4+ to happen in " [:b (* p 100000)] " of them"]
+         [:p {:style {:margin-bottom "5px"}} "No earthquake of magnitude 4+ to happen in " [:b (* (- 1 p) 100000)] " of them"]
+         [:p [:button-link {:on-click #(rf/dispatch [::events/in-percentage? false])} 
+              (db/ttt :db/show-me "Show me this number in context")]]]
+        
+        [:<>
+         (cond
+           (nil? community) "Missing community data"
+           (nil? (community :p-7day)) "Missing community :p-7day"
+           :else [:div {:style {:font-size "18px"
+                                :padding "0px" #_(str (if with-vis? 15 30) "px 30px")
+                                :background-color #_"#444466" "#80647D"
+                                :color "white"
+                                :text-align "center"
+                                :height 360}} 
+                  [:svg {:width "100%" :height "100%"}
+                   [:g {:transform "translate(-25 0)"}
+                    [:rect {:x 0 :y "42%" :width "120%" :height "60%" :fill "#fff3"}]
+                    [:text {:x "40%" :y "10%" :fill "#fff"} "To put this in context:"] 
+                    [:text {:style {:font-size "1.2em"} :fill "#fff" :x (pc (+ community-x dx)) :y "30%"} (nice% p) " in " (community :title)]
+                    [:line {:x1 (pc community-x) :x2 (pc community-x) :y1 "36%" :y2 "42%" :stroke "#fff" :stroke-width 2}]
+                    [:circle {:cx (pc community-x) :cy "42%" :r 5 :fill "#fff"}]
+                    (into [:g
+                           [:line {:x1 "10%" :x2 "90%" :y1 "42%" :y2 "42%" :stroke "#fff" :stroke-width 3}]]
+                          (map (fn [tick]
+                                 (let [x* (X tick)
+                                       x (str x* "%")
+                                       dx (str (- x* 2) "%")]
+                                   [:g
+                                    [:line {:x1 x :x2 x
+                                            :y1 "39%" :y2 "45%"
+                                            :stroke "#fff8" :stroke-width 1}]
+                                    [:text {:x dx :y "38%" :fill "#fff8" :font-size 14} (str tick "%")]]))
+                               (range 0 50 10)))
+                    (when average-cities
+                      (into [:g] (map (fn [city] (average-city (assoc city :X X :dx 0))) average-cities)))
 
-       [:div {:style {:font-size "18px" #_"21px"
-                      :border "1px solid #CCC"
-                      :border-radius 20
-                      :min-height 400
-                      :padding "10px" #_(str (if with-vis? 15 30) "px 30px")
-                      :box-shadow "1px 1px 1px 1px #CCC"
-                      :background-color #_"#444466" "#80647D"
-                      :color "white"
-                      :text-align "center"
-                      #_#_:overflow "scroll"
-                      :max-height "400px"}}
-        [:p {:style {:margin-bottom "5px"}} "With current levels of seismic activity the chance of
+
+                    [:text {:x "8%"
+                            :y (if (db/ttt :db/compared-to-these-cities-2 "in these cities")
+                                 "87%" "89%")
+                            :fill "#fff"} (db/ttt :db/compared-to-these-cities "compared to an average week in these cities")]
+                    [:text {:x "8%" :y "95%" :fill "#fff"} (db/ttt :db/compared-to-these-cities-2 "in these cities")]]]])
+         [:p [:button-link {:on-click #(rf/dispatch [::events/in-percentage? true])}
+              (db/ttt :db/back-to "Back to explanation of the percentage")]]]
+        
+        )]
+
+     #_[:div {:style {:font-size "18px" #_"21px"
+                    :display "relative"
+                    :border "1px solid #CCC"
+                    :border-radius 20
+                    :min-height 600
+                    :padding "10px 0px" #_"10px" #_(str (if with-vis? 15 30) "px 30px")
+                    :box-shadow "1px 1px 1px 1px #CCC"
+                    :background-color #_"#444466" "#80647D"
+                    :color "white"
+                    :text-align "center"
+                    #_#_:overflow "scroll"
+                    :max-height "600px"}}
+      [:p {:style {:margin-bottom "5px"}} "With current levels of seismic activity the chance of
           an earthquake of magnitude 4 or more happening in this 
            area between"]
-        [:p (str date1 " <-> " date2 " is: ")]
+      [:p (str date1 " <-> " date2 " is: ")]
 
-        [:p {:style {:font-size "25px"}} (nice% p)]
-        [:p {:style {:margin-bottom "5px"}} "To put this in context:"]
+      [:p {:style {:font-size "25px"}} (nice% p)]
+      
 
-        (cond
-          (nil? community) "Missing community data"
-          (nil? (community :p-7day)) "Missing community :p-7day"
-          :else [:svg {:width "100%" :height "100%"}
-                 [:g {:transform "translate(-25 0)"}
-                  [:rect {:x 0 :y "42%" :width "120%" :height "60%" :fill "#fff3"}] 
-                  #_[:text {:x "8%" :y "10%" :fill "#fff"} (db/ttt :db/compare-cities-1 "The chance of a magnitude 4 or")]
-                  #_[:text {:x "8%" :y "17%" :fill "#fff"} (db/ttt :db/compare-cities-2 "more within the next 7 days is")]
-                  [:text {:style {:font-size "1.2em"} :fill "#fff" :x (pc (+ community-x dx)) :y "25%"} (nice% p) " in " (community :title)]
-                  [:line {:x1 (pc community-x) :x2 (pc community-x) :y1 "36%" :y2 "42%" :stroke "#fff" :stroke-width 2}]
-                  [:circle {:cx (pc community-x) :cy "42%" :r 5 :fill "#fff"}]
-                  (into [:g
-                         [:line {:x1 "10%" :x2 "90%" :y1 "42%" :y2 "42%" :stroke "#fff" :stroke-width 3}]]
-                        (map (fn [tick]
-                               (let [x* (X tick)
-                                     x (str x* "%")
-                                     dx (str (- x* 2) "%")]
-                                 [:g
-                                  [:line {:x1 x :x2 x
-                                          :y1 "39%" :y2 "45%"
-                                          :stroke "#fff8" :stroke-width 1}]
-                                  [:text {:x dx :y "38%" :fill "#fff8" :font-size 14} (str tick "%")]]))
-                             (range 0 50 10)))
-                  (when average-cities
-                    (into [:g] (map (fn [city] (average-city (assoc city :X X :dx 0))) average-cities)))
+      
 
-
-                  [:text {:x "8%"
-                          :y (if (db/ttt :db/compared-to-these-cities-2 "in these cities")
-                               "87%" "89%")
-                          :fill "#fff"} (db/ttt :db/compared-to-these-cities "compared to an average week in these cities")]
-                  [:text {:x "8%" :y "95%" :fill "#fff"} (db/ttt :db/compared-to-these-cities-2 "in these cities")]]])
-
-        [:p [:button-link {:on-click #(rf/dispatch [::events/in-percentage? true])}
-             (db/ttt :db/back-to "Back to explanation of the percentage")]]])
+      ]
      
      [update-status]]
     
