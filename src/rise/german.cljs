@@ -76,4 +76,6 @@
        :click-here "Klicken Sie hier, um mehr zu erfahren..."
        :what-can-I-do "Was kann ich mit diesen Informationen anfangen?"
        :much-less-certain "Erdbebenvorhersagen sind viel unsicherer als Wettervorhersagen, da wir nicht sehen können, was unter der Erde passiert, aber sie können den Entscheidungsträgern nützliche Informationen liefern."
-       :explanation "Erläuterung zu dieser Prognose:"})
+       :explanation "Erläuterung zu dieser Prognose:"
+       :show-me "Zeigen Sie mir diese Zahl im Kontext"
+       :back-to "Zurück zur Erklärung des Prozentsatzes"})

@@ -80,4 +80,15 @@
        :click-here "Click here to find out more..."
        :what-can-I-do "What can I do with this information?"
        :much-less-certain "Earthquake forecasts are much less certain than weather forecasts as we cannot see what is happening underground, but they can give useful information to those making decisions."
-       :explanation "Explanation for this forecast:"})
+       :explanation "Explanation for this forecast:"
+       :show-me "Show me this number in context"
+       :back-to "Back to explanation of the percentage"
+       
+       :current-levels "With current levels of seismic activity the chance of 
+                        an earthquake of magnitude 4 or more happening in this 
+                        area between"
+       :imagine-100000 [:<> "Imagine " [:b "100,000"] " areas with exactly the same 
+                        chance of an earthquake as this one."]
+       :within-week "Within the week of %1 <-> %2 with a %3 chance we would expect:"
+       :is "%1 <-> %2 is:"
+       :happen "An earthquake of magnitude 4+ to happen in"})

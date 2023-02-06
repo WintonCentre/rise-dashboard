@@ -716,15 +716,46 @@
   (real->f js/Math.PI 2)
   )
 
+;;
+; Date utilities
+;;
+
 (def time-formatter (f/formatter #_"yyyyMMdd" #_:basic-date-time "dd-MM-yyyy"))
+
+
+(def month-names
+  "A vector of abbreviations for the twelve months, in order."
+  ["Jan" "Feb" "Mar" "Apr" "May" "Jun" "Jul" "Aug" "Sep" "Oct" "Nov" "Dec"])
+
+(defn month-name
+  "Returns the abbreviation for a month in the range [1..12]."
+  [month]
+  (get month-names (dec month)))
+
+(defn parse-iso-date
+  "Returns a vector of the year, month, and day from an ISO 8601 date string."
+  [date]
+  (mapv #(js/parseInt %) (string/split date #"-0?")))
+
+(defn format-date
+  "Converts an ISO 8601 date string to one of the format \"(D)D Mon YYYY\"."
+  [date]
+  (let [[day month year] (parse-iso-date date)]
+    (str day " " (month-name month) " " year)))
+
+
+
+;;
+; ----
+;;
 
 (defn new-area-status
   "Show earthquake status of an area conform to the recommendations"
   [community]
   (let [p (community :p-7day)
         in-percentage? @(rf/subscribe [::subs/in-percentage?])
-        date1 (f/unparse time-formatter (t/today))
-        date2 (f/unparse time-formatter (t/plus (t/today) (t/weeks 1)))
+        date1 (format-date (f/unparse time-formatter (t/today)))
+        date2 (format-date (f/unparse time-formatter (t/plus (t/today) (t/weeks 1))))
         X #(+ 10 (* % 2))
         dx -4
         community-x (X (* 100 p))
@@ -740,20 +771,20 @@
                     :color "white"
                     :text-align "center"}}
       [:p {:style {:margin-bottom "5px"
-                   :padding "10px"}} "With current levels of seismic activity the chance of
+                   :padding "10px"}} (db/ttt :db/current-levels "With current levels of seismic activity the chance of
           an earthquake of magnitude 4 or more happening in this 
-           area between"]
-      [:p (str date1 " <-> " date2 " is: ")]
+           area between")]
+      [:span (db/ttt :db/is [:span "%1 <-> %2 is:"] date1 date2)]
 
       [:p {:style {:font-size "25px"
                    :margin-bottom "0px"}} (nice% p)]
       (if in-percentage?
         [:<>
-         [:p {:style {:margin-bottom "5px"}} "Imagine " [:b "100,000"] " areas with exactly the same 
-          chance of an earthquake as this one."]
-         [:p {:style {:margin-bottom "5px"}} (str "Within the week of " date1 " <-> " date2 " with
-          a " (nice% p) " chance we would expect:")]
-         [:p {:style {:margin-bottom "5px"}} "An earthquake of magnitude 4+ to happen in " [:b (* p 100000)] " of them"]
+         [:p {:style {:margin-bottom "5px"}} (db/ttt :db/imagine-100000 [:<> "Imagine " [:b "100,000"] " areas with exactly the same 
+          chance of an earthquake as this one."])]
+         [:p {:style {:margin-bottom "5px"}} (db/ttt :db/within-week [:span "Within the week of %1 <-> %2 with
+          a %3 chance we would expect:"] date1 date2 (nice% p))]
+         [:p {:style {:margin-bottom "5px"}} [:span (db/ttt :db/happen "An earthquake of magnitude 4+ to happen in") " " [:b (* p 100000)] " " (db/ttt :db/of-them "of them")]]
          [:p {:style {:margin-bottom "5px"}} "No earthquake of magnitude 4+ to happen in " [:b (* (- 1 p) 100000)] " of them"]
          [:p [:button-link {:on-click #(rf/dispatch [::events/in-percentage? false])} 
               (db/ttt :db/show-me "Show me this number in context")]]]
@@ -886,7 +917,6 @@
                           rr%2)
             ]
            ])]]
-
       [update-status]]]))
 
 (defn arrow-template

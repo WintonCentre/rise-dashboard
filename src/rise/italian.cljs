@@ -74,4 +74,6 @@
        :click-here "Clicca qui per saperne di più..."
        :what-can-I-do "Cosa posso fare con queste informazioni?"
        :much-less-certain "Le previsioni dei terremoti sono molto meno certe di quelle meteorologiche, perché non possiamo vedere cosa succede nel sottosuolo, ma possono fornire informazioni utili a chi deve prendere decisioni."
-       :explanation "Spiegazione di questa previsione:"})
+       :explanation "Spiegazione di questa previsione:"
+       :show-me "Mostrami questo numero nel contesto"
+       :back-to "Torna alla spiegazione della percentuale"})
