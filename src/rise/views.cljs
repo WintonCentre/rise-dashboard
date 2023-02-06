@@ -446,7 +446,7 @@
      [ui/col (base-style 3)
       (when with-context?
         [:<>
-         [:h4 [:a {:href (str "/#/history/" (community :id))} (db/ttt :db/how-to-survive "How to survive an earthquake") #_(db/ttt :db/Local-history "Local earthquake history")]]
+         [:h4 [:a {:href (str #_"/#/history/" "/#/hex/" (community :id))} (db/ttt :db/how-to-survive "How to survive an earthquake") #_(db/ttt :db/Local-history "Local earthquake history")]]
          [:p (db/ttt :db/useful-tips "Click here for useful tips on what to do 
                                       before, during, and after an earthquake.")]
          #_[:p (db/ttt :db/Local-history-p1 "How many earthquakes of magnitude 4 or more have hit") " "
@@ -470,24 +470,24 @@
                (< (community :p-7day) (* 1.2 (community :mean-7day))))
          [:<>
           [:p (db/ttt :db/local-quiet-message "%1 is currently in a quiet period." (community :title))]
-          [:a {:href ""} (db/ttt :db/click-here "Click here to find out more...")]
+          [:a {:href (str "/#/hex/" (community :id))} (db/ttt :db/click-here "Click here to find out more...")]
           ]
          [:<>
           [:p  (db/ttt :db/local-message "%1 is seeing higher chances than normal because of increased 
              seismic activity around the Mount Vettore fault system." (community :title))]
-          [:a {:href ""} (db/ttt :db/click-here "Click here to find out more...")]
+          [:a {:href (str "/#/hex/" (community :id))} (db/ttt :db/click-here "Click here to find out more...")]
           ]
          )]]
      [ui/col (base-style {:span 4})
       (when with-context?
         [:<>
-         [:h4 [:a {:href #_"" (str "/#/world/" (community :id))}
+         [:h4 [:a {:href (str #_"/#/world/" "/#/hex/" (community :id))}
                (db/ttt :db/what-can-I-do "What can I do with this information?")
                #_(db/ttt :db/How-does-location-compare "How does %1 compare to the world" (community :title))]]
          [:p (db/ttt :db/much-less-certain "Earthquake forecasts are much less certain than weather forecasts as we cannot see what is happening underground, but they can give useful information to those making decisions.") 
           #_(db/ttt :db/How-chance-compares "How does the current chance of a magnitude 4+ quake in %1 compare to an average week in other places worldwide?"
                      (community :title))]
-         [:a {:href ""} (db/ttt :db/click-here "Click here to find out more...")]
+         [:a {:href (str "/#/hex/" (community :id))} (db/ttt :db/click-here "Click here to find out more...")]
          ])]]))
 (comment
 (db/ttt :db/How-does-location-compare "How does %1 compare to the world" "Spoleto"))
@@ -784,9 +784,9 @@
           a %3 chance we would expect:"] date1 date2 (nice% p))]
          [:p {:style {:margin-bottom "5px"}} [:span (db/ttt :db/happen "An earthquake of magnitude 4+ to happen in") " " [:b (* p 100000)] " " (db/ttt :db/of-them "of them")]]
          [:p {:style {:margin-bottom "5px"}} [:span (db/ttt :db/not-happen "No earthquake of magnitude 4+ to happen in") " " [:b (* (- 1 p) 100000)] " " (db/ttt :db/of-them "of them")]]
-         [:p [:button-link {:on-click #(rf/dispatch [::events/in-percentage? false])} 
+         [:p [:button-link {:on-click #(rf/dispatch [::events/in-percentage? false])}
               (db/ttt :db/show-me "Show me this number in context")]]]
-        
+
         [:<>
          (cond
            (nil? community) "Missing community data"
@@ -796,11 +796,11 @@
                                 :background-color #_"#444466" "#80647D"
                                 :color "white"
                                 :text-align "center"
-                                :height 360}} 
+                                :height 360}}
                   [:svg {:width "100%" :height "100%"}
                    [:g {:transform "translate(-25 0)"}
                     [:rect {:x 0 :y "42%" :width "120%" :height "60%" :fill "#fff3"}]
-                    [:text {:x "8%" :y "10%" :fill "#fff"} (db/ttt :db/put-in-context "To put this in context:")] 
+                    [:text {:x "8%" :y "10%" :fill "#fff"} (db/ttt :db/put-in-context "To put this in context:")]
                     [:text {:style {:font-size "1.2em"} :fill "#fff" :x (pc (+ community-x dx)) :y "30%"} (nice% p) " in " (community :title)]
                     [:line {:x1 (pc community-x) :x2 (pc community-x) :y1 "36%" :y2 "42%" :stroke "#fff" :stroke-width 2}]
                     [:circle {:cx (pc community-x) :cy "42%" :r 5 :fill "#fff"}]
@@ -826,34 +826,7 @@
                             :fill "#fff"} (db/ttt :db/compared-to-these-cities "compared to an average week in these cities")]
                     [:text {:x "8%" :y "95%" :fill "#fff"} (db/ttt :db/compared-to-these-cities-2 "in these cities")]]]])
          [:p [:button-link {:on-click #(rf/dispatch [::events/in-percentage? true])}
-              (db/ttt :db/back-to "Back to explanation of the percentage")]]]
-        
-        )]
-
-     #_[:div {:style {:font-size "18px" #_"21px"
-                    :display "relative"
-                    :border "1px solid #CCC"
-                    :border-radius 20
-                    :min-height 600
-                    :padding "10px 0px" #_"10px" #_(str (if with-vis? 15 30) "px 30px")
-                    :box-shadow "1px 1px 1px 1px #CCC"
-                    :background-color #_"#444466" "#80647D"
-                    :color "white"
-                    :text-align "center"
-                    #_#_:overflow "scroll"
-                    :max-height "600px"}}
-      [:p {:style {:margin-bottom "5px"}} "With current levels of seismic activity the chance of
-          an earthquake of magnitude 4 or more happening in this 
-           area between"]
-      [:p (str date1 " <-> " date2 " is: ")]
-
-      [:p {:style {:font-size "25px"}} (nice% p)]
-      
-
-      
-
-      ]
-     
+              (db/ttt :db/back-to "Back to explanation of the percentage")]]])] 
      [update-status]]
     
     )
