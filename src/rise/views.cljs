@@ -780,7 +780,8 @@
         [:<>
          [:p {:style {:margin-bottom "5px"}} (db/ttt :db/imagine-100000 [:<> "Imagine " [:b "100,000"] " areas with exactly the same 
           chance of an earthquake as this one."])]
-         [:p {:style {:margin-bottom "5px"}} (db/ttt :db/within-week [:span "Within the week of %1 <-> %2 with
+         [:p {:style {:margin-bottom "5px"
+                      :padding "10px"}} (db/ttt :db/within-week [:span "Within the week of %1 <-> %2 with
           a %3 chance we would expect:"] date1 date2 (nice% p))]
          [:p {:style {:margin-bottom "5px"}} [:span (db/ttt :db/happen "An earthquake of magnitude 4+ to happen in") " " [:b (* p 100000)] " " (db/ttt :db/of-them "of them")]]
          [:p {:style {:margin-bottom "5px"}} [:span (db/ttt :db/not-happen "No earthquake of magnitude 4+ to happen in") " " [:b (* (- 1 p) 100000)] " " (db/ttt :db/of-them "of them")]]
