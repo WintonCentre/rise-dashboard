@@ -1,10 +1,7 @@
 (ns rise.bsio
   "A (react) bootstrap i/o wrapper. There's an example of a boostrap text input component in the comment
 where we can work on defining a common interface. "
-  (:require ["react-bootstrap" :as bs]
-            [shadow.debug :refer [locals ?> ?-> ?->>]]))
-
-(def missing-color "#ff0000")
+  (:require ["react-bootstrap" :as bs]))
 
 (comment
   
@@ -73,14 +70,10 @@ I've also missed out things like stopPropagation, preventDefault, and touch even
              :name id
              :value value
              :on-change on-change
-             :style  {#_#_:border (str "3px solid "
-                                   (if (or (nil? value)
-                                           (= :unknown value)) 
-                                     (if optional "teal" missing-color) "#CCCCCC"))
-                      :border-radius 5
+             :style  {:border-radius 5
                       :padding 1
                       #_#_:display "grid"}}]
-           (map (fn [{:keys [level-name level optional disabled] :as levels}]
+           (map (fn [{:keys [level-name level]}]
                   [:> bs/ToggleButton {;:tabindex "-1"
                                        :type "checkbox"
                                        :key level :disabled false
@@ -89,45 +82,10 @@ I've also missed out things like stopPropagation, preventDefault, and touch even
                                                :margin 0
                                                :color (when (highlight? level) "teal")
                                                :font-weight (when (highlight? level) "bold")
-                                               :background-color (if (highlight? level) "#fec" nil)
-                                               #_#_:padding 5}
+                                               :background-color (if (highlight? level) "#fec" nil)}
                                        :variant "outline-secondary"}
                    level-name])
                 buttons)))])
-
-(defn dropdown
-  [{:keys [id value-f on-change buttons-f]}]
-
-  (let [value (value-f)
-        buttons (buttons-f)]
-
-    [:> bs/Dropdown
-     {:on-select #(on-change (keyword %))}
-
-     (into [:> bs/DropdownButton
-            {:id id
-             :value value
-             :variant (if (nil? value) "outline-secondary" "secondary")
-             :title  (:level-name (first (if-let [x (seq (filter (fn [{:keys [level]}]
-                                                              (= value level)) buttons))]
-                                      x (buttons-f))))
-             :style  {:border (str "3px solid " (if (nil? value) missing-color "#ffffff"))
-                      :border-radius 5
-                      :padding 1
-                      :width "max-content"}}]
-           (map (fn [{:keys [level-name level disabled]}]
-                  [:> bs/Dropdown.Item {:key level :as "button"
-                                        :eventKey level
-                                        :on-click #(.preventDefault %)}
-                   level-name])
-                (buttons-f)))]))
-
-(defn reset-button
-  [{:keys [on-click]}]
-  [:> bs/Button {:variant "danger" ;"secondary"
-                 :id "reset"
-                 :style {:margin-bottom 10}
-                 :on-click on-click} "Reset all"])
 
 (comment
   ; white border when there is a value
@@ -145,13 +103,3 @@ I've also missed out things like stopPropagation, preventDefault, and touch even
                                                      :buttons-f (fn [] [{:level :male :level-name "Male"}
                                                                         {:level :female :level-name "Female"}])}))
                         2))))
-
-(defn tabs
-  [options & content]
-  (into [:> bs/Tabs options] 
-        content))
-
-(defn tab
-  [options content]
-  [:> bs/Tab options
-   content])

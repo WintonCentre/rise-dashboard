@@ -1,15 +1,14 @@
 (ns rise.ui
   "This should become the high level ui interface and should have all ns references factored out into 
 the low level ui."
-  (:require [clojure.string :refer [capitalize]]
-            [reagent.core :as rc]
+  (:require [reagent.core :as rc]
             [reitit.frontend.easy :as rfe]
             ["react-bootstrap" :as bs]
             [re-frame.core :as rf]
             [rise.events :as events]
             [rise.db :as db]
             [rise.subs :as subs]
-            [shadow.debug :refer [?-> ?->> locals]]))
+            [shadow.debug :refer [locals]]))
 
 ;(enable-console-print!)
 
@@ -17,9 +16,6 @@ the low level ui."
 (def container "a react/bootstrap component adapter" (rc/adapt-react-class bs/Container))
 (def col "a react/bootstrap component adapter" (rc/adapt-react-class bs/Col))
 (def row "a react/bootstrap component adapter" (rc/adapt-react-class bs/Row))
-(def button "a react/bootstrap component adapter" (rc/adapt-react-class bs/Button))
-(def tabs "a react/bootstrap component adapter" (rc/adapt-react-class bs/Tabs))
-(def tab "a react/bootstrap component adapter" (rc/adapt-react-class bs/Tab))
 
 (defn href
   "Return relative url for given route. Url can be used in HTML links. Note that k is a route name defined 
@@ -101,19 +97,13 @@ in the routes table."
       [:> bs/Nav {:style {:display "flex" :justify-content "space-between" :width "100%"}
                   :active-key (if page-name (name page-name) "home")}
        [:> bs/Nav.Link {:event-key :home
-                        :href (href :rise.views/home)} (db/ttt :db/Home "Home")]
-       #_[:> bs/Nav.Link {:event-key :info
-                          :href (href :rise.views/info)} "Info"]
+                        :href (href :rise.views/home)} (db/ttt :db/Home "Home")] 
        [navbar-dropdown-menu ::subs/countries]
        [navbar-dropdown-menu ::subs/regions]
        [navbar-dropdown-menu ::subs/communities]
        [:div {:style {:flex-grow 6}} " "]
        [preset-dropdown-menu]
-       [language-dropdown-menu]
-       #_[:> bs/Nav.Link {:event-key :settings
-                        :href (href :rise.views/settings)} (db/ttt :db/Settings "Settings")]
-
-       ]]]))
+       [language-dropdown-menu]]]]))
 
 (comment
   @(rf/subscribe [::subs/communities])
@@ -137,11 +127,11 @@ in the routes table."
 (defn three-columns
   [{:keys [col1 col2 col3]}]
   [row
-   [col {:sm 3 :style {#_#_:max-width 500 :margin-bottom 30 :margin-right 0 :padding-right 0}}
+   [col {:sm 3 :style {:margin-bottom 30 :margin-right 0 :padding-right 0}}
     col1]
-   [col {:sm 5 :style {#_#_:max-width 600 :margin-left -2 :padding-left 0}}
+   [col {:sm 5 :style {:margin-left -2 :padding-left 0}}
     col2]
-   [col {:sm 4 :style {#_#_:max-width 500}}
+   [col {:sm 4}
     col3]])
 
 (defn footer
@@ -174,20 +164,7 @@ in the routes table."
               :logo "/assets/rise-logo.png"
               :tool-name "rise"}]]))
 
-(def mobile-break
-  "Screens of this size or smaller are rendered with mobile oriented views."
-  1200 ;800
-  )
 
-(defn open-icon
-  "wrapper for access open-icon access"
-  ([name]
-   (open-icon nil name))
-  ([style name]
-   [:span (assoc {:class (str "oi oi-" name)
-                  :title name
-                  :aria-hidden "true"}
-                 :style style)]))
 
 
 
