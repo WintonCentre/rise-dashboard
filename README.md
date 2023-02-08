@@ -14,7 +14,7 @@ capable browser (Chrome, Safari, Firefox, Opera, IE11, Edge). It uses Bootstrap
 styling (via react-bootstrap) to achieve a responsive display that adapts to desktop or mobile screen sizes.
 
 <p align="center">
-<a href="https://ibb.co/CsFBkVz"><img src="https://i.ibb.co/Z1CdncV/Capture-d-e-cran-2023-02-08-a-12-49-18.png" alt="Earthquake forecast dashboard" border="0" /></a>
+<a><img src="./screenshot.png" alt="Earthquake forecast dashboard" border="0" /></a>
 </p>
 
 This project is open-sourced for people to use as a basis for building such a website in production. It features the best practices highlighted in the recommendations mentioned above. The site still contains user testing facilities (presets) but the recommended view resides in _preset 5_. Links can be made to point to new pages of the site.
@@ -33,7 +33,6 @@ You can quickly get this project running on your local machine.
 * Run `npm run` to view scripts help in `package.json` 
 
 </details>
-<br>
 
 ## Development build (any IDE)
 
