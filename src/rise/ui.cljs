@@ -81,7 +81,7 @@ in the routes table."
                [:> bs/NavDropdown.Item
                 {:on-select #(rf/dispatch [::events/set-language (keyword lang-name)])}
                 lang-name])
-             ["en" "it" "de"])))
+             ["en" "it" "de" "is"])))
 
 (defn navbar
   "Straight out of the react-bootstrap example with reitit routing patched in."

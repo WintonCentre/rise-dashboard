@@ -13,23 +13,21 @@
    If you need to change the markup in square brackets ask gmp26@cam.ac.uk how. The syntax is documented 
    at https://github.com/weavejester/hiccup/wiki/Syntax.
    "
-  #:db{:Dashboard "Erdbeben Dashboard"
-       :Countries "Länder"
-       :country "Land"
-       :Communities "Gemeinden"
-       :Regions "Regionen"
-       :Navigate "Wählen Sie Ihren Standort."
-       :Italy "Italien"
-       :Switzerland "Schweiz"
-       :Iceland "Iceland"
-       :Zurich-Canton "Kanton Zurich"
+  #:db{:Dashboard "Jarðskjálftaspá"
+       :Countries "Lönd"
+       :Communities "Samfélög"
+       :Regions "Svæði"
+       :Italy "Ítalíu"
+       :Switzerland "Sviss"
+       :Iceland "Ísland"
+       :Zurich-Canton "Zürich kantóna"
        :Home "Home"
-       :Settings "Einstellungen"
-       :History "Geschichte"
-       :Data-source "Datenquelle: SED, n. +xx xx xxx xx xx"
-       :Responsibility "Verantwortlich: Schweizerischer Erdbebendienst an der ETH Zürich +xx xx xxx xx xx"
-       :Ambulance [:span [:b "Ambulanz:"] " Call 118"]
-       :Emergency [:span [:b "Notrufnummer:"] " Call 112"]
+       :Settings "Stillingar"
+       :History "Saga"
+       :Data-source "Uppruni gagna: SED, n. +xx xx xxx xx xx"
+       :Responsibility "Ábyrgð: Almannavarnir n.327 347684"
+       :Ambulance [:span [:b "Sjúkrabíll:"] " Call 118"]
+       :Emergency [:span [:b "Neyðartilvik:"] " Call 112"]
        :Country-regions {"italy" "Italien Regionen" ; "italy", "iceland" "switzerland" are lookup keys - do not translate them
                          "iceland" "Island Regionen"
                          "switzerland" "Schweiz Regionen"}

@@ -5,7 +5,6 @@
 </p>
 
 _This website was designed by the [Winton Centre for Risk & Evidence Communication](https://wintoncentre.maths.cam.ac.uk/) at the University of Cambridge, funded by Horizon 2020, as part of the [Work Package 5 (on Society)](http://www.rise-eu.org/activities/society/) of the European project RISE. It aims to display Operational Earthquake Forecasts in a way that is most helpful to a variety of audiences, and was the result of iterative design and testing with over 100 people, in Iceland, Switzerland, and Italy, ranging from seismologists to the general public, journalists to civil protection. The way that the numbers are displayed is the result of quantitative testing with many thousands of members of the general public in California, Switzerland and Iceland. The full reports of the testing and good practice recommendations are found as deliverables of WP5 on the **[RISE website](http://www.rise-eu.org/home/)**._
-
 ---
 This is a single page web application written in
 [clojurescript](https://clojurescript.org/).
