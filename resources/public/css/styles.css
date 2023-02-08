@@ -44,7 +44,8 @@
     color: #FFFFFF;
 }
 
-[data-title]:hover:after {
+
+/*[data-title]:hover:after {
     opacity: 1;
     transition: all 0.1s ease 0.5s;
     visibility: visible;
@@ -69,6 +70,16 @@
 
 [data-title] {
     position: relative;
+}*/
+
+.hex {
+    width: 500px;
+    height: 500px;
+    background: blue linear-gradient(red, blue);
+    -webkit-mask-image: url(/assets/hex.svg);
+    -webkit-mask-mode: alpha;
+    mask-image: url(/assets/hex.svg);
+    mask-mode: alpha;
 }
 
 button-link {

@@ -15,7 +15,6 @@
   (let [translation (get-in dict/dictionary [country-code field-key])]
     (if translation
       translation
-      ;[:span translation]
       [:span.pink english])))
 
 (defn svg-ttt*
@@ -57,20 +56,6 @@
   (if (string? title)
     title
     (apply ttt title)))
-
-
-#_(defn ttt
-  "2 arity looks up cc in chosen dictionary
-  3+ arity looks up cc, but then does parameter interpolation on %1 %2 ...
-   args will replace %1 %2,... stopping when either args or %s run out"
-  [cc s & args]
-  (let [ts (ttt* :it cc s)]
-    (if (or (vector? ts) (zero? (count args))) ; ts may be a [:span.pink] 
-      ts
-      (let [ts (ttt* :it cc s)]
-        (first (reduce (fn [[result i] arg]
-                         [(string/replace result (str "%" (inc i)) arg) (inc i)]) [ts 0] args))))))
-
 
 ;;;
 ;; 
@@ -117,24 +102,25 @@
                         :title [:db/Italy "Italy"]
                         :id "italy"
                         :map "italy.png"}
-                       #_{:href :rise.views/countries
-                          :title "New Zealand" ; TRANSLATE
-                          :id "nz"
-                          :map "nz.png"}
                        {:href :rise.views/countries
                         :title [:db/Switzerland "Switzerland"] ; TRANSLATE
                         :id "switzerland"
                         :map "switzerland.png"}
-                       #_{:href :rise.views/countries
-                          :title "Iceland" ; TRANSLATE
-                          :id "iceland"
-                          :map "iceland.png"}]}
+                       {:href :rise.views/countries
+                        :title [:db/Iceland "Iceland"] ; TRANSLATE
+                        :id "iceland"
+                        :map "iceland.png"}]}
    :regions {:title [:db/Regions "Regions"]
              :items [{:href :rise.views/regions
                       :title "Umbria"
                       :id "umbria"
                       :map "umbria.png"
                       :country "italy"}
+                     {:href :rise.views/regions
+                      :title "Reykyavik Region"
+                      :id "reykyavick-region"
+                      :map "reykyavick-region.png"
+                      :country "iceland"}
                      {:href :rise.views/regions
                       :title [:db/Zurich-Canton "Canton of Zurich"]
                       :id "zurich-canton"
@@ -156,15 +142,30 @@
                         :map "abruzzo.png"
                         :country "italy"}]}
    :communities {:title [:db/Communities "Communities"] ; TRANSLATE
-                 :items [#_{:title "Foligno"
-                            :region "umbria"
-                            :id "foligno"}
-                         #_{:title "Orvieto"
-                            :region "umbria"
-                            :id "orvieto"}
-                         #_{:title "Perugia"
-                            :region "umbria"
-                            :id "perugia"}
+                 :items [{:href :rise.views/hex
+                          :title "Akureyri"
+                          :id "akureyri"
+                          :map "akureyri hex.png"
+                          :latitude 65.68
+                          :longitude 18.09
+                          :region "reykyavick-region"
+                          :country "iceland"
+                          :p-7day 0.30
+                          :mean-7day 0.03
+                          :neighbours {}
+                          :osm-href "https://www.openstreetmap.org/#map=11/64.1284/-21.9429"}
+                         {:href :rise.views/hex
+                          :title "Reykyavik"
+                          :id "reykyavik"
+                          :map "reykyavik hex.png"
+                          :latitude 64.15
+                          :longitude 21.94
+                          :region "reykyavick-region"
+                          :country "iceland"
+                          :p-7day 0.30
+                          :mean-7day 0.03
+                          :neighbours {}
+                          :osm-href "https://www.openstreetmap.org/#map=11/64.1284/-21.9429"}
                          ;;
                          ;; Norcia
                          ;;

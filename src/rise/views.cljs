@@ -380,7 +380,8 @@
              [:circle {:cx r :cy r :r cr :fill "none" :stroke "#ffffff88" :stroke-width w}]
              [:circle {:cx r :cy r :r cr :fill "none" :stroke "#ffffff" #_"#327bff" :stroke-width w
                        :stroke-dasharray (str dash " " gap " " dash)
-                       :style {:transform "rotate(-90deg)"
+                       :style {#_#_:transform "rotate(-90deg)"
+                               :transform (str "rotate(" (* 90 (dec (* 2 p))) "deg)")
                                :transform-origin "50% 50%"}}]]]])
         (when text  [:div {:style {:margin "auto auto"}} text])]]))
 
@@ -419,8 +420,9 @@
 
 (defn vis%
   "An arc with p rendered as a percentage at the centre"
-  [p]
-  (let [annular? @(rf/subscribe [::subs/annular?])
+  [p] 
+  (let [p 0.00001
+        annular? @(rf/subscribe [::subs/annular?])
         with-vis? @(rf/subscribe [::subs/with-vis?])
         params {:p p
                 :r 55
@@ -853,7 +855,7 @@
                      :min-height 370
                      :padding (str (if with-vis? 15 30) "px 30px")
                      :box-shadow "1px 1px 1px 1px #CCC"
-                     :background-color #_"#444466" "#80647D"
+                     :background-color "#686261" #_"#444466" #_"#80647D"
                      :color "white"}}
        [ui/row {:style {:display "flex" :align-items "center" :justify-content "space-between"
                         :padding-bottom (when with-vis? 25)}}
