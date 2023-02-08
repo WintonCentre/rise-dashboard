@@ -10,32 +10,72 @@ _This website was designed by the [Winton Centre for Risk & Evidence Communicati
 This is a single page web application written in
 [clojurescript](https://clojurescript.org/).
 The clojurescript compiler generates javascript which runs in an HTML5
-capable browser (Chrome, Safari, Firefox, Opera, IE11). It uses Bootstrap
-styling to achieve a responsive display that adapts to desktop or mobile
-screen sizes.
+capable browser (Chrome, Safari, Firefox, Opera, IE11, Edge). It uses Bootstrap
+styling (via react-bootstrap) to achieve a responsive display that adapts to desktop or mobile screen sizes.
 
-# Development Quickstart:
-* Install clojure
-* (Install babashka)
-* Install npm
-* `npm run` to view scripts help in `package.json` 
+<p align="center">
+<a href="https://ibb.co/CsFBkVz"><img src="https://i.ibb.co/Z1CdncV/Capture-d-e-cran-2023-02-08-a-12-49-18.png" alt="Earthquake forecast dashboard" border="0" /></a>
+</p>
 
-To run the configuration tool, and start a shadow-cljs dashboard:
+This project is open-sourced for people to use as a basis for building such a website in production. It features the best practices highlighted in the recommendations mentioned above. The site still contains user testing facilities (presets) but the recommended view resides in _preset 5_. Links can be made to point to new pages of the site.
+
+# Development Quickstart
+
+## Installation
+
+You can quickly get this project running on your local machine.
+
+<details><summary><b>Show installation instructions</b></summary>
+
+* Install [clojure](https://clojure.org/guides/install_clojure) and prerequisites depending on your system (Java notably)
+* Install [babashka](https://github.com/babashka/babashka#installation) (optional)
+* Install [npm](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm)
+* Run `npm run` to view scripts help in `package.json` 
+
+</details>
+<br>
+
+## Development build (any IDE)
+
+To run the configuration tool, start a shadow-cljs dashboard and start a development build:
+
 ```sh
 npm run watch-all
 ```
-Open `localhost:9630` for the shadow-cljs dashboard. The `:app` will be served on `localhost:3000` and the 
-`:test-browser` on `localhost:3021`.
+Open `localhost:9630` for the shadow-cljs dashboard. The `:app` will be served on `localhost:3000` and the `:test-browser` on `localhost:3021`.
 
-## For VSCode app development,
-Install Calva extension in VSCode.
-`npm run stop`
-Run VSC command `Calva: Start a Project REPL and Connect (aka Jack-in)` and select `shadow-cljs`.
-Check both `:app` and `test-browser` to start both. Connect to the `:app` build. Enable notifications on 3021.
+To stop your local build:
+```sh
+npm run stop
+```
 
-To inspect values in code, it is often more convenient to use `tap>` rather than `println`. 
-Results will appear in the dashboard inspectors which allow navigation of run-time data.
+## Development build using VSCode
+Install the Calva extension in VSCode.
 
-Requiring `shadow.debug` will provide a slightly higher level interface to `tap>`
-with useful snapshotting utilities that call `tap>`. See the comment at the end of this file for usage: [shadow.debug](https://github.com/thheller/shadow-cljs/blob/master/src/main/shadow/debug.clj)
+Run VSCode command `Calva: Start a Project REPL and Connect (aka Jack-in)` and select `shadow-cljs`.
 
+Check both `:app` and `test-browser` to start both. Connect to the `:app` build on the next prompt. Enable notifications on port 3021.
+
+> To inspect values in code, it is often more convenient to use `tap>` rather than `println`. Results will appear in the dashboard inspectors which allow navigation of run-time data.
+
+>> Requiring `shadow.debug` will provide a slightly higher level interface to `tap>`with useful snapshotting utilities that call `tap>`. See the comment at the end of this file for usage: [shadow.debug](https://github.com/thheller/shadow-cljs/blob/master/src/main/shadow/debug.clj)
+
+
+# Server build
+
+You can build a production ready version of the code using:
+```sh
+npm run build
+# This command runs shadow-cljs release app under the hood
+```
+
+# Deployment
+
+You only need to host the `public/` folder on your servers or 
+on a platforms like [Netlify](https://www.netlify.com/) or [surge.sh](https://surge.sh/).
+
+# License
+
+_Copyright ©2022 Winton Centre for Risk & Evidence Communication_
+
+_Distributed under the Eclipse Public License either version 1.0 or (at your option) any later version._
