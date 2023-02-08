@@ -12,7 +12,6 @@ This is a single page web application written in
 The clojurescript compiler generates javascript which runs in an HTML5
 capable browser (Chrome, Safari, Firefox, Opera, IE11, Edge). It uses Bootstrap
 styling (via react-bootstrap) to achieve a responsive display that adapts to desktop or mobile screen sizes.
-
 <p align="center">
 <a><img src="./screenshot.png" alt="Earthquake forecast dashboard" border="0" /></a>
 </p>
