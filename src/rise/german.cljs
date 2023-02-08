@@ -103,4 +103,6 @@
        :Sep "Sep"
        :Oct "Okt"
        :Nov "Nov"
-       :Dec "Dez"})
+       :Dec "Dez"
+       :presets "Voreinstellungen"
+       :language "Sprache"})

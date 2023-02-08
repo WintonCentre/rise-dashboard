@@ -82,8 +82,7 @@
        :much-less-certain "Earthquake forecasts are much less certain than weather forecasts as we cannot see what is happening underground, but they can give useful information to those making decisions."
        :explanation "Explanation for this forecast:"
        :show-me "Show me this number in context"
-       :back-to "Back to explanation of the percentage"
-       
+       :back-to "Back to explanation of the percentage" 
        :current-levels "With current levels of seismic activity the chance of 
                         an earthquake of magnitude 4 or more happening in this 
                         area between"
@@ -107,4 +106,6 @@
        :Oct "Oct"
        :Nov "Nov"
        :Dec "Dec"
+       :presets "Presets"
+       :language "Language"
        })

@@ -67,7 +67,7 @@ in the routes table."
 (defn preset-dropdown-menu
   []
   
-  (into [:> bs/NavDropdown {:title "Presets" :id "presets-dropdown"}]
+  (into [:> bs/NavDropdown {:title (db/ttt :db/presets "Presets") :id "presets-dropdown"}]
         (map (fn [preset-id]
                [:> bs/NavDropdown.Item 
                 {:on-select #(rf/dispatch [::events/set-preset preset-id])} 
@@ -76,7 +76,7 @@ in the routes table."
 
 (defn language-dropdown-menu
   []
-  (into [:> bs/NavDropdown {:title "Language" :id "language-dropdown"}]
+  (into [:> bs/NavDropdown {:title (db/ttt :db/language "Language") :id "language-dropdown"}]
         (map (fn [lang-name]
                [:> bs/NavDropdown.Item
                 {:on-select #(rf/dispatch [::events/set-language (keyword lang-name)])}

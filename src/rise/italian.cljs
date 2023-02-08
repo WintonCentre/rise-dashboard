@@ -100,4 +100,6 @@
        :Sep "Set"
        :Oct "Ott"
        :Nov "Nov"
-       :Dec "Dic"})
+       :Dec "Dic"
+       :presets "Preimpostazioni"
+       :language "Lingua"})
