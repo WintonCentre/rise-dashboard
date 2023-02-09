@@ -492,22 +492,54 @@
 (comment
 (db/ttt :db/How-does-location-compare "How does %1 compare to the world" "Spoleto"))
 
+;;
+; Date utilities
+;;
+
+(def time-formatter (f/formatter #_"yyyyMMdd" #_:basic-date-time "dd-MM-yyyy"))
+
+
+(def month-names
+  "A vector of abbreviations for the twelve months, in order."
+  ["Jan" "Feb" "Mar" "Apr" "May" "Jun" "July" "Aug" "Sep" "Oct" "Nov" "Dec"])
+
+(defn month-name
+  "Returns the abbreviation for a month in the range [1..12]."
+  [month]
+  (get month-names (dec month)))
+
+(defn parse-iso-date
+  "Returns a vector of the year, month, and day from an ISO 8601 date string."
+  [date]
+  (mapv #(js/parseInt %) (string/split date #"-0?")))
+
+(defn format-date
+  "Converts an ISO 8601 date string to one of the format \"(D)D Mon YYYY\"."
+  [date]
+  (let [[day month year] (parse-iso-date date)]
+    (str day " " (db/ttt (keyword "db" (month-name month)) (month-name month)) " " year)))
+
+;;
+;
+;;
 
 (defn update-status
   []
-  [:div {:style {:font-size 16
-                 :margin-left 30
-                 :color "#888"}}
+  (let [date1 (format-date (f/unparse time-formatter (t/today)))
+        date2 (format-date (f/unparse time-formatter (t/plus (t/today) (t/days 1))))]
+    [:div {:style {:font-size 16
+                   :margin-left 30
+                   :color "#888"}}
 
-   [ui/row {:style {:width 570}}
+     [ui/row {:style {:width 570}}
         ;[:span  "Last updated"]
         ;[:span "00:00 6th July 2021"]
-    [ui/col {:xs 6} (db/ttt :db/Last-updated "Last updated")]
-    [ui/col {:xs 6} [db/ttt :db/from-date "00:00 6th July 2021"]]]
+      [ui/col {:xs 6} (db/ttt :db/Last-updated "Last updated")]
+      [ui/col {:xs 6} (str "00:00 " date1)]]
 
-   [ui/row {:style {:width 570}}
-    [ui/col {:xs 6} (db/ttt :db/Next-update-due "Next update due")]
-    [ui/col {:xs 6} (db/ttt :db/to-date "00:00 7th July 2021")]]])
+     [ui/row {:style {:width 570}}
+      [ui/col {:xs 6} (db/ttt :db/Next-update-due "Next update due")]
+      [ui/col {:xs 6} (str "00:00 " date2)]]]))
 
 (comment
   (db/ttt :db/current-chance-is "The current chance is %1 %2 average"
@@ -716,32 +748,6 @@
   (real->f js/Math.PI 2)
   )
 
-;;
-; Date utilities
-;;
-
-(def time-formatter (f/formatter #_"yyyyMMdd" #_:basic-date-time "dd-MM-yyyy"))
-
-
-(def month-names
-  "A vector of abbreviations for the twelve months, in order."
-  ["Jan" "Feb" "Mar" "Apr" "May" "Jun" "July" "Aug" "Sep" "Oct" "Nov" "Dec"])
-
-(defn month-name
-  "Returns the abbreviation for a month in the range [1..12]."
-  [month]
-  (get month-names (dec month)))
-
-(defn parse-iso-date
-  "Returns a vector of the year, month, and day from an ISO 8601 date string."
-  [date]
-  (mapv #(js/parseInt %) (string/split date #"-0?")))
-
-(defn format-date
-  "Converts an ISO 8601 date string to one of the format \"(D)D Mon YYYY\"."
-  [date]
-  (let [[day month year] (parse-iso-date date)] 
-    (str day " " (db/ttt (keyword "db" (month-name month)) (month-name month)) " " year)))
 
 ;;
 ; ----
