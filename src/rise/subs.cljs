@@ -1,7 +1,6 @@
 (ns rise.subs
   (:require
-   [re-frame.core :as rf]
-   ))
+   [re-frame.core :as rf]))
 
 ;;; 
 ;; Note that subscription keys are fully qualified in rise.subs ns, but...
@@ -10,9 +9,8 @@
 ;; subscripton keys are used in views (usually) to READ db values
 ;; db keys are used in event handlers (always) to WRITE to the db
 ;;; 
-(rf/reg-sub ::lang (fn [db] (:lang db)))
 
-(rf/reg-sub ::window-width (fn [db] (:window-width db)))
+(rf/reg-sub ::lang (fn [db] (:lang db)))
 
 (rf/reg-sub ::current-route (fn [db] (:current-route db)))
 
@@ -37,10 +35,6 @@
 (rf/reg-sub ::in-percentage? (fn [db] (:in-percentage? db)))
 
 (rf/reg-sub ::average-cities (fn [db] (:average-cities db)))
-
-
-
-
 
 (rf/reg-sub ::quake? (fn [db] (:quake? db)))
 

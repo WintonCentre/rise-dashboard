@@ -6,13 +6,10 @@
    [reitit.frontend :as rfr]
    [reitit.frontend.controllers :as rfc]
    [reitit.frontend.easy :as rfe]
-   #_[rise.ui :as ui]
    [rise.events :as events]
    [rise.views :as views]
    [rise.subs :as subs]
-   [shadow.debug :refer [locals ?> ?-> ?->>]]
-   #_["react-bootstrap" :as bs :refer [Navbar Navbar.Brand Navbar.Toggle Navbar.Collapse Navbar.Text
-                                       Nav Nav.Link]]))
+   [shadow.debug :refer [locals ?> ?-> ?->>]]))
 
 (def routes
   "Reitit nested route syntax can be tricky. Only the leaves are valid.

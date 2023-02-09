@@ -73,6 +73,5 @@ on a platforms like [Netlify](https://www.netlify.com/) or [surge.sh](https://su
 
 # License
 
-_Copyright ©2022 Winton Centre for Risk & Evidence Communication_
 
 _Distributed under the Eclipse Public License either version 1.0 or (at your option) any later version._

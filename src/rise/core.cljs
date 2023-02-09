@@ -17,8 +17,7 @@
 
 (defn dev-setup []
   (when debug?
-    (enable-console-print!)
-    #_(println "dev mode")))
+    (enable-console-print!)))
 
 (defn ^:dev/after-load mount-root
   "Mount components and start the reitit router. The :dev/after-load meta-data causes

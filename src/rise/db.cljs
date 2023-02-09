@@ -21,7 +21,6 @@
   "Look up a the keyword in the dictionary.
    If found then return in an undecorated text.
    If found return english inside braces.
-   
    This is useful inside SVG"
   [country-code field-key english]
   (let [translation (get-in dict/dictionary [country-code field-key])]
@@ -584,17 +583,3 @@
                                        :S "sion-SW"}
                           :osm-href "https://www.openstreetmap.org/relation/42105"}]}})
 
-;; For now, edit these definitions to change site language
-;(def ttt (partial ttt* :it))
-(def svg-ttt (partial svg-ttt* (default-db :lang)))
-
-(defn db-ttt 
-  [v-or-text]
-  (if (vector? v-or-text)
-    (do
-      (println v-or-text ::db-ttt)
-      (let [[_ db-key english] v-or-text]
-        (ttt db-key english)))
-    v-or-text
-    )
-  )

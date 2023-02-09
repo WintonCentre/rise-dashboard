@@ -15,9 +15,3 @@
    (rfe/push-state k params query)))
 
 
-;; Loading edn files from the database
-(rf/reg-fx
-::dispatch
-(fn [[event-key event-params]]
-  (rf/dispatch [event-key event-params])))
-

@@ -12,8 +12,7 @@
    [rise.bsio :as bsio]
    [rise.db :as db]
    [shadow.debug :refer [locals ?> ?-> ?->>]]
-   [goog.string :as gstr]
-   [goog.string.format :as gsf]
+   [goog.string :as gstr] 
    [cljs-time.core :as t]
    [cljs-time.format :as f])
   )
@@ -341,9 +340,8 @@
 
 (defn bar
   [{:keys [p r w text]}]
-
   [:div {:style {:width 100 :height 100 :display "flex" :flex-direction "column" :justify-content "center" :align-items "flex-end"}}
-   (when text  text [:div {:style {:margin "0" :font-size "1.4em"}} text])
+   (when text text [:div {:style {:margin "0" :font-size "1.4em"}} text])
    (when @(rf/subscribe [::subs/with-vis?])
      (when-not @(rf/subscribe [::subs/annular?])
        [:<>
@@ -749,7 +747,7 @@
 ; ----
 ;;
 
-(defn new-area-status
+(defn area-status
   "Show earthquake status of an area conform to the recommendations"
   [community]
   (let [p (community :p-7day)
@@ -836,7 +834,7 @@
   )
 
 
-(defn area-status
+#_(defn area-status
   "show earthquake status of an area"
   [community]
   (let [p (community :p-7day)
@@ -1012,11 +1010,12 @@
   []
   (main-content-template
    (fn [community] [:<> (db/ttt :db/current-forecast [:<> "Current forecast for a" " " [:i "magnitude 4 or above"] " earthquake in the area you have selected:"])])
-   new-area-status))
+   area-status))
 
 ;;;
 ;;
 ;;;
+
 (defn histogram
   [community]
   (let [region (find-location-by-id :region (community :region))]
