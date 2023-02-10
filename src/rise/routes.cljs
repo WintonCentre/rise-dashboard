@@ -116,7 +116,7 @@
   (rfe/start!
    router
    on-navigate
-   {:use-fragment true}))
+   {:use-fragment false}))
 
 (comment
   (routes [:home :info]))
