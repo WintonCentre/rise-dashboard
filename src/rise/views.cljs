@@ -446,7 +446,7 @@
      [ui/col (base-style 3)
       (when with-context?
         [:<>
-         [:h4 [:a {:href (str #_"/#/history/" "/#/hex/" (community :id))} (db/ttt :db/how-to-survive "How to survive an earthquake") #_(db/ttt :db/Local-history "Local earthquake history")]]
+         [:h4 [:a {:href (str #_"/#/history/" "/hex/" (community :id))} (db/ttt :db/how-to-survive "How to survive an earthquake") #_(db/ttt :db/Local-history "Local earthquake history")]]
          [:p (db/ttt :db/useful-tips "Click here for useful tips on what to do 
                                       before, during, and after an earthquake.")]
          #_[:p (db/ttt :db/Local-history-p1 "How many earthquakes of magnitude 4 or more have hit") " "
@@ -462,7 +462,7 @@
                                             :border "1px solid black"
                                             :border-radius "25px"}})
       [:div 
-       [:h4 {:style {:text-align "center"}}(db/ttt :db/explanation "Explanation for this forecast:") #_[:a {:href (str "/#/hex/" (community :id))} (db/ttt :db/Whats-happening "What's happening here and now?")]]
+       [:h4 {:style {:text-align "center"}}(db/ttt :db/explanation "Explanation for this forecast:")]
        [:br]
        (if (or (= (community :id) "norcia-S")
                (= (community :id) "zurich")
@@ -470,24 +470,24 @@
                (< (community :p-7day) (* 1.2 (community :mean-7day))))
          [:<>
           [:p (db/ttt :db/local-quiet-message "%1 is currently in a quiet period." (community :title))]
-          [:a {:href (str "/#/hex/" (community :id))} (db/ttt :db/click-here "Click here to find out more...")]
+          [:a {:href (str "/hex/" (community :id))} (db/ttt :db/click-here "Click here to find out more...")]
           ]
          [:<>
           [:p  (db/ttt :db/local-message "%1 is seeing higher chances than normal because of increased 
              seismic activity around the Mount Vettore fault system." (community :title))]
-          [:a {:href (str "/#/hex/" (community :id))} (db/ttt :db/click-here "Click here to find out more...")]
+          [:a {:href (str "/hex/" (community :id))} (db/ttt :db/click-here "Click here to find out more...")]
           ]
          )]]
      [ui/col (base-style {:span 4})
       (when with-context?
         [:<>
-         [:h4 [:a {:href (str #_"/#/world/" "/#/hex/" (community :id))}
+         [:h4 [:a {:href (str #_"/#/world/" "/hex/" (community :id))}
                (db/ttt :db/what-can-I-do "What can I do with this information?")
                #_(db/ttt :db/How-does-location-compare "How does %1 compare to the world" (community :title))]]
          [:p (db/ttt :db/much-less-certain "Earthquake forecasts are much less certain than weather forecasts as we cannot see what is happening underground, but they can give useful information to those making decisions.") 
           #_(db/ttt :db/How-chance-compares "How does the current chance of a magnitude 4+ quake in %1 compare to an average week in other places worldwide?"
                      (community :title))]
-         [:a {:href (str "/#/hex/" (community :id))} (db/ttt :db/click-here "Click here to find out more...")]
+         [:a {:href (str "/hex/" (community :id))} (db/ttt :db/click-here "Click here to find out more...")]
          ])]]))
 (comment
 (db/ttt :db/How-does-location-compare "How does %1 compare to the world" "Spoleto"))
