@@ -102,4 +102,22 @@
        :Nov "Nov"
        :Dec "Dic"
        :presets "Preimpostazioni"
-       :language "Lingua"})
+       :language "Lingua"
+       :intro-1 "Questo è un sito web dimostrativo sviluppato dal Winton Centre 
+                per la comunicazione del rischio e dell'evidenza dell'Università di Cambridge 
+                nell'ambito del programma RISE. Il codice è liberamente disponibile per 
+                l'uso a:"
+       :intro-2 "Raccoglie alcune delle linee guida sulle migliori pratiche per 
+                comunicazione delle previsioni sismiche operative, sviluppate nel corso del 
+                progetto attraverso interviste e focus group con oltre 100 persone in Italia, Islanda e Svizzera. 
+                persone in Italia, Islanda e Svizzera (tra cui sismologi, 
+                sismologi, giornalisti, gestori di infrastrutture, protezione civile e 
+                pubblico in generale), oltre a sondaggi online su larga scala in Italia, Svizzera e California, 
+                Svizzera e California."
+       :intro-3 "I terremoti scelti per fornire esempi di diversa magnitudo e le città scelte per fornire esempi di diversi livelli di pericolosità sono stati scelti per 
+                città scelte per fornire esempi di diversi livelli di pericolosità, sono stati scelti per 
+                in Italia e dovrebbero essere sostituiti."
+       :intro-4 "La navigazione e i dati geografici, nonché i link/le parole per ulteriori 
+                sono ovviamente solo a scopo dimostrativo."
+       :intro-5 "Iniziate scegliendo una lingua e un Paese, poi una regione e una comunità, per vedere la dimostrazione. 
+                comunità, per vedere la dimostrazione."})

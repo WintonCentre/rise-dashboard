@@ -33,7 +33,6 @@ You can quickly get this project running on your local machine.
 </details>
 
 ## Development build (any IDE)
-
 To run the configuration tool, start a shadow-cljs dashboard and start a development build:
 
 ```sh

@@ -105,4 +105,22 @@
        :Nov "Nov"
        :Dec "Dez"
        :presets "Voreinstellungen"
-       :language "Sprache"})
+       :language "Sprache"
+       :intro-1 "Dies ist eine Demonstrations-Website, die vom Winton Centre 
+                 for Risk & Evidence Communication an der Universität Cambridge 
+                 als Teil des RISE-Programms entwickelt wurde. Der Code ist frei 
+                 verfügbar für die Verwendung unter:"
+       :intro-2 "Er fasst einige der bewährten Leitlinien für die 
+                Kommunikation von operationellen Erdbebenvorhersagen, die im Rahmen des 
+                im Rahmen des Projekts durch Interviews und Fokusgruppen mit über 100 
+                Personen in Italien, Island und der Schweiz (darunter Seismologen, 
+                Journalisten, Infrastrukturmanager, Zivilschutz und Mitglieder der 
+                Öffentlichkeit) sowie groß angelegte Online-Umfragen in Italien, der 
+                Schweiz und Kalifornien."
+       :intro-3 "Die Erdbeben, die ausgewählt wurden, um Beispiele für verschiedene Magnituden zu geben, und die 
+                Städte, die als Beispiele für unterschiedliche Gefährdungsstufen ausgewählt wurden, wurden für 
+                Tests in Italien ausgewählt und sollten ersetzt werden."
+       :intro-4 "Die geografische Navigation und die Daten sowie die Links/Worte für weitere Informationen 
+                dienen natürlich nur zu Demonstrationszwecken."
+       :intro-5 "Bitte wählen Sie zunächst eine Sprache und ein Land, dann eine Region und eine 
+                Gemeinschaft, um die Demonstration zu sehen."})

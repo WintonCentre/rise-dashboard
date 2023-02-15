@@ -82,7 +82,7 @@
        :much-less-certain "Earthquake forecasts are much less certain than weather forecasts as we cannot see what is happening underground, but they can give useful information to those making decisions."
        :explanation "Explanation for this forecast:"
        :show-me "Show me this number in context"
-       :back-to "Back to explanation of the percentage" 
+       :back-to "Back to explanation of the percentage"
        :current-levels "With current levels of seismic activity the chance of 
                         an earthquake of magnitude 4 or more happening in this 
                         area between"
@@ -108,4 +108,21 @@
        :Dec "Dec"
        :presets "Presets"
        :language "Language"
-       })
+       :intro-1 "This is a demonstration website developed by the Winton Centre 
+                for Risk & Evidence Communication at the University of Cambridge 
+                as part of the RISE programme. The code is freely available for 
+                use at:"
+       :intro-2 "It pulls together some of the best practice guidelines for 
+                communicating Operational Earthquake Forecasts developed during 
+                the project through interviews and focus groups with over 100 
+                people in Italy, Iceland, and Switzerland (including seismologists, 
+                journalists, infrastructure managers, civil protection and members 
+                of the general public), along with large-scale online surveys in Italy, 
+                Switzerland, and California."
+       :intro-3 "The earthquakes chosen to give examples of different magnitudes, and the 
+                cities chosen to give examples of different hazard levels, were chosen for 
+                testing in Italy and should be replaced."
+       :intro-4 "The geographical navigation and data and the links/wording for further 
+                information are, of course, for demonstration purposes only."
+       :intro-5 "Please start by choosing a language and a country, then a region and a 
+                community, to see the demonstration."})

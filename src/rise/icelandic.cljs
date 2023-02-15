@@ -23,7 +23,7 @@
        :Zurich-Canton "Zürich kantóna"
        :Navigate "Farðu að staðsetningu þinni:"
        :how-to-survive "Hvernig á að lifa af jarðskjálfta"
-       :useful-tips "Smelltu hér til að fá gagnlegar ábendingar um hvað á að gera fyrir, á meðan og eftir jarðskjálfta." 
+       :useful-tips "Smelltu hér til að fá gagnlegar ábendingar um hvað á að gera fyrir, á meðan og eftir jarðskjálfta."
        :Home "Home"
        :Settings "Stillingar"
        :History "Saga"
@@ -102,4 +102,22 @@
        :Nov "nóv"
        :Dec "des"
        :presets "Forstillingar"
-       :language "Tungumál"})
+       :language "Tungumál"
+       :intro-1 "Þetta er sýnikennsluvefur þróaður af Winton Center
+                 fyrir Risk & Evidence Communication við háskólann í Cambridge
+                 sem hluti af RISE áætluninni. Kóðinn er ókeypis fáanlegur fyrir
+                 nota á:"
+       :intro-2 "Það tekur saman nokkrar af leiðbeiningum um bestu starfsvenjur fyrir
+                 miðla rekstrarlegum jarðskjálftaspám sem þróaðar voru á
+                 verkefnið með viðtölum og rýnihópum með yfir 100
+                 fólk á Ítalíu, Íslandi og Sviss (þar á meðal jarðskjálftafræðingar,
+                 blaðamenn, mannvirkjastjórar, almannavarnir og félagsmenn
+                 almennings), ásamt stórum netkönnunum á Ítalíu,
+                 Sviss og Kaliforníu."
+       :intro-3 "Jarðskjálftarnir sem valdir voru til að gefa dæmi um mismunandi stærðargráðu, og
+                 borgir valdar til að gefa dæmi um mismunandi hættustig, voru valdar fyrir
+                 prófun á Ítalíu og ætti að skipta út."
+       :intro-4 "Landfræðileg leiðsögn og gögn og tenglar/orðalag til að fá frekari upplýsingar
+                 upplýsingar eru að sjálfsögðu eingöngu til sýnis."
+       :intro-5 "Vinsamlegast byrjaðu á því að velja tungumál og land, síðan svæði og a
+                 samfélag, til að sjá sýninguna."})

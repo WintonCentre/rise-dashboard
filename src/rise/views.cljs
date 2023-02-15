@@ -230,7 +230,30 @@
   (let [all-countries (:items @(rf/subscribe [::subs/countries]))]
     [ui/page ""
      [ui/row 
-      [ui/col {:md {:span 6 :offset 1} :style {:font-size "1.4em"}}
+      [ui/col {:md 4 :style {:font-size "0.9em"}}
+       [:div {:style {:border "1px solid black"
+                      :border-radius "25px"}}
+        [:p {:style {:padding "10px 0 0 10px"}} (db/ttt :db/intro-1 "This is a demonstration website developed by the Winton Centre 
+                                for Risk & Evidence Communication at the University of Cambridge 
+                                as part of the RISE programme. The code is freely available for 
+                                use at:") " " [:a {:href "https://github.com/WintonCentre/rise-dashboard"
+                                                   :rel "noopener"
+                                                   :target "_blank"} "https://github.com/WintonCentre/rise-dashboard"]]
+        [:p {:style {:padding "0 0 0 10px"}} (db/ttt :db/intro-2 "It pulls together some of the best practice guidelines for 
+                                communicating Operational Earthquake Forecasts developed during 
+                                the project through interviews and focus groups with over 100 
+                                people in Italy, Iceland, and Switzerland (including seismologists, 
+                                journalists, infrastructure managers, civil protection and members 
+                                of the general public), along with large-scale online surveys in Italy, 
+                                Switzerland, and California.")]
+        [:p {:style {:padding "0 0 0 10px"}} (db/ttt :db/intro-3 "The earthquakes chosen to give examples of different magnitudes, and the 
+                                cities chosen to give examples of different hazard levels, were chosen for 
+                                testing in Italy and should be replaced.")]
+        [:p {:style {:padding "0 0 0 10px"}} (db/ttt :db/intro-4 "The geographical navigation and data and the links/wording for further 
+                                information are, of course, for demonstration purposes only.")]
+        [:p {:style {:padding "0 0 0 10px"}} (db/ttt :db/intro-5 "Please start by choosing a language and a country, then a region and a 
+                                community, to see the demonstration.")]]]
+      [ui/col {:md {:span 3 :offset 0} :style {:font-size "1.4em"}}
        (db/ttt :db/Navigate "Navigate to your local area.")
        [links-to all-countries]]
       [ui/col {:md 5} 
