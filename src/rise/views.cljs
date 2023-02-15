@@ -814,7 +814,13 @@
           a %3 chance we would expect:"] date1 date2 (nice% p))]
          [:p {:style {:margin-bottom "5px"}} [:span (db/ttt :db/happen "An earthquake of magnitude 4+ to happen in") " " [:b (* p 100000)] " " (db/ttt :db/of-them "of them")]]
          [:p {:style {:margin-bottom "5px"}} [:span (db/ttt :db/not-happen "No earthquake of magnitude 4+ to happen in") " " [:b (* (- 1 p) 100000)] " " (db/ttt :db/of-them "of them")]]
-         [:p [:button.button-link {:on-click #(rf/dispatch [::events/in-percentage? false])}
+         [:p [:button {:on-click #(rf/dispatch [::events/in-percentage? false])
+                       :style {:background "none"
+                               :border "none"
+                               :padding "0"
+                               :color "#aef"
+                               :text-decoration "underline"
+                               :cursor "pointer"}}
               (db/ttt :db/show-me "Show me this number in context")]]]
 
         [:<>
@@ -855,7 +861,13 @@
                                  "87%" "89%")
                             :fill "#fff"} (db/ttt :db/compared-to-these-cities "compared to an average week in these cities")]
                     [:text {:x "8%" :y "95%" :fill "#fff"} (db/ttt :db/compared-to-these-cities-2 "in these cities")]]]])
-         [:p [:button.button-link {:on-click #(rf/dispatch [::events/in-percentage? true])}
+         [:p [:button {:on-click #(rf/dispatch [::events/in-percentage? true])
+                       :style {:background "none"
+                               :border "none"
+                               :padding "0"
+                               :color "#aef"
+                               :text-decoration "underline"
+                               :cursor "pointer"}}
               (db/ttt :db/back-to "Back to explanation of the percentage")]]])] 
      [update-status]]
     

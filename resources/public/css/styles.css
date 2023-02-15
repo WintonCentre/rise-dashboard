@@ -81,16 +81,3 @@
     mask-image: url(/assets/hex.svg);
     mask-mode: alpha;
 }
-
-.button-link {
-    background: none!important;
-    border: none;
-    padding: 0!important;
-    /*optional*/
-    font-family: arial, sans-serif;
-    /*input has OS specific font-family*/
-    color: #aef/*#069*/
-    ;
-    text-decoration: underline;
-    cursor: pointer;
-}
