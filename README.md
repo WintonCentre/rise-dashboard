@@ -73,6 +73,8 @@ on a platforms like [Netlify](https://www.netlify.com/) or [surge.sh](https://su
 
 Improving mobile layout is a key area for future developers of the project to take into account. The necessary building blocks are already in the code like `react-bootstrap`, but the way the `views` are currently structured doesn't make for the best experience on mobile.
 
+You might have noticed that on refresh, the language is lost and reverted to English. This is because the `init` function is called on refresh, and the database is reinitialized. One might want to use localStorage for instance to persist this type of parameters in the database not to lose them on refresh.
+
 # License
 
 

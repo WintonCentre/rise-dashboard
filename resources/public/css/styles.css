@@ -82,7 +82,7 @@
     mask-mode: alpha;
 }
 
-button-link {
+.button-link {
     background: none!important;
     border: none;
     padding: 0!important;
