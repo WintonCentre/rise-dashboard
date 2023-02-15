@@ -15,7 +15,6 @@ styling (via react-bootstrap) to achieve a responsive display that adapts to des
 <a><img src="./screenshot.jpg" alt="Earthquake forecast dashboard" border="0" /></a>
 </p>
 
-This project is open-sourced for people to use as a basis for building such a website in production. It features the best practices highlighted in the recommendations mentioned above. The site still contains user testing facilities (presets) but the recommended view resides in _preset 5_. Links can be made to point to new pages of the site.
 
 # Development Quickstart
 
@@ -69,6 +68,10 @@ npm run build
 
 You only need to host the `public/` folder on your servers or 
 on a platforms like [Netlify](https://www.netlify.com/) or [surge.sh](https://surge.sh/).
+
+# Future developments needed
+
+Improving mobile layout is a key area for future developers of the project to take into account. The necessary building blocks are already in the code like `react-bootstrap`, but the way the `views` are currently structured doesn't make for the best experience on mobile.
 
 # License
 
